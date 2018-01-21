@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="template"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/jacob/projects/cs436d/template/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/jacob/projects/cs436d/template/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/jacob/projects/cs436d/template/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="template">
+				<Option output="/Users/jacob/projects/cs436d/template/cmake-build-debug/template" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/jacob/projects/cs436d/template/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 template"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="template/fast">
+				<Option output="/Users/jacob/projects/cs436d/template/cmake-build-debug/template" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/jacob/projects/cs436d/template/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/9.0.0/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 template/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/jacob/projects/cs436d/template/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/jacob/projects/cs436d/template/Makefile">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/audio/music.wav">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/audio/salmon_dead.wav">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/audio/salmon_eat.wav">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/meshes/salmon.mesh">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/textures/fish.png">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/data/textures/turtle.png">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/gl3w/gl3w.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/gl3w/glcorearb.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/glfw/include/GLFW/glfw3.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/glfw/include/GLFW/glfw3native.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_assert.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_atomic.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_audio.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_bits.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_blendmode.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_clipboard.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_android.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_iphoneos.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_macosx.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_minimal.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_pandora.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_psp.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_windows.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_winrt.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_config_wiz.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_copying.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_cpuinfo.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_egl.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_endian.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_error.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_events.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_filesystem.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_gamecontroller.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_gesture.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_haptic.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_hints.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_joystick.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_keyboard.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_keycode.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_loadso.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_log.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_main.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_messagebox.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_mixer.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_mouse.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_mutex.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_name.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengl.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengl_glext.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles2.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles2_gl2.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles2_gl2ext.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles2_gl2platform.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_opengles2_khrplatform.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_pixels.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_platform.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_power.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_quit.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_rect.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_render.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_revision.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_rwops.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_scancode.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_shape.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_stdinc.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_surface.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_system.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_syswm.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_assert.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_common.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_compare.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_crc32.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_font.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_fuzzer.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_harness.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_images.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_log.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_md5.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_memory.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_test_random.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_thread.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_timer.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_touch.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_types.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_version.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_video.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/SDL_vulkan.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/begin_code.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/sdl/include/SDL/close_code.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/ext/stb_image/stb_image.h">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/shaders/colored.fs.glsl">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/shaders/colored.vs.glsl">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/shaders/textured.fs.glsl">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/shaders/textured.vs.glsl">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/a1.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/common.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/common.hpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/fish.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/fish.hpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/salmon.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/salmon.hpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/turtle.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/turtle.hpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/world.cpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/src/world.hpp">
+			<Option target="template"/>
+		</Unit>
+		<Unit filename="/Users/jacob/projects/cs436d/template/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
