@@ -33,3 +33,12 @@
 
 *.DS_Store
 Roy-the-Traffic-Cop
+
+.idea/
+CMakeCache.txt
+cmake-build-debug/
+CMakeFiles/
+cmake_install.cmake
+
+Roy_the_Traffic_Cop
+Roy_the_Traffic_Cop.cbp

@@ -1,23 +1,20 @@
 // Header
-#include "salmon.hpp"
+#include "lane.hpp"
 
 // stlib
 #include <vector>
-#include <string>
 #include <algorithm>
-#include <math.h>
 
-bool Salmon::init()
+bool Lane::init()
 {
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;
 
-	// Reads the salmon mesh from a file, which contains a list of vertices and indices
-	FILE* mesh_file = fopen(mesh_path("salmon.mesh"), "r");
+	FILE* mesh_file = fopen(mesh_path("salmon.mesh"), "r"); // TODO: Correct texture [YAO]
 	if (mesh_file == nullptr)
 		return false;
 
-	// Reading vertices and colors
+	// Reading vertices and colors // TODO: Update vertices to match lane
 	size_t num_vertices;
 	fscanf(mesh_file, "%zu\n", &num_vertices);
 	for (size_t i = 0; i < num_vertices; ++i)
@@ -66,27 +63,19 @@ bool Salmon::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl")))
+	if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl"))) // TODO: Change shaders?
 		return false;
 
 	// Setting initial values
 	m_scale.x = -35.f;
 	m_scale.y = 35.f;
-	m_is_alive = true;
 	m_num_indices = indices.size();
-	m_position = { 100.f, 100.f };
-	m_rotation = 0.f;
-	m_light_up_countdown_ms = -1.f;
-	m_advanced_controls = false;
-	m_current_speed = 0.f;
-	m_x_dir = 0.f;
-	m_y_dir = 0.f;
 
 	return true;
 }
 
 // Releases all graphics resources
-void Salmon::destroy()
+void Lane::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
@@ -97,33 +86,10 @@ void Salmon::destroy()
 	glDeleteShader(effect.program);
 }
 
-// Called on each frame by World::update()
-void Salmon::update(float ms)
+void Lane::draw(const mat3& projection)
 {
-	const float SALMON_SPEED = 200.f;
-	float step = SALMON_SPEED * (ms / 1000);
-	float speed_step = 0.2f;
-	float min_speed = 0.f;
-	float max_speed = 3.f;
-	if (m_is_alive)
-	{
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// UPDATE SALMON POSITION HERE BASED ON KEY PRESSED (World::on_key())
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	}
-	else
-	{
-		// If dead we make it face upwards and sink deep down
-		set_rotation(3.1415f);
-		move({ 0.f, step });
-	}
+	// TODO: Draw the lane properly
 
-	if (m_light_up_countdown_ms > 0.f)
-		m_light_up_countdown_ms -= ms;
-}
-
-void Salmon::draw(const mat3& projection)
-{
 	transform_begin();
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -179,68 +145,24 @@ void Salmon::draw(const mat3& projection)
 
 	// !!! Salmon Color
 	float color[3];
-	if (m_is_alive) {
-		color[0] = 1.f;
-		color[1] = 1.f;
-		color[2] = 1.f;
-	} else {
-		color[0] = 1.f;
-		color[1] = 0.5f;
-		color[2] = 0.5f;
-	}
+	color[0] = 1.f;
+	color[1] = 1.f;
+	color[2] = 1.f;
 
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HERE TO SET THE CORRECTLY LIGHT UP THE SALMON IF HE HAS EATEN RECENTLY
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	int light_up;
-	if (m_light_up_countdown_ms > 0) {
-		light_up = 1;
-	} else {
-		light_up = 0;
-	}
-	glUniform1iv(light_up_uloc, 1, &light_up);
-
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES,(GLsizei)m_num_indices, GL_UNSIGNED_SHORT, nullptr);
 }
 
-vec2 Salmon::get_position()const
+float Lane::get_time_remaining() const
 {
-	return m_position;
+    return m_time_remaining;
 }
 
-void Salmon::move(vec2 off)
+Car* Lane::get_cars() const
 {
-	m_position.x += off.x; m_position.y += off.y;
+    return m_cars;
 }
 
-void Salmon::set_rotation(float radians)
-{
-	m_rotation = radians;
-}
-
-bool Salmon::is_alive()const
-{
-	return m_is_alive;
-}
-
-// Called when the salmon collides with a turtle
-void Salmon::kill()
-{
-	m_is_alive = false;
-}
-
-// Called when the salmon collides with a fish
-void Salmon::light_up()
-{
-	m_light_up_countdown_ms = 1500.f;
-}
-
-void Salmon::toggle_advanced_controls()
-{
-	m_advanced_controls = !m_advanced_controls;
-}

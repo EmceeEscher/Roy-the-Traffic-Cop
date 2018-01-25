@@ -2,7 +2,7 @@
 
 // internal
 #include "common.hpp"
-#include "salmon.hpp"
+#include "traffic_cop.hpp"
 
 // stlib
 #include <vector>
@@ -48,7 +48,7 @@ private:
 	unsigned int m_points;
 
 	// Game entities
-	Salmon m_salmon;
+	TrafficCop m_traffic_cop;
 
 	float m_world_scale;
 
