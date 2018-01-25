@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+*.DS_Store
+Roy-the-Traffic-Cop
