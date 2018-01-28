@@ -63,7 +63,7 @@ bool Car::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl"))) // TODO: Change shaders?
+	if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl")))
 		return false;
 
 	// Setting initial values
