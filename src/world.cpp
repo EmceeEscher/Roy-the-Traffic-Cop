@@ -103,7 +103,7 @@ bool World::init(vec2 screen)
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
-	return m_salmon.init();
+	return m_traffic_cop.init();
 }
 
 // Releases all the associated resources
@@ -114,7 +114,7 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
-	m_salmon.destroy();
+	m_traffic_cop.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -125,9 +125,7 @@ bool World::update(float elapsed_ms)
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-	// Updating all entities, making the turtle and fish
-	// faster based on current
-	m_salmon.update(elapsed_ms);
+	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 
 	return true;
 }
@@ -169,7 +167,7 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
-	m_salmon.draw(projection_2D);
+	m_traffic_cop.draw(projection_2D);
 
 	// Presenting
 	glfwSwapBuffers(m_window);
