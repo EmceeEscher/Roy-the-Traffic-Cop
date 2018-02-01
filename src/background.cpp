@@ -17,19 +17,19 @@ bool Background::init()
 		}
 	}
 
-	// The position corresponds to the center of the texture
-	float wr = background_texture.width;
-	float hr = background_texture.height;
+	// The position (0,0) corresponds to the center of the texture
+	float wr = background_texture.width * 0.5;
+	float hr = background_texture.height * 0.5;
 
-	TexturedVertex vertices[4];
+	TexturedVertex vertices[4]; 
 	vertices[0].position = { -wr, +hr, 0.f };
-	vertices[0].texcoord = { -1.f, 2.f };
+	vertices[0].texcoord = { 0.f, 1.f };//top left
 	vertices[1].position = { +wr, +hr, 0.f };
-	vertices[1].texcoord = { 1.f, 2.f };
+	vertices[1].texcoord = { 1.f, 1.f };//top right
 	vertices[2].position = { +wr, -hr, 0.f };
-	vertices[2].texcoord = { 1.f, 0.f };
+	vertices[2].texcoord = { 1.f, 0.f };//bottom right
 	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[3].texcoord = { -1.f, 0.f };
+	vertices[3].texcoord = { 0.f, 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -60,6 +60,7 @@ bool Background::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
+	m_position = { 500.f, 500.f };
 	//m_rotation = 0.f;
 
 	return true;
@@ -78,21 +79,13 @@ void Background::destroy()
 	glDeleteShader(effect.program);
 }
 
-//void background::update(float ms)
-//{
-//	// Move fish along -X based on how much time has passed, this is to (partially) avoid
-//	// having entities move at different speed based on the machine.
-//	const float background_SPEED = 200.f;
-//	float step = -background_SPEED * (ms / 1000);
-//	m_position.x += step;
-//}
-
 void Background::draw(const mat3& projection)
 {
 	// Transformation code, see Rendering and Transformation in the template specification for more info
 	// Incrementally updates transformation matrix, thus ORDER IS IMPORTANT
 	transform_begin();
 	transform_scale(m_scale);
+	transform_translate(m_position);
 	transform_end();
 
 	// Setting shaders
@@ -133,20 +126,9 @@ void Background::draw(const mat3& projection)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-
-//vec2 background::get_position()const
-//{
-//	return m_position;
-//}
-
-//void background::set_position(vec2 position)
-//{
-//	m_position = position;
-//}
-
-//// Returns the local bounding coordinates scaled by the current size of the background 
-//vec2 background::get_bounding_box()const
-//{
-//	// fabs is to avoid negative scale due to the facing direction
-//	return { std::fabs(m_scale.x) * background_texture.width, std::fabs(m_scale.y) * background_texture.height };
-//}
+// returns the local bounding coordinates scaled by the current size of the background 
+vec2 Background::get_bounding_box()const
+{
+	// fabs is to avoid negative scale due to the facing direction
+	return { std::fabs(m_scale.x) * background_texture.width, std::fabs(m_scale.y) * background_texture.height };
+}

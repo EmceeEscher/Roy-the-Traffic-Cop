@@ -104,6 +104,7 @@ bool World::init(vec2 screen)
 	m_advanced_features = false;
 
 	m_background.init();
+	m_car.init();
 	return m_traffic_cop.init();
 }
 
@@ -117,6 +118,7 @@ void World::destroy()
 
 	m_traffic_cop.destroy();
 	m_background.destroy();
+	m_car.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -170,7 +172,9 @@ void World::draw()
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
 	m_background.draw(projection_2D);
+	m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
+	
 	
 
 	// Presenting
