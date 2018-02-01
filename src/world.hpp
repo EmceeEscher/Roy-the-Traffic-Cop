@@ -3,6 +3,7 @@
 // internal
 #include "common.hpp"
 #include "traffic_cop.hpp"
+#include "background.hpp"
 
 // stlib
 #include <vector>
@@ -49,6 +50,7 @@ private:
 
 	// Game entities
 	TrafficCop m_traffic_cop;
+	Background m_background;
 
 	float m_world_scale;
 

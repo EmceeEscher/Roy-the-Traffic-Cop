@@ -103,6 +103,7 @@ bool World::init(vec2 screen)
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
+	m_background.init();
 	return m_traffic_cop.init();
 }
 
@@ -115,6 +116,7 @@ void World::destroy()
 	Mix_CloseAudio();
 
 	m_traffic_cop.destroy();
+	m_background.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -149,7 +151,7 @@ void World::draw()
 	// Clearing backbuffer
 	glViewport(0, 0, w, h);
 	glDepthRange(0.00001, 10);
-	const float clear_color[3] = { 0.3f, 0.3f, 0.8f };
+	const float clear_color[3] = { 0.f, 0.f, 0.f };
 	glClearColor(clear_color[0], clear_color[1], clear_color[2], 1.0);
 	glClearDepth(1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -167,7 +169,9 @@ void World::draw()
 	float ty = -(top + bottom) / (top - bottom);
 	mat3 projection_2D{ { sx, 0.f, 0.f },{ 0.f, sy, 0.f },{ tx, ty, 1.f } };
 
+	m_background.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
+	
 
 	// Presenting
 	glfwSwapBuffers(m_window);
