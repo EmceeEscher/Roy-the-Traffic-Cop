@@ -40,4 +40,6 @@ cmake_install.cmake
 
 Roy_the_Traffic_Cop
 Roy_the_Traffic_Cop.cbp
+/visual_studio/tmp/
+/visual_studio/Debug/
 /visual_studio/.vs/a1/v15
