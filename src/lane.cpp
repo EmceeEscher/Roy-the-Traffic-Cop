@@ -6,7 +6,7 @@
 #include <algorithm>
 
 // Releases all graphics resources
-bool Lane::init()
+bool Lane::init(float world_scale)
 {
 	m_cars = new Car[MaxCarsPerLane];
 	return true;
@@ -26,4 +26,3 @@ Car* Lane::get_cars() const
 {
     return m_cars;
 }
-

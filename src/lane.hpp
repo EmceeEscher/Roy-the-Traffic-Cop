@@ -9,7 +9,7 @@ public:
 	const int MaxCarsPerLane = 5;
 
 	// Creates instance
-	bool init();
+	bool init(float world_scale);
 
 	// Releases instance
 	void destroy();

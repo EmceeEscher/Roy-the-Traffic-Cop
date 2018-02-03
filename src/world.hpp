@@ -37,6 +37,9 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
+	// Returns the scale between window coordinates/game coordinates (for high-density displays)
+	float get_world_scale();
+
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -52,7 +55,7 @@ private:
 	// Game entities
 	TrafficCop m_traffic_cop;
 	Background m_background;
-	//Just a single car to show for now. 
+	//Just a single car to show for now.
 	Car m_car;
 	//std::vector<Car> m_cars;
 
