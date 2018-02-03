@@ -103,9 +103,9 @@ bool World::init(vec2 screen)
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
-	m_background.init();
-	m_car.init();
-	return m_traffic_cop.init();
+	m_background.init(m_world_scale);
+	m_car.init(m_world_scale);
+	return m_traffic_cop.init(m_world_scale);
 }
 
 // Releases all the associated resources
@@ -174,8 +174,8 @@ void World::draw()
 	m_background.draw(projection_2D);
 	m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
-	
-	
+
+
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -200,4 +200,8 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+}
+
+float World::get_world_scale() {
+	return m_world_scale;
 }

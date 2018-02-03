@@ -7,7 +7,7 @@
 
 Texture Car::car_texture;
 
-bool Car::init()
+bool Car::init(float world_scale)
 {
 	// Load shared texture
 	if (!car_texture.is_valid())
@@ -20,8 +20,8 @@ bool Car::init()
 	}
 
 	// The position (0,0) corresponds to the center of the texture
-	float wr = car_texture.width * 0.5;
-	float hr = car_texture.height * 0.5;
+	float wr = car_texture.width * 0.5 * world_scale;
+	float hr = car_texture.height * 0.5 * world_scale;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, 0.f };
@@ -62,7 +62,7 @@ bool Car::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 350.f, 537.f };
+	m_position = { 350.f * world_scale, 537.f * world_scale};
 	//m_rotation = 0.f;
 
 	return true;
@@ -131,7 +131,7 @@ void Car::draw(const mat3& projection)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-// returns the local bounding coordinates scaled by the current size of the car 
+// returns the local bounding coordinates scaled by the current size of the car
 vec2 Car::get_bounding_box()const
 {
 	// fabs is to avoid negative scale due to the facing direction
@@ -150,7 +150,7 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	m_position.x += off.x; 
+	m_position.x += off.x;
 	m_position.y += off.y;
 }
 
@@ -158,5 +158,3 @@ void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
 }
-
-
