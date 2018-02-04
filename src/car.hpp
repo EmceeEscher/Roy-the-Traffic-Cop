@@ -1,17 +1,10 @@
 #pragma once
 
 #include "common.hpp"
+#include "direction.hpp"
 #include <string>
 
 using std::string;
-
-enum class direction : int
-{
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST,
-};
 
 class Car : public Renderable
 {

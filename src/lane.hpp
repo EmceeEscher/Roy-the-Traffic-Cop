@@ -5,7 +5,7 @@
 
 #include <vector>
 
-class Lane : public Renderable
+class Lane
 {
 public:
 	const int MaxCarsPerLane = 4;
