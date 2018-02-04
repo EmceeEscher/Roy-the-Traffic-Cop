@@ -23,5 +23,5 @@ public:
     void turn_car(direction dir);
 
 private:
-    Map<direction, Lane> lanes;
+    std::map<direction, Lane> lanes;
 };
