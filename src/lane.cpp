@@ -1,12 +1,13 @@
 // Header
 #include "lane.hpp"
 
-bool Lane::init(float world_scale)
+Lane::Lane(float world_scale, direction dir)
 {
-	return true;
+	m_world_scale = world_scale;
+	m_dir = dir;
 }
 
-void Lane::destroy()
+Lane::~Lane()
 {
 	m_cars.clear();
 }
@@ -30,7 +31,7 @@ void Lane::add_car(Car new_car)
 	}
 }
 
-void Lane::remove_car()
+void Lane::turn_car()
 {
 	if (m_cars.size() > 0) {
 		//m_cars[0].turn(); //tell the car at the front of the lane to turn

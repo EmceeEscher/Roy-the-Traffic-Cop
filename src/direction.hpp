@@ -1,3 +1,5 @@
+#pragma once
+
 enum class direction : int
 {
 	NORTH,

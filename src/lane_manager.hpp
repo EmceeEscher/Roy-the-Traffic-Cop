@@ -1,7 +1,7 @@
 #pragma once
 
-#include "lane.cpp"
-#include "car.cpp"
+#include "lane.hpp"
+#include "car.hpp"
 #include "direction.hpp"
 
 #include <map>
@@ -11,7 +11,7 @@ class LaneManager
 public:
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
-    bool init();
+    bool init(float world_scale);
 
     // Releases instance
     void destroy();
@@ -23,5 +23,5 @@ public:
     void turn_car(direction dir);
 
 private:
-    std::map<direction, Lane> lanes;
+    std::map<direction, Lane*> lanes;
 };

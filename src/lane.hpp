@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "car.hpp"
+#include "direction.hpp"
 
 #include <vector>
 
@@ -10,11 +11,9 @@ class Lane
 public:
 	const int MaxCarsPerLane = 4;
 
-	// Creates instance
-	bool init(float world_scale);
-
-	// Releases instance
-	void destroy();
+    // constructor/destructor
+    Lane(float world_scale, direction dir);
+    ~Lane();
 
 	// Returns the current time remaining on the timer
     float get_time_remaining() const;
@@ -26,7 +25,7 @@ public:
     void add_car(Car new_car);
 
     // Removes the car at the front of the lane
-    void remove_car();
+    void turn_car();
 
     // Returns true if the lane has MaxCarsPerLane cars in it
     bool is_lane_full() const;
@@ -34,4 +33,6 @@ public:
 private:
     std::vector<Car> m_cars; // Cars in the lane
     float m_time_remaining; // Time remaining on timer of car at front of lane
+    float m_world_scale;
+    direction m_dir;
 };

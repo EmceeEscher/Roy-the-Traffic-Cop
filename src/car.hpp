@@ -10,6 +10,12 @@ class Car : public Renderable
 {
 	static Texture car_texture;
 public:
+
+	//constructor/destructor (call init/destroy)
+	// TODO: move body of init/destroy to constructor/destructor
+	// Car(float world_scale);
+	// ~Car();
+
 	// Creates all the associated render resources and default transform
 	bool init(float world_scale);
 
