@@ -53,6 +53,10 @@ void Lane::turn_car()
 		//m_cars[0].turn(); //tell the car at the front of the lane to turn
 		//wait for first car to finish turning...
 		m_cars.erase(m_cars.begin()); //Will this work? have to be careful that it won't delete the car mid-turn. Might need to like pass this as a callback or something...
+		for(std::vector<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
+		{
+			//*it.advance(); //<-- tell remaining cars to move up in the lane
+		}
 	} else {
 		//throw error...
 	}
