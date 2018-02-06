@@ -30,6 +30,7 @@ bool LaneManager::update(float ms)
     this->add_car();
     m_time_remaining = m_time_per_action;
   }
+  return true;
 }
 
 void LaneManager::add_car()

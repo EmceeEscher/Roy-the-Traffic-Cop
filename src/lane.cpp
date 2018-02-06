@@ -31,6 +31,7 @@ bool Lane::update(float ms)
 		this->turn_car();
 		m_time_remaining = m_max_time_per_car;
 	}
+	return true;
 }
 
 void Lane::add_car()
