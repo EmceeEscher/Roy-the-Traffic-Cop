@@ -50,8 +50,13 @@ private:
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
 	size_t m_num_indices; // passed to glDrawElements
-	float m_current_speed;
-	float m_x_dir;
-	float m_y_dir;
+	//float m_current_speed;
+	//float m_x_dir;
+	//float m_y_dir;
+	vec2 m_velocity;
+	vec2 m_acceleration;
+	int at_intersection;
+	vec2 m_displacement;
+	int lane;
 	direction m_desired_direction;
 };

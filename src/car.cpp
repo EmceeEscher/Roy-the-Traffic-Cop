@@ -62,7 +62,8 @@ bool Car::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 350.f, 537.f };
+	m_position = { 50.f, 537.f };
+	m_velocity = { 50.0f, .0f };
 	//m_rotation = 0.f;
 
 	return true;
@@ -84,6 +85,11 @@ void Car::destroy()
 void Car::update(float ms)
 {
 	// TODO: Implement Update Car [Theo, Mason]
+	if (!at_intersection) {
+		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+		move(m_displacement);
+	}
+
 }
 
 void Car::draw(const mat3& projection)

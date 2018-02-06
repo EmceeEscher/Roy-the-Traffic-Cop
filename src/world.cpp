@@ -7,6 +7,8 @@
 #include <sstream>
 #include <math.h>
 
+#define PI 3.14159265
+
 // Same as static in c, local to compilation unit
 namespace
 {
@@ -100,6 +102,11 @@ bool World::init(vec2 screen)
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 
+	lanes[0] = PI;
+	lanes[1] = PI/2.f;
+	lanes[2] = 0;
+	lanes[3] = 3.f*PI/2.f;
+
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
@@ -130,7 +137,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
-
+	m_car.update(elapsed_ms);
 	return true;
 }
 
@@ -193,6 +200,14 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE KEY PRESSES HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
+		m_traffic_cop.set_rotation(lanes[0]);
+	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
+		m_traffic_cop.set_rotation(lanes[2]);
+	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+		m_traffic_cop.set_rotation(lanes[1]);
+	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
+		m_traffic_cop.set_rotation(lanes[3]);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

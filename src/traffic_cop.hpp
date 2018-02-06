@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 
+
 using std::string;
 
 class TrafficCop : public Renderable

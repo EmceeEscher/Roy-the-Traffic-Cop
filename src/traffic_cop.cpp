@@ -80,11 +80,13 @@ void TrafficCop::destroy()
 	glDeleteShader(effect.program);
 }
 
+
 void TrafficCop::draw(const mat3& projection)
 {
 	transform_begin();
 	transform_scale(m_scale);
 	transform_translate(m_position);
+	transform_rotate(m_rotation);
 	transform_end();
 
 	// Setting shaders

@@ -61,6 +61,8 @@ private:
 
 	bool m_advanced_features;
 
+	float lanes[4];
+
 	Mix_Music* m_background_music;
 
 	// C++ rng
