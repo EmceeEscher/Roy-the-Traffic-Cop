@@ -7,15 +7,6 @@
 
 Texture Car::car_texture;
 
-// Car::Car(float world_scale)
-// {
-// 	this->init(world_scale);
-// }
-//
-// Car::~Car(){
-// 	this->destroy();
-// }
-
 bool Car::init(float world_scale)
 {
 	// Load shared texture

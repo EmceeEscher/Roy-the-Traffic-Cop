@@ -16,6 +16,9 @@ public:
     // Releases instance
     void destroy();
 
+    // Moves the game ahead by ms milliseconds
+    bool update(float ms);
+
     // Will try to add a car that will be frustrating for player
     void add_car();
 
@@ -23,5 +26,7 @@ public:
     void turn_car(direction dir);
 
 private:
-    std::map<direction, Lane*> lanes;
+    std::map<direction, Lane*> m_lanes;
+    float const m_time_per_action = 5000;
+    float m_time_remaining;
 };

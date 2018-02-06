@@ -2,17 +2,34 @@
 
 bool LaneManager::init(float world_scale)
 {
-  lanes[direction::NORTH] = new Lane(world_scale, direction::NORTH);
-  lanes[direction::EAST] = new Lane(world_scale, direction::EAST);
-  lanes[direction::SOUTH] = new Lane(world_scale, direction::SOUTH);
-  lanes[direction::WEST] = new Lane(world_scale, direction::WEST);
+  m_lanes[direction::NORTH] = new Lane(world_scale, direction::NORTH);
+  m_lanes[direction::EAST] = new Lane(world_scale, direction::EAST);
+  m_lanes[direction::SOUTH] = new Lane(world_scale, direction::SOUTH);
+  m_lanes[direction::WEST] = new Lane(world_scale, direction::WEST);
+
+  m_time_remaining = m_time_per_action;
 
   return true;
 }
 
 void LaneManager::destroy()
 {
-  lanes.clear();
+  m_lanes.clear();
+}
+
+bool LaneManager::update(float ms)
+{
+  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+  {
+    it->second->update(ms);
+  }
+
+  m_time_remaining -= ms;
+  if (m_time_remaining <= 0)
+  {
+    this->add_car();
+    m_time_remaining = m_time_per_action;
+  }
 }
 
 void LaneManager::add_car()
@@ -22,5 +39,5 @@ void LaneManager::add_car()
 
 void LaneManager::turn_car(direction dir)
 {
-  lanes[dir]->turn_car();
+  m_lanes[dir]->turn_car();
 }

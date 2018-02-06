@@ -5,6 +5,7 @@
 #include "traffic_cop.hpp"
 #include "background.hpp"
 #include "car.hpp"
+#include "lane_manager.hpp"
 
 // stlib
 #include <vector>
@@ -55,6 +56,7 @@ private:
 	// Game entities
 	TrafficCop m_traffic_cop;
 	Background m_background;
+	LaneManager m_lane_manager;
 	//Just a single car to show for now.
 	Car m_car;
 	//std::vector<Car> m_cars;

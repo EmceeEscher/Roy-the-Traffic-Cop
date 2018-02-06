@@ -105,6 +105,7 @@ bool World::init(vec2 screen)
 
 	m_background.init(m_world_scale);
 	m_car.init(m_world_scale);
+	//m_lane_manager.init(m_world_scale);
 	return m_traffic_cop.init(m_world_scale);
 }
 
@@ -130,6 +131,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
+	//m_lane_manager.update(elapsed_ms);
 
 	return true;
 }
