@@ -34,16 +34,15 @@ bool Lane::update(float ms)
 	return true;
 }
 
-void Lane::add_car()
+void Lane::add_car(carType type)
 {
 	if (m_cars.size() < MaxCarsPerLane) {
+		// change following code based on carType once we have more than one
 		Car new_car;
 		if(new_car.init(m_world_scale)){
 			m_cars.emplace_back(new_car);
 			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
 		}
-	} else {
-		//throw error? How do I do that in C++...
 	}
 }
 
@@ -57,8 +56,6 @@ void Lane::turn_car()
 		{
 			//*it.advance(); //<-- tell remaining cars to move up in the lane
 		}
-	} else {
-		//throw error...
 	}
 }
 

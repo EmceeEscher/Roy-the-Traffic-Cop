@@ -3,8 +3,10 @@
 #include "lane.hpp"
 #include "car.hpp"
 #include "direction.hpp"
+#include "car_type.hpp"
 
 #include <map>
+#include <string>
 
 class LaneManager
 {

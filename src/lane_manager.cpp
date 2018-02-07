@@ -35,7 +35,25 @@ bool LaneManager::update(float ms)
 
 void LaneManager::add_car()
 {
-  //TODO: this function
+  int longest_line = 0;
+  for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+  {
+    int cars_in_lane = it->second->get_cars().size();
+    if (cars_in_lane > longest_line)
+    {
+      longest_line = cars_in_lane;
+    }
+  }
+
+  for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+  {
+    int cars_in_lane = it->second->get_cars().size();
+    if ((cars_in_lane < longest_line || it->first == direction::WEST) && !it->second->is_lane_full())
+    {
+      it->second->add_car(carType::REGULAR);
+      break;
+    }
+  }
 }
 
 void LaneManager::turn_car(direction dir)
