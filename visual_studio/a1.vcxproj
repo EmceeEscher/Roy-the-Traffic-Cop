@@ -36,7 +36,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FECE120D-1285-32A0-BDFC-6FFF4B04D800}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>Win32</Platform>
     <ProjectName>Roy-the-Traffic-Cop</ProjectName>

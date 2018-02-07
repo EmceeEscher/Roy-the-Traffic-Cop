@@ -102,16 +102,19 @@ bool World::init(vec2 screen)
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 
-	lanes[0] = PI;
-	lanes[1] = PI/2.f;
-	lanes[2] = 0;
-	lanes[3] = 3.f*PI/2.f;
+	lanes_rot[0] = PI;
+	lanes_rot[1] = PI/2.f;
+	lanes_rot[2] = 0;
+	lanes_rot[3] = 3.f*PI/2.f;
+	
+	lanes_pos[1] = { 400.f, 540.f };
 
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
 	m_background.init();
 	m_car.init();
+	m_car.set_lane(1);
 	return m_traffic_cop.init();
 }
 
@@ -137,6 +140,11 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
+	if (m_car.get_position().x >= lanes_pos[1].x && m_car.get_acc().x > 0.f)
+	{
+		printf("Here");
+		m_car.slow_down();
+	}
 	m_car.update(elapsed_ms);
 	return true;
 }
@@ -201,13 +209,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// HANDLE KEY PRESSES HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
-		m_traffic_cop.set_rotation(lanes[0]);
+		m_traffic_cop.set_rotation(lanes_rot[0]);
 	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
-		m_traffic_cop.set_rotation(lanes[2]);
+		m_traffic_cop.set_rotation(lanes_rot[2]);
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
-		m_traffic_cop.set_rotation(lanes[1]);
+		m_traffic_cop.set_rotation(lanes_rot[1]);
 	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
-		m_traffic_cop.set_rotation(lanes[3]);
+		m_traffic_cop.set_rotation(lanes_rot[3]);
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

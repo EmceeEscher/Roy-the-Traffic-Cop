@@ -45,6 +45,21 @@ public:
 	// Set rotation in radians
 	void set_rotation(float radians);
 
+	// Set the lane associated with car
+	void set_lane(int n);
+	// Get the lane number associated with car
+	int get_lane();
+
+	// Let the car to decelerate
+	void slow_down();
+
+	// Get the acceleration
+	vec2 get_acc();
+
+	// Get the velocity
+	vec2 get_vel();
+
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -57,6 +72,6 @@ private:
 	vec2 m_acceleration;
 	int at_intersection;
 	vec2 m_displacement;
-	int lane;
+	int m_lane;
 	direction m_desired_direction;
 };

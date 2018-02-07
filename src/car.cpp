@@ -63,7 +63,8 @@ bool Car::init()
 	m_scale.x = 1;
 	m_scale.y = 1;
 	m_position = { 50.f, 537.f };
-	m_velocity = { 50.0f, .0f };
+	m_velocity = { 30.0f, .0f };
+	m_acceleration = { 10.f, .0f };
 	//m_rotation = 0.f;
 
 	return true;
@@ -86,6 +87,9 @@ void Car::update(float ms)
 {
 	// TODO: Implement Update Car [Theo, Mason]
 	if (!at_intersection) {
+		m_velocity.x += m_acceleration.x;
+		m_velocity.y += m_acceleration.y;
+		printf("%f",m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
 	}
@@ -160,9 +164,34 @@ void Car::move(vec2 off)
 	m_position.y += off.y;
 }
 
+void Car::set_lane(int n)
+{
+	m_lane = n;
+}
+
+int Car::get_lane()
+{
+	return m_lane;
+}
+
 void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
 }
 
+void Car::slow_down()
+{
+	m_acceleration.x *= -1.f;
+	m_acceleration.y = 0.f;
+}
+
+vec2 Car::get_acc()
+{
+	return m_acceleration;
+}
+
+vec2 Car::get_vel()
+{
+	return m_velocity;
+}
 

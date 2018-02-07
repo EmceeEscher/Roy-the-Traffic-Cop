@@ -61,7 +61,8 @@ private:
 
 	bool m_advanced_features;
 
-	float lanes[4];
+	float lanes_rot[4];
+	vec2 lanes_pos[4];
 
 	Mix_Music* m_background_music;
 
