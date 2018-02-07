@@ -3,6 +3,8 @@
 // internal
 #include "common.hpp"
 #include "traffic_cop.hpp"
+#include "background.hpp"
+#include "car.hpp"
 
 // stlib
 #include <vector>
@@ -35,6 +37,9 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
+	// Returns the scale between window coordinates/game coordinates (for high-density displays)
+	float get_world_scale();
+
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
@@ -44,11 +49,16 @@ private:
 	// Window handle
 	GLFWwindow* m_window;
 
-	// Number of fish eaten by the salmon, displayed in the window title
+	// Currency earned
 	unsigned int m_points;
 
 	// Game entities
 	TrafficCop m_traffic_cop;
+	Background m_background;
+	//Just a single car to show for now.
+	Car m_car;
+	//std::vector<Car> m_cars;
+
 
 	float m_world_scale;
 

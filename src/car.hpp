@@ -15,9 +15,10 @@ enum class direction : int
 
 class Car : public Renderable
 {
+	static Texture car_texture;
 public:
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(float world_scale);
 
 	// Releases all associated resources
 	void destroy();
@@ -37,6 +38,9 @@ public:
 
 	// Moves the position by the specified offset
 	void move(vec2 off);
+
+	// Returns the turtle' bounding box for collision detection, called by collides_with()
+	vec2 get_bounding_box()const;
 
 	// Set rotation in radians
 	void set_rotation(float radians);

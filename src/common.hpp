@@ -2,6 +2,7 @@
 
 // stlib
 #include <fstream> // stdout, stderr..
+#include <cmath>
 
 // glfw
 #define NOMINMAX
@@ -61,14 +62,14 @@ struct Texture
 	GLuint id;
 	int width;
 	int height;
-	
+
 	// Loads texture from file specified by path
 	bool load_from_file(const char* path);
 	bool is_valid()const; // True if texture is valid
 };
 
 // A Mesh is a collection of a VertexBuffer and an IndexBuffer. A VAO
-// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and 
+// represents a Vertex Array Object and is the container for 1 or more Vertex Buffers and
 // an Index Buffer
 struct Mesh
 {
