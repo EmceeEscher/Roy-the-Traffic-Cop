@@ -45,23 +45,22 @@ public:
 	// Set rotation in radians
 	void set_rotation(float radians);
 
-	// Set the lane associated with car
+	// get or set the lane associated with car
 	void set_lane(int n);
-	// Get the lane number associated with car
 	int get_lane();
 
-	// Let the car to decelerate
+	// car to slows down to stop sign or speeds away
 	void slow_down();
+	void speed_up();
 
-	// Get the acceleration
+	// get acceleration, velocity, max_speed
 	vec2 get_acc();
-
-	// Get the velocity
 	vec2 get_vel();
-
-	// Get max speed
 	float get_max_speed();
 
+	// get or set intersection state; 0=In line, 1=In intersection
+	void set_at_intersection(int state);
+	int get_at_intersection();
 
 private:
 	vec2 m_position; // Window coordinates

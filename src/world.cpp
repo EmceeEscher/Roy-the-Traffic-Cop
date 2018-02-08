@@ -8,6 +8,7 @@
 #include <math.h>
 
 #define PI 3.14159265
+#define OFF_SCREEN 1000
 
 // Same as static in c, local to compilation unit
 namespace
@@ -103,9 +104,9 @@ bool World::init(vec2 screen)
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 
 	lanes_rot[0] = PI;
-	lanes_rot[1] = PI/2.f;
+	lanes_rot[1] = PI/2.0;
 	lanes_rot[2] = 0;
-	lanes_rot[3] = 3.f*PI/2.f;
+	lanes_rot[3] = 3.0*PI/2.0;
 	
 	lanes_pos[1] = { 400.f, 540.f };
 
@@ -136,15 +137,20 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	int w, h;
-        glfwGetFramebufferSize(m_window, &w, &h);
+    glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
-	if (m_car.get_position().x >= lanes_pos[1].x - 160.f && m_car.get_acc().x > 0.f)
+	//TODO: make this work for other cars.
+	// With init_vel=15.f, acc=3.f, call slow down 160.f away from target
+	if (m_car.get_position().x >= lanes_pos[1].x - 160.f && m_car.get_acc().x > 0.f && m_car.get_at_intersection() == 0)
 	{
 		m_car.slow_down();
 	}
 	m_car.update(elapsed_ms);
+	if (m_car.get_position().x > OFF_SCREEN) {
+		// TODO: why does this make the car huge? 
+		//m_car.destroy(); 
+	}
 	return true;
 }
 
@@ -212,7 +218,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
 		m_traffic_cop.set_rotation(lanes_rot[2]);
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+	{
 		m_traffic_cop.set_rotation(lanes_rot[1]);
+		if(m_car.get_vel().x <= 0.f) {
+			m_car.set_at_intersection(1); // 1 means car has left stop sign
+			m_car.speed_up();
+		}
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
 		m_traffic_cop.set_rotation(lanes_rot[3]);
 }

@@ -66,6 +66,7 @@ bool Car::init()
 	m_velocity = { 15.0f, .0f };
 	m_acceleration = { 3.f, .0f };
 	m_max_speed = { 200.f };
+	at_intersection = 0;
 	//m_rotation = 0.f;
 
 	return true;
@@ -87,23 +88,19 @@ void Car::destroy()
 void Car::update(float ms)
 {
 	// TODO: Implement Update Car [Theo, Mason]
-	if (!at_intersection) {
-		if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
-			m_velocity.x += m_acceleration.x;
-			m_velocity.y += m_acceleration.y;
-		}
-		else if (m_velocity.x < 0.f){
-			m_velocity.x = 0.f;
-		}
-		else if (m_velocity.x > m_max_speed) {
-			m_velocity.x = m_max_speed;
-		}
-		printf("%f\n", m_velocity.x);
-		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
-		move(m_displacement);
-
+	if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+		m_velocity.x += m_acceleration.x;
+		m_velocity.y += m_acceleration.y;
 	}
-
+	else if (m_velocity.x < 0.f){
+		m_velocity.x = 0.f;
+	}
+	else if (m_velocity.x > m_max_speed) {
+		m_velocity.x = m_max_speed;
+	}
+	//printf("%f", m_velocity.x);
+	vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+	move(m_displacement);
 }
 
 void Car::draw(const mat3& projection)
@@ -196,6 +193,11 @@ void Car::slow_down()
 	m_acceleration.y = 0.f;
 }
 
+void Car::speed_up() {
+	m_acceleration.x *= -1.f;
+	m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+}
+
 vec2 Car::get_acc()
 {
 	return m_acceleration;
@@ -209,5 +211,13 @@ vec2 Car::get_vel()
 float Car::get_max_speed()
 {
 	return m_max_speed;
+}
+
+void Car::set_at_intersection(int state) {
+	at_intersection = state;
+}
+int Car::get_at_intersection() 
+{
+	return at_intersection;
 }
 
