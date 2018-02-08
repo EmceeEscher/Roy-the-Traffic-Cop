@@ -62,9 +62,10 @@ bool Car::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 50.f, 537.f };
-	m_velocity = { 30.0f, .0f };
-	m_acceleration = { 10.f, .0f };
+	m_position = { 5.f, 537.f };
+	m_velocity = { 15.0f, .0f };
+	m_acceleration = { 3.f, .0f };
+	m_max_speed = { 200.f };
 	//m_rotation = 0.f;
 
 	return true;
@@ -87,11 +88,20 @@ void Car::update(float ms)
 {
 	// TODO: Implement Update Car [Theo, Mason]
 	if (!at_intersection) {
-		m_velocity.x += m_acceleration.x;
-		m_velocity.y += m_acceleration.y;
-		printf("%f",m_velocity.x);
+		if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+			m_velocity.x += m_acceleration.x;
+			m_velocity.y += m_acceleration.y;
+		}
+		else if (m_velocity.x < 0.f){
+			m_velocity.x = 0.f;
+		}
+		else if (m_velocity.x > m_max_speed) {
+			m_velocity.x = m_max_speed;
+		}
+		printf("%f\n", m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
+
 	}
 
 }
@@ -181,6 +191,7 @@ void Car::set_rotation(float radians)
 
 void Car::slow_down()
 {
+	m_velocity.x = m_max_speed-m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 	m_acceleration.x *= -1.f;
 	m_acceleration.y = 0.f;
 }
@@ -193,5 +204,10 @@ vec2 Car::get_acc()
 vec2 Car::get_vel()
 {
 	return m_velocity;
+}
+
+float Car::get_max_speed()
+{
+	return m_max_speed;
 }
 

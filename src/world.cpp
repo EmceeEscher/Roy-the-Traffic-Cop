@@ -140,9 +140,8 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
-	if (m_car.get_position().x >= lanes_pos[1].x && m_car.get_acc().x > 0.f)
+	if (m_car.get_position().x >= lanes_pos[1].x - 160.f && m_car.get_acc().x > 0.f)
 	{
-		printf("Here");
 		m_car.slow_down();
 	}
 	m_car.update(elapsed_ms);

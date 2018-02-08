@@ -59,6 +59,9 @@ public:
 	// Get the velocity
 	vec2 get_vel();
 
+	// Get max speed
+	float get_max_speed();
+
 
 private:
 	vec2 m_position; // Window coordinates
@@ -74,4 +77,5 @@ private:
 	vec2 m_displacement;
 	int m_lane;
 	direction m_desired_direction;
+	float m_max_speed;
 };
