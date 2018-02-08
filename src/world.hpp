@@ -5,6 +5,7 @@
 #include "traffic_cop.hpp"
 #include "background.hpp"
 #include "car.hpp"
+#include "game_timer.hpp"
 
 // stlib
 #include <vector>
@@ -53,6 +54,7 @@ private:
 	unsigned int m_points;
 
 	// Game entities
+	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
 	Background m_background;
 	//Just a single car to show for now.

@@ -105,6 +105,7 @@ bool World::init(vec2 screen)
 
 	m_background.init(m_world_scale);
 	m_car.init(m_world_scale);
+	m_game_timer.init(m_world_scale);
 	return m_traffic_cop.init(m_world_scale);
 }
 
@@ -128,6 +129,9 @@ bool World::update(float elapsed_ms)
 	int w, h;
         glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
+
+	m_game_timer.advance_time(elapsed_ms / 1000);
+	m_game_timer.get_current_time_string();
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 
