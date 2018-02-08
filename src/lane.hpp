@@ -34,6 +34,12 @@ public:
     // Returns true if the lane has MaxCarsPerLane cars in it
     bool is_lane_full() const;
 
+    // Returns true if the lane has at least 1 vehicle in it
+    bool is_lane_empty() const;
+
+    // Erases the first car in the lane. (Call this after that car has finished turning)
+    void erase_first_car();
+
 private:
     std::vector<Car> m_cars; // Cars in the lane
     float const m_max_time_per_car = 20000; // Max time before a car will turn
