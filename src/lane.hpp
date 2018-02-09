@@ -30,8 +30,8 @@ public:
     Car* get_cars() const;
 
 private:
-    Car* m_cars; // Cars in the lane
-    float m_time_remaining; // Time remaining on timer
+  Car* m_cars; // Cars in the lane
+  float m_time_remaining; // Time remaining on timer
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
 };

@@ -2,14 +2,14 @@
 
 #include "common.hpp"
 
-// Background 
+// Background
 class Background : public Renderable
 {
 	static Texture background_texture;
 
 public:
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(float world_scale);
 
 	// Releases all the associated resources
 	void destroy();

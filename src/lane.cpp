@@ -45,4 +45,3 @@ Car* Lane::get_cars() const
 {
     return m_cars;
 }
-

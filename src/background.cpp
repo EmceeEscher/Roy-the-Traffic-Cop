@@ -1,11 +1,12 @@
 // Header
 #include "background.hpp"
+#include "world.hpp"
 
 #include <cmath>
 
 Texture Background::background_texture;
 
-bool Background::init()
+bool Background::init(float world_scale)
 {
 	// Load shared texture
 	if (!background_texture.is_valid())
@@ -16,12 +17,11 @@ bool Background::init()
 			return false;
 		}
 	}
-
 	// The position (0,0) corresponds to the center of the texture
-	float wr = background_texture.width * 0.5;
-	float hr = background_texture.height * 0.5;
+	float wr = background_texture.width * 0.5 * world_scale;
+	float hr = background_texture.height * 0.5 * world_scale;
 
-	TexturedVertex vertices[4]; 
+	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, 0.f };
 	vertices[0].texcoord = { 0.f, 1.f };//top left
 	vertices[1].position = { +wr, +hr, 0.f };
@@ -36,7 +36,7 @@ bool Background::init()
 
 	// Clearing errors
 	gl_flush_errors();
-	
+
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
@@ -60,7 +60,7 @@ bool Background::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 500.f, 500.f };
+	m_position = { 500.f * world_scale, 500.f * world_scale};
 	//m_rotation = 0.f;
 
 	return true;
@@ -126,7 +126,7 @@ void Background::draw(const mat3& projection)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-// returns the local bounding coordinates scaled by the current size of the background 
+// returns the local bounding coordinates scaled by the current size of the background
 vec2 Background::get_bounding_box()const
 {
 	// fabs is to avoid negative scale due to the facing direction

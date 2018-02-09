@@ -199,8 +199,8 @@ void World::draw()
 	m_background.draw(projection_2D);
 	m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
-	
-	
+
+
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -241,4 +241,8 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+}
+
+float World::get_world_scale() {
+	return m_world_scale;
 }

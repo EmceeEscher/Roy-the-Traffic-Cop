@@ -10,7 +10,7 @@ class TrafficCop : public Renderable
 	static Texture cop_texture;
 public:
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(float world_scale);
 
 	// Releases all associated resources
 	void destroy();

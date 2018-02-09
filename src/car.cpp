@@ -8,7 +8,7 @@
 
 Texture Car::car_texture;
 
-bool Car::init()
+bool Car::init(float world_scale)
 {
 	// Load shared texture
 	if (!car_texture.is_valid())
@@ -21,6 +21,7 @@ bool Car::init()
 	}
 
 	// The position (0,0) corresponds to the center of the texture
+  
 	m_wr = car_texture.width * 0.5;
 	m_hr = car_texture.height * 0.5;
 
@@ -149,7 +150,7 @@ void Car::draw(const mat3& projection)
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }
-// returns the local bounding coordinates scaled by the current size of the car 
+// returns the local bounding coordinates scaled by the current size of the car
 vec2 Car::get_bounding_box()const
 {
 	// fabs is to avoid negative scale due to the facing direction
@@ -168,7 +169,7 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	m_position.x += off.x; 
+	m_position.x += off.x;
 	m_position.y += off.y;
 }
 
@@ -237,4 +238,3 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	else
 		return false;
 }
-
