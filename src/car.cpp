@@ -1,5 +1,6 @@
 // Header
 #include "car.hpp"
+#include "lane.hpp"
 
 // stlib
 #include <vector>
@@ -20,17 +21,17 @@ bool Car::init()
 	}
 
 	// The position (0,0) corresponds to the center of the texture
-	float wr = car_texture.width * 0.5;
-	float hr = car_texture.height * 0.5;
+	m_wr = car_texture.width * 0.5;
+	m_hr = car_texture.height * 0.5;
 
 	TexturedVertex vertices[4];
-	vertices[0].position = { -wr, +hr, 0.f };
+	vertices[0].position = { -m_wr, +m_hr, 0.f };
 	vertices[0].texcoord = { 0.f, 1.f };//top left
-	vertices[1].position = { +wr, +hr, 0.f };
+	vertices[1].position = { +m_wr, +m_hr, 0.f };
 	vertices[1].texcoord = { 1.f, 1.f };//top right
-	vertices[2].position = { +wr, -hr, 0.f };
+	vertices[2].position = { +m_wr, -m_hr, 0.f };
 	vertices[2].texcoord = { 1.f, 0.f };//bottom right
-	vertices[3].position = { -wr, -hr, 0.f };
+	vertices[3].position = { -m_wr, -m_hr, 0.f };
 	vertices[3].texcoord = { 0.f, 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
@@ -66,7 +67,7 @@ bool Car::init()
 	m_velocity = { 15.0f, .0f };
 	m_acceleration = { 3.f, .0f };
 	m_max_speed = { 200.f };
-	at_intersection = 0;
+	m_can_move = false;
 	//m_rotation = 0.f;
 
 	return true;
@@ -213,11 +214,27 @@ float Car::get_max_speed()
 	return m_max_speed;
 }
 
-void Car::set_at_intersection(int state) {
-	at_intersection = state;
-}
-int Car::get_at_intersection() 
+void Car::signal_to_move()
 {
-	return at_intersection;
+	m_can_move = true;
+}
+
+float Car::compute_stopping_dis(float velocity, float acc)
+{
+	// vf*vf = vi*vi + 2*acc*d
+	float dis = (1000.f*1000.f*velocity*velocity) / (2.f * abs(acc*1000.f));
+	return dis + m_wr;
+}
+
+bool Car::is_near_intersection(vec2 lane_pos)
+{
+	float stop_x = lane_pos.x;
+	float stop_y = lane_pos.y;
+	float x_margin = abs(m_position.x - stop_x);
+	float y_margin = abs(m_position.y - stop_y);
+	if (std::max(x_margin, y_margin) <= 160.f && m_position.x <= stop_x && (m_can_move == false))
+		return true;
+	else
+		return false;
 }
 

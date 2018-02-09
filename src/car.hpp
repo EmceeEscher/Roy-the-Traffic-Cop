@@ -53,14 +53,19 @@ public:
 	void slow_down();
 	void speed_up();
 
+	// Set indicator for passage
+	void signal_to_move();
+
 	// get acceleration, velocity, max_speed
 	vec2 get_acc();
 	vec2 get_vel();
 	float get_max_speed();
 
-	// get or set intersection state; 0=In line, 1=In intersection
-	void set_at_intersection(int state);
-	int get_at_intersection();
+	// Intersection Detection
+	bool is_near_intersection(vec2 lane_pos);
+	
+	// Calculation for safe stopping distance
+	float compute_stopping_dis(float velocity, float acc);
 
 private:
 	vec2 m_position; // Window coordinates
@@ -72,9 +77,11 @@ private:
 	//float m_y_dir;
 	vec2 m_velocity;
 	vec2 m_acceleration;
-	int at_intersection;
+	bool m_can_move;
 	vec2 m_displacement;
 	int m_lane;
 	direction m_desired_direction;
 	float m_max_speed;
+	float m_wr;
+	float m_hr;
 };

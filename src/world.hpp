@@ -5,6 +5,7 @@
 #include "traffic_cop.hpp"
 #include "background.hpp"
 #include "car.hpp"
+#include "lane.hpp"
 
 // stlib
 #include <vector>
@@ -62,7 +63,8 @@ private:
 	bool m_advanced_features;
 
 	float lanes_rot[4];
-	vec2 lanes_pos[4];
+	
+	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
 

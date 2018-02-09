@@ -102,13 +102,18 @@ bool World::init(vec2 screen)
 
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
-
+	
+	// Rotation values for each lane
 	lanes_rot[0] = PI;
 	lanes_rot[1] = PI/2.0;
 	lanes_rot[2] = 0;
 	lanes_rot[3] = 3.0*PI/2.0;
 	
-	lanes_pos[1] = { 400.f, 540.f };
+	// Hard coded stop sign positions
+	lanes[0] = { 450.f,400.f };
+	lanes[1] = { 400.f,540.f };
+	lanes[2] = { 550.f,600.f };
+	lanes[3] = { 600.f,450.f };
 
 	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
@@ -142,7 +147,7 @@ bool World::update(float elapsed_ms)
 
 	//TODO: make this work for other cars.
 	// With init_vel=15.f, acc=3.f, call slow down 160.f away from target
-	if (m_car.get_position().x >= lanes_pos[1].x - 160.f && m_car.get_acc().x > 0.f && m_car.get_at_intersection() == 0)
+	if ( m_car.is_near_intersection(lanes[1]) && m_car.get_acc().x > 0.f)
 	{
 		m_car.slow_down();
 	}
@@ -221,7 +226,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	{
 		m_traffic_cop.set_rotation(lanes_rot[1]);
 		if(m_car.get_vel().x <= 0.f) {
-			m_car.set_at_intersection(1); // 1 means car has left stop sign
+			m_car.signal_to_move(); // signal car to move
+
+			// I removed the condition functions, we will later use a queue to do this
 			m_car.speed_up();
 		}
 	}
