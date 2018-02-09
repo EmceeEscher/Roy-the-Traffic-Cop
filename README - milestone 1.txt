@@ -11,5 +11,6 @@ Things implemented for the first milestone:
 - Displays background, car, and traffic cop sprites
 - Plays background music
 - Car spawns offscreen and moves up to the stop line on its own
+- When the player presses an arrow key, Roy the traffic cop will rotate to face that direction
 - After the car is at the stop line, when the user presses the left arrow key,
-  the car advances to the right and the traffic cop turns
+  the car advances to the right
