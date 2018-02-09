@@ -8,7 +8,7 @@
 
 Texture Car::car_texture;
 
-bool Car::init(float world_scale)
+bool Car::init()
 {
 	// Load shared texture
 	if (!car_texture.is_valid())

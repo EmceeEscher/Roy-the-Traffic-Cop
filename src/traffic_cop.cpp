@@ -7,7 +7,7 @@
 
 Texture TrafficCop::cop_texture;
 
-bool TrafficCop::init(float world_scale)
+bool TrafficCop::init()
 {
 	// Load shared texture
 	if (!cop_texture.is_valid())
@@ -20,8 +20,8 @@ bool TrafficCop::init(float world_scale)
 	}
 
 	// The position (0,0) corresponds to the center of the texture
-	float wr = cop_texture.width * 0.5 * world_scale;
-	float hr = cop_texture.height * 0.5 * world_scale;
+	float wr = cop_texture.width * 0.5;
+	float hr = cop_texture.height * 0.5;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, 0.f };
@@ -62,7 +62,7 @@ bool TrafficCop::init(float world_scale)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 500.f * world_scale, 500.f * world_scale};
+	m_position = { 500.f, 500.f};
 	//m_rotation = 0.f;
 
 	return true;
