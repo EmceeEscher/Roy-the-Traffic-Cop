@@ -226,7 +226,7 @@ float Car::compute_stopping_dis(float velocity, float acc)
 	return dis + m_wr;
 }
 
-bool Car::is_near_intersection(vec2 lane_pos)
+bool Car::is_approaching_stop(vec2 lane_pos)
 {
 	float stop_x = lane_pos.x;
 	float stop_y = lane_pos.y;

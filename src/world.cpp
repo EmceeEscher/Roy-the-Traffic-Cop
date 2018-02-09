@@ -147,7 +147,7 @@ bool World::update(float elapsed_ms)
 
 	//TODO: make this work for other cars.
 	// With init_vel=15.f, acc=3.f, call slow down 160.f away from target
-	if ( m_car.is_near_intersection(lanes[1]) && m_car.get_acc().x > 0.f)
+	if ( m_car.is_approaching_stop(lanes[1]) && m_car.get_acc().x > 0.f)
 	{
 		m_car.slow_down();
 	}

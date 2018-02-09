@@ -62,7 +62,7 @@ public:
 	float get_max_speed();
 
 	// Intersection Detection
-	bool is_near_intersection(vec2 lane_pos);
+	bool is_approaching_stop(vec2 lane_pos);
 	
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
