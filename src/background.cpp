@@ -62,7 +62,6 @@ bool Background::init()
 	m_scale.y = 1;
 	m_position = { 500.f, 500.f};
 	//m_rotation = 0.f;
-
 	return true;
 }
 

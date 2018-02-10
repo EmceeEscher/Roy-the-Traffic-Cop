@@ -1,6 +1,7 @@
 // Header
 #include "car.hpp"
 #include "lane.hpp"
+#include "direction.hpp"
 
 // stlib
 #include <vector>
@@ -173,12 +174,12 @@ void Car::move(vec2 off)
 	m_position.y += off.y;
 }
 
-void Car::set_lane(int n)
+void Car::set_lane(direction dir)
 {
-	m_lane = n;
+	m_lane = dir;
 }
 
-int Car::get_lane()
+direction Car::get_lane()
 {
 	return m_lane;
 }
@@ -190,12 +191,14 @@ void Car::set_rotation(float radians)
 
 void Car::slow_down()
 {
+	// TODO: y coordinates 
 	m_velocity.x = m_max_speed-m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 	m_acceleration.x *= -1.f;
 	m_acceleration.y = 0.f;
 }
 
 void Car::speed_up() {
+	// TODO: y acceleration/velocity
 	m_acceleration.x *= -1.f;
 	m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 }

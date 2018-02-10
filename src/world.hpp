@@ -6,6 +6,8 @@
 #include "background.hpp"
 #include "car.hpp"
 #include "lane.hpp"
+#include "direction.hpp"
+
 
 // stlib
 #include <vector>

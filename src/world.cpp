@@ -1,5 +1,6 @@
 // Header
 #include "world.hpp"
+#include "direction.hpp"
 
 // stlib
 #include <string.h>
@@ -104,10 +105,10 @@ bool World::init(vec2 screen)
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 	
 	// Rotation values for each lane
-	lanes_rot[0] = PI;
-	lanes_rot[1] = PI/2.0;
-	lanes_rot[2] = 0;
-	lanes_rot[3] = 3.0*PI/2.0;
+	lanes_rot[0] = PI;			// North
+	lanes_rot[1] = PI/2.0;		// West
+	lanes_rot[2] = 0;			// South
+	lanes_rot[3] = 3.0*PI/2.0;	// East
 	
 	// Hard coded stop sign positions
 	lanes[0] = { 450.f,400.f };
@@ -120,7 +121,7 @@ bool World::init(vec2 screen)
 
 	m_background.init();
 	m_car.init();
-	m_car.set_lane(1);
+	m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
 }
 

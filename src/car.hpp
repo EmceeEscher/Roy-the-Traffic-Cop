@@ -1,17 +1,10 @@
 #pragma once
 
 #include "common.hpp"
+#include "direction.hpp"
 #include <string>
 
 using std::string;
-
-enum class direction : int
-{
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST,
-};
 
 class Car : public Renderable
 {
@@ -46,8 +39,8 @@ public:
 	void set_rotation(float radians);
 
 	// get or set the lane associated with car
-	void set_lane(int n);
-	int get_lane();
+	void set_lane(direction dir);
+	direction get_lane();
 
 	// car to slows down to stop sign or speeds away
 	void slow_down();
@@ -72,14 +65,11 @@ private:
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
 	size_t m_num_indices; // passed to glDrawElements
-	//float m_current_speed;
-	//float m_x_dir;
-	//float m_y_dir;
 	vec2 m_velocity;
 	vec2 m_acceleration;
 	bool m_can_move;
 	vec2 m_displacement;
-	int m_lane;
+	direction m_lane;
 	direction m_desired_direction;
 	float m_max_speed;
 	float m_wr;
