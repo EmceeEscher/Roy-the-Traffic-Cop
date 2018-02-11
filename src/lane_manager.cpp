@@ -2,10 +2,10 @@
 
 bool LaneManager::init(float world_scale)
 {
-  m_lanes[direction::NORTH] = new Lane(world_scale, direction::NORTH);
-  m_lanes[direction::EAST] = new Lane(world_scale, direction::EAST);
-  m_lanes[direction::SOUTH] = new Lane(world_scale, direction::SOUTH);
-  m_lanes[direction::WEST] = new Lane(world_scale, direction::WEST);
+  m_lanes[direction::NORTH] = new Lane(direction::NORTH);
+  m_lanes[direction::EAST] = new Lane(direction::EAST);
+  m_lanes[direction::SOUTH] = new Lane(direction::SOUTH);
+  m_lanes[direction::WEST] = new Lane(direction::WEST);
 
   m_time_remaining = m_time_per_action;
 

@@ -9,7 +9,7 @@ class Background : public Renderable
 
 public:
 	// Creates all the associated render resources and default transform
-	bool init(float world_scale);
+	bool init();
 
 	// Releases all the associated resources
 	void destroy();

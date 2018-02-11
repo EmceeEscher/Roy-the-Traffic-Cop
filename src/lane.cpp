@@ -1,11 +1,18 @@
 // Header
 #include "lane.hpp"
 
-Lane::Lane(float world_scale, direction dir)
+Lane::Lane(direction dir)
 {
-	m_world_scale = world_scale;
 	m_dir = dir;
 	m_time_remaining = m_max_time_per_car;
+}
+
+
+// Releases all graphics resources
+bool Lane::init(direction dir)
+{
+	m_dir = dir;
+	return true;
 }
 
 Lane::~Lane()
@@ -13,9 +20,27 @@ Lane::~Lane()
 	m_cars.clear();
 }
 
+int Lane::get_lane_num()const
+{
+	return m_lane_num;
+}
+
 float Lane::get_time_remaining() const
 {
     return m_time_remaining;
+}
+
+void Lane::set_stop_sign(vec2 loc)
+{
+	float x = loc.x;
+	float y = loc.y;
+	m_stop_sign_loc.x = x;
+	m_stop_sign_loc.y = y;
+}
+
+vec2 Lane::get_stop_sign()const
+{
+	return m_stop_sign_loc;
 }
 
 std::vector<Car> Lane::get_cars() const
@@ -39,7 +64,7 @@ void Lane::add_car(carType type)
 	if (this->is_lane_full()) {
 		// change following code based on carType once we have more than one
 		Car new_car;
-		if(new_car.init(m_world_scale)){
+		if(new_car.init()){
 			m_cars.emplace_back(new_car);
 			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
 		}

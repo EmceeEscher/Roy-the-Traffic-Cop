@@ -6,6 +6,7 @@
 #include "car_type.hpp"
 
 #include <vector>
+#include <algorithm>
 
 class Lane
 {
@@ -13,11 +14,23 @@ public:
 	const int MaxCarsPerLane = 4;
 
     // constructor/destructor
-    Lane(float world_scale, direction dir);
+    Lane(direction dir);
     ~Lane();
+
+	// Creates instance
+	bool init(direction dir);
 
 	// Returns the current time remaining on the timer
     float get_time_remaining() const;
+
+	// Set stop sign location
+	void set_stop_sign(vec2 loc);
+
+	// Get stop sign location
+	vec2 get_stop_sign()const;
+
+	// Get the lane label number
+	int get_lane_num()const;
 
     // Returns the cars in the lane
     std::vector<Car> get_cars() const;
@@ -46,4 +59,7 @@ private:
     float m_time_remaining; // Time remaining on timer of car at front of lane
     float m_world_scale;
     direction m_dir;
+
+	vec2 m_stop_sign_loc;
+	int m_lane_num;
 };

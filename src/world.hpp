@@ -6,6 +6,9 @@
 #include "background.hpp"
 #include "car.hpp"
 #include "lane_manager.hpp"
+#include "lane.hpp"
+#include "direction.hpp"
+
 
 // stlib
 #include <vector>
@@ -65,6 +68,10 @@ private:
 	float m_world_scale;
 
 	bool m_advanced_features;
+
+	float lanes_rot[4];
+
+	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
 
