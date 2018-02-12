@@ -103,23 +103,24 @@ bool World::init(vec2 screen)
 
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
-	
+
 	// Rotation values for each lane
 	lanes_rot[0] = PI;			// North
 	lanes_rot[1] = PI/2.0;		// West
 	lanes_rot[2] = 0;			// South
 	lanes_rot[3] = 3.0*PI/2.0;	// East
-	
+
 	// Hard coded stop sign positions
 	lanes[0] = { 450.f,400.f };
 	lanes[1] = { 400.f,540.f };
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
 	m_background.init();
+	m_lane_manager.init();
+	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
 	m_car.init();
 	m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
@@ -146,6 +147,9 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
+	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
+	m_lane_manager.update(elapsed_ms);
+
 	//TODO: make this work for other cars.
 	// With init_vel=15.f, acc=3.f, call slow down 160.f away from target
 	if ( m_car.is_approaching_stop(lanes[1]) && m_car.get_acc().x > 0.f)
@@ -154,8 +158,8 @@ bool World::update(float elapsed_ms)
 	}
 	m_car.update(elapsed_ms);
 	if (m_car.get_position().x > OFF_SCREEN) {
-		// TODO: why does this make the car huge? 
-		//m_car.destroy(); 
+		// TODO: why does this make the car huge?
+		//m_car.destroy();
 	}
 	return true;
 }
@@ -242,8 +246,4 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-}
-
-float World::get_world_scale() {
-	return m_world_scale;
 }

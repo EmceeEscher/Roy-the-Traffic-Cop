@@ -10,6 +10,7 @@ class Car : public Renderable
 {
 	static Texture car_texture;
 public:
+
 	// Creates all the associated render resources and default transform
 	bool init();
 
