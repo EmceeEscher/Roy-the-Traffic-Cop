@@ -13,7 +13,7 @@ class LaneManager
 public:
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
-    bool init(float world_scale);
+    bool init();
 
     // Releases instance
     void destroy();

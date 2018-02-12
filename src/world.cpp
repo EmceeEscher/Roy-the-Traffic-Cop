@@ -116,10 +116,11 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
 	m_background.init();
+	m_lane_manager.init();
+	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
 	m_car.init();
 	m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
@@ -245,8 +246,4 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-}
-
-float World::get_world_scale() {
-	return m_world_scale;
 }

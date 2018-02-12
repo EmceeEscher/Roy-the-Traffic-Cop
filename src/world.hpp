@@ -62,10 +62,7 @@ private:
 	LaneManager m_lane_manager;
 	//Just a single car to show for now.
 	Car m_car;
-	//std::vector<Car> m_cars;
 
-
-	float m_world_scale;
 
 	bool m_advanced_features;
 

@@ -57,7 +57,6 @@ private:
     std::vector<Car> m_cars; // Cars in the lane
     float const m_max_time_per_car = 20000; // Max time before a car will turn
     float m_time_remaining; // Time remaining on timer of car at front of lane
-    float m_world_scale;
     direction m_dir;
 
 	vec2 m_stop_sign_loc;

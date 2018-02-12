@@ -1,6 +1,6 @@
 #include "lane_manager.hpp"
 
-bool LaneManager::init(float world_scale)
+bool LaneManager::init()
 {
   m_lanes[direction::NORTH] = new Lane(direction::NORTH);
   m_lanes[direction::EAST] = new Lane(direction::EAST);
