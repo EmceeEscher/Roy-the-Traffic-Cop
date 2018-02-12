@@ -1,5 +1,7 @@
 // Header
 #include "car.hpp"
+#include "lane.hpp"
+#include "direction.hpp"
 
 // stlib
 #include <vector>
@@ -7,7 +9,7 @@
 
 Texture Car::car_texture;
 
-bool Car::init(float world_scale)
+bool Car::init()
 {
 	// Load shared texture
 	if (!car_texture.is_valid())
@@ -20,17 +22,18 @@ bool Car::init(float world_scale)
 	}
 
 	// The position (0,0) corresponds to the center of the texture
-	float wr = car_texture.width * 0.5 * world_scale;
-	float hr = car_texture.height * 0.5 * world_scale;
+  
+	m_wr = car_texture.width * 0.5;
+	m_hr = car_texture.height * 0.5;
 
 	TexturedVertex vertices[4];
-	vertices[0].position = { -wr, +hr, 0.f };
+	vertices[0].position = { -m_wr, +m_hr, 0.f };
 	vertices[0].texcoord = { 0.f, 1.f };//top left
-	vertices[1].position = { +wr, +hr, 0.f };
+	vertices[1].position = { +m_wr, +m_hr, 0.f };
 	vertices[1].texcoord = { 1.f, 1.f };//top right
-	vertices[2].position = { +wr, -hr, 0.f };
+	vertices[2].position = { +m_wr, -m_hr, 0.f };
 	vertices[2].texcoord = { 1.f, 0.f };//bottom right
-	vertices[3].position = { -wr, -hr, 0.f };
+	vertices[3].position = { -m_wr, -m_hr, 0.f };
 	vertices[3].texcoord = { 0.f, 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
@@ -62,7 +65,11 @@ bool Car::init(float world_scale)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 350.f * world_scale, 537.f * world_scale};
+	m_position = { 5.f, 537.f };
+	m_velocity = { 15.0f, .0f };
+	m_acceleration = { 3.f, .0f };
+	m_max_speed = { 200.f };
+	m_can_move = false;
 	//m_rotation = 0.f;
 
 	return true;
@@ -84,6 +91,19 @@ void Car::destroy()
 void Car::update(float ms)
 {
 	// TODO: Implement Update Car [Theo, Mason]
+	if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+		m_velocity.x += m_acceleration.x;
+		m_velocity.y += m_acceleration.y;
+	}
+	else if (m_velocity.x < 0.f){
+		m_velocity.x = 0.f;
+	}
+	else if (m_velocity.x > m_max_speed) {
+		m_velocity.x = m_max_speed;
+	}
+	//printf("%f", m_velocity.x);
+	vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+	move(m_displacement);
 }
 
 void Car::draw(const mat3& projection)
@@ -154,7 +174,70 @@ void Car::move(vec2 off)
 	m_position.y += off.y;
 }
 
+void Car::set_lane(direction dir)
+{
+	m_lane = dir;
+}
+
+direction Car::get_lane()
+{
+	return m_lane;
+}
+
 void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
+}
+
+void Car::slow_down()
+{
+	// TODO: y coordinates 
+	m_velocity.x = m_max_speed-m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+	m_acceleration.x *= -1.f;
+	m_acceleration.y = 0.f;
+}
+
+void Car::speed_up() {
+	// TODO: y acceleration/velocity
+	m_acceleration.x *= -1.f;
+	m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+}
+
+vec2 Car::get_acc()
+{
+	return m_acceleration;
+}
+
+vec2 Car::get_vel()
+{
+	return m_velocity;
+}
+
+float Car::get_max_speed()
+{
+	return m_max_speed;
+}
+
+void Car::signal_to_move()
+{
+	m_can_move = true;
+}
+
+float Car::compute_stopping_dis(float velocity, float acc)
+{
+	// vf*vf = vi*vi + 2*acc*d
+	float dis = (1000.f*1000.f*velocity*velocity) / (2.f * abs(acc*1000.f));
+	return dis + m_wr;
+}
+
+bool Car::is_approaching_stop(vec2 lane_pos)
+{
+	float stop_x = lane_pos.x;
+	float stop_y = lane_pos.y;
+	float x_margin = abs(m_position.x - stop_x);
+	float y_margin = abs(m_position.y - stop_y);
+	if (std::max(x_margin, y_margin) <= 160.f && m_position.x <= stop_x && (m_can_move == false))
+		return true;
+	else
+		return false;
 }
