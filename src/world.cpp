@@ -121,8 +121,8 @@ bool World::init(vec2 screen)
 	m_background.init();
 	m_lane_manager.init();
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
-	m_car.init();
-	m_car.set_lane(direction::WEST);
+	//m_car.init();
+	//m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
 }
 
@@ -239,6 +239,18 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
 		m_traffic_cop.set_rotation(lanes_rot[3]);
+	if (action == GLFW_PRESS && key == GLFW_KEY_W) {
+		m_lane_manager.input_create_cars(direction::NORTH);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_A) {
+		m_lane_manager.input_create_cars(direction::WEST);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_S) {
+		m_lane_manager.input_create_cars(direction::SOUTH);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_D) {
+		m_lane_manager.input_create_cars(direction::EAST);
+	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

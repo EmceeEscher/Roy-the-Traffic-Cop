@@ -27,6 +27,8 @@ public:
     // Will tell the first car in the lane in direction dir to turn
     void turn_car(direction dir);
 
+	void input_create_cars(direction dir);
+
 private:
     std::map<direction, Lane*> m_lanes;
     float const m_time_per_action = 5000;

@@ -60,3 +60,9 @@ void LaneManager::turn_car(direction dir)
 {
   m_lanes[dir]->turn_car();
 }
+
+//Temporary manual input to test before implementation of AI
+
+void LaneManager::input_create_cars(direction dir) {
+	m_lanes[dir]->add_car(carType::REGULAR);
+}

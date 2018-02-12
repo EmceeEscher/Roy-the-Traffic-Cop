@@ -61,6 +61,7 @@ bool Lane::update(float ms)
 
 void Lane::add_car(carType type)
 {
+	fprintf(stderr, "hello");
 	if (this->is_lane_full()) {
 		// change following code based on carType once we have more than one
 		Car new_car;
