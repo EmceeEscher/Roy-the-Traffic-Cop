@@ -40,8 +40,6 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
-	// Returns the scale between window coordinates/game coordinates (for high-density displays)
-	float get_world_scale();
 
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
@@ -62,13 +60,10 @@ private:
 	Car m_car;
 	//std::vector<Car> m_cars;
 
-
-	float m_world_scale;
-
 	bool m_advanced_features;
 
 	float lanes_rot[4];
-	
+
 	vec2 lanes[4];
 
 	Mix_Music* m_background_music;

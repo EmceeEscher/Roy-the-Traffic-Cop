@@ -103,20 +103,19 @@ bool World::init(vec2 screen)
 
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
-	
+
 	// Rotation values for each lane
 	lanes_rot[0] = PI;			// North
 	lanes_rot[1] = PI/2.0;		// West
 	lanes_rot[2] = 0;			// South
 	lanes_rot[3] = 3.0*PI/2.0;	// East
-	
+
 	// Hard coded stop sign positions
 	lanes[0] = { 450.f,400.f };
 	lanes[1] = { 400.f,540.f };
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_world_scale = fb_w / screen.x;
 	m_advanced_features = false;
 
 	m_background.init();
@@ -154,8 +153,8 @@ bool World::update(float elapsed_ms)
 	}
 	m_car.update(elapsed_ms);
 	if (m_car.get_position().x > OFF_SCREEN) {
-		// TODO: why does this make the car huge? 
-		//m_car.destroy(); 
+		// TODO: why does this make the car huge?
+		//m_car.destroy();
 	}
 	return true;
 }
@@ -242,8 +241,4 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-}
-
-float World::get_world_scale() {
-	return m_world_scale;
 }
