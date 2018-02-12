@@ -89,8 +89,9 @@ bool World::init(vec2 screen)
 	}
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
 
-	if (m_background_music == nullptr)
+	if (m_background_music == nullptr || m_roy_whistle == nullptr)
 	{
 		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
 		return false;
@@ -131,6 +132,8 @@ void World::destroy()
 {
 	if (m_background_music != nullptr)
 		Mix_FreeMusic(m_background_music);
+	if (m_roy_whistle != nullptr)
+		Mix_FreeChunk(m_roy_whistle);
 
 	Mix_CloseAudio();
 
@@ -223,6 +226,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE KEY PRESSES HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT|| key == GLFW_KEY_RIGHT)) {
+		Mix_PlayChannel(-1, m_roy_whistle, 0);
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
 		m_traffic_cop.set_rotation(lanes_rot[0]);
 	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
