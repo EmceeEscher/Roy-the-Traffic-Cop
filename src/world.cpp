@@ -119,6 +119,8 @@ bool World::init(vec2 screen)
 	m_advanced_features = false;
 
 	m_background.init();
+	m_lane_manager.init();
+	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
 	m_car.init();
 	m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
@@ -144,6 +146,9 @@ bool World::update(float elapsed_ms)
 	int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
+
+	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
+	m_lane_manager.update(elapsed_ms);
 
 	//TODO: make this work for other cars.
 	// With init_vel=15.f, acc=3.f, call slow down 160.f away from target
