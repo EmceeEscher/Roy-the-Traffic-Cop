@@ -41,5 +41,5 @@ cmake_install.cmake
 /visual_studio/tmp/
 /visual_studio/Debug/
 /visual_studio/.vs/
-visual_studio/a1.vcxproj.user
+/visual_studio/a1.vcxproj.user
 /.vs
