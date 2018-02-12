@@ -72,6 +72,7 @@ private:
 	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
+	Mix_Chunk* m_roy_whistle;
 
 	// C++ rng
 	std::default_random_engine m_rng;
