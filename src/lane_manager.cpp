@@ -25,22 +25,47 @@ bool LaneManager::update(float ms)
 {
 	if (get_cars_in_lane(direction::WEST).size() > 0) {
 		Car& new_car = get_cars_in_lane(direction::WEST).back();
+		new_car.set_lane(direction::WEST);
+		if (new_car.is_approaching_stop(lanes[1]) && new_car.get_acc().x > 0.f)
+		{
+			new_car.slow_down();
+		}
 		new_car.update(ms);
 	}
 	if (get_cars_in_lane(direction::SOUTH).size() > 0) {
 		Car& new_car = get_cars_in_lane(direction::SOUTH).back();
+		new_car.set_lane(direction::SOUTH);
+		new_car.set_position({ 5.f, 637.f });
+		if (new_car.is_approaching_stop(lanes[2]) && new_car.get_acc().x > 0.f)
+		{
+			new_car.slow_down();
+		}
 		new_car.update(ms);
 	}
 	if (get_cars_in_lane(direction::NORTH).size() > 0) {
 		Car& new_car = get_cars_in_lane(direction::NORTH).back();
+		new_car.set_lane(direction::NORTH);
+		new_car.set_position({ 5.f, 437.f });
+
+		if (new_car.is_approaching_stop(lanes[0]) && new_car.get_acc().x > 0.f)
+		{
+			new_car.slow_down();
+		}
 		new_car.update(ms);
 	}
 	if (get_cars_in_lane(direction::EAST).size() > 0) {
 		Car& new_car = get_cars_in_lane(direction::EAST).back();
+		new_car.set_lane(direction::EAST);
+		new_car.set_position({ 5.f, 337.f });
+
+		if (new_car.is_approaching_stop(lanes[4]) && new_car.get_acc().x > 0.f)
+		{
+			new_car.slow_down();
+		}
 		new_car.update(ms);
 	}
 
-  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+/*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
   {
     it->second->update(ms);
   }
@@ -51,6 +76,7 @@ bool LaneManager::update(float ms)
     this->add_car();
     m_time_remaining = m_time_per_action;
   }
+  */
   return true;
 }
 
