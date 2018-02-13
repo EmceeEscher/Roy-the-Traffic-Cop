@@ -61,9 +61,11 @@ bool Lane::update(float ms)
 
 void Lane::add_car(carType type)
 {
-	fprintf(stderr, "hello");
 	if (this->is_lane_full()) {
 		// change following code based on carType once we have more than one
+		fprintf(stderr, "lane is full");
+	}
+	else{
 		Car new_car;
 		if(new_car.init()){
 			m_cars.emplace_back(new_car);
@@ -87,6 +89,7 @@ void Lane::turn_car()
 
 bool Lane::is_lane_full() const
 {
+	printf("%zu", m_cars.size());
 	return m_cars.size() >= MaxCarsPerLane;
 }
 

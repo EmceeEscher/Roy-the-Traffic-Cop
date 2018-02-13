@@ -39,6 +39,8 @@ public:
 	// Set rotation in radians
 	void set_rotation(float radians);
 
+	void set_position(vec2 position);
+
 	// get or set the lane associated with car
 	void set_lane(direction dir);
 	direction get_lane();

@@ -188,6 +188,10 @@ void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
 }
+void Car::set_position(vec2 position)
+{
+	m_position = position;
+}
 
 void Car::slow_down()
 {
