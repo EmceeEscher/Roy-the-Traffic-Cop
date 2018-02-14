@@ -117,8 +117,6 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_advanced_features = false;
-
 	m_background.init();
 	m_lane_manager.init();
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
