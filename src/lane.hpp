@@ -53,8 +53,10 @@ public:
     // Erases the first car in the lane. (Call this after that car has finished turning)
     void erase_first_car();
 
+	std::vector<Car> m_cars; // Cars in the lane
+
+
 private:
-    std::vector<Car> m_cars; // Cars in the lane
     float const m_max_time_per_car = 20000; // Max time before a car will turn
     float m_time_remaining; // Time remaining on timer of car at front of lane
     direction m_dir;

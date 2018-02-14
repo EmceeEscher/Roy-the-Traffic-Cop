@@ -23,46 +23,37 @@ void LaneManager::destroy()
 
 bool LaneManager::update(float ms)
 {
-	if (get_cars_in_lane(direction::WEST).size() > 0) {
-		Car& new_car = get_cars_in_lane(direction::WEST).back();
-		new_car.set_lane(direction::WEST);
-		if (new_car.is_approaching_stop(lanes[1]) && new_car.get_acc().x > 0.f)
-		{
-			new_car.slow_down();
+		for (Car& car : m_lanes[direction::WEST]->m_cars) {
+			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
 		}
-		new_car.update(ms);
-	}
-	if (get_cars_in_lane(direction::SOUTH).size() > 0) {
-		Car& new_car = get_cars_in_lane(direction::SOUTH).back();
-		new_car.set_lane(direction::SOUTH);
-		new_car.set_position({ 5.f, 637.f });
-		if (new_car.is_approaching_stop(lanes[2]) && new_car.get_acc().x > 0.f)
-		{
-			new_car.slow_down();
+	
+		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
+			if (car.is_approaching_stop(lanes[0]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
 		}
-		new_car.update(ms);
-	}
-	if (get_cars_in_lane(direction::NORTH).size() > 0) {
-		Car& new_car = get_cars_in_lane(direction::NORTH).back();
-		new_car.set_lane(direction::NORTH);
-		new_car.set_position({ 5.f, 437.f });
-
-		if (new_car.is_approaching_stop(lanes[0]) && new_car.get_acc().x > 0.f)
-		{
-			new_car.slow_down();
+	
+		for (Car& car : m_lanes[direction::EAST]->m_cars) {
+			if (car.is_approaching_stop(lanes[3]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
 		}
-		new_car.update(ms);
-	}
-	if (get_cars_in_lane(direction::EAST).size() > 0) {
-		Car& new_car = get_cars_in_lane(direction::EAST).back();
-		new_car.set_lane(direction::EAST);
-		new_car.set_position({ 5.f, 337.f });
-
-		if (new_car.is_approaching_stop(lanes[4]) && new_car.get_acc().x > 0.f)
-		{
-			new_car.slow_down();
-		}
-		new_car.update(ms);
+	
+		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
+			if (car.is_approaching_stop(lanes[2]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
+		
 	}
 
 /*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
@@ -105,16 +96,16 @@ void LaneManager::add_car()
 
 std::vector<Car> LaneManager::get_cars_in_lane(direction dir) {
 	if (dir == direction::NORTH) {
-		return m_lanes[direction::NORTH]->get_cars();
+		return this->m_lanes[direction::NORTH]->get_cars();
 	}
 	else if (dir == direction::WEST) {
-		return m_lanes[direction::WEST]->get_cars();
+		return this->m_lanes[direction::WEST]->get_cars();
 	}
 	else if (dir == direction::EAST) {
-		return m_lanes[direction::EAST]->get_cars();
+		return this->m_lanes[direction::EAST]->get_cars();
 	}
 	else if (dir == direction::SOUTH) {
-		return m_lanes[direction::SOUTH]->get_cars();
+		return this->m_lanes[direction::SOUTH]->get_cars();
 	}
 }
 

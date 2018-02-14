@@ -121,8 +121,8 @@ bool World::init(vec2 screen)
 	m_background.init();
 	m_lane_manager.init();
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
-	m_car.init();
-	m_car.set_lane(direction::WEST);
+	//m_car.init();
+	//m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
 }
 
@@ -149,14 +149,13 @@ bool World::update(float elapsed_ms)
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 	m_lane_manager.update(elapsed_ms);
-
 	//TODO: make this work for other cars.
 	 //With init_vel=15.f, acc=3.f, call slow down 160.f away from target
-	if ( m_car.is_approaching_stop(lanes[1]) && m_car.get_acc().x > 0.f)
-	{
-		m_car.slow_down();
-	}
-	m_car.update(elapsed_ms);
+	//if ( m_car.is_approaching_stop(lanes[1]) && m_car.get_acc().x > 0.f)
+	//{
+	//	m_car.slow_down();
+	//}
+	//m_car.update(elapsed_ms);
 	if (m_car.get_position().x > OFF_SCREEN) {
 		// TODO: why does this make the car huge?
 		//m_car.destroy();
@@ -210,7 +209,7 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
-	m_car.draw(projection_2D);
+	//m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 
 
