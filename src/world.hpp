@@ -41,8 +41,6 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
-	// Returns the scale between window coordinates/game coordinates (for high-density displays)
-	float get_world_scale();
 
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
@@ -62,15 +60,13 @@ private:
 	LaneManager m_lane_manager;
 	//Just a single car to show for now.
 	Car m_car;
-
-
-	bool m_advanced_features;
-
+  
 	float lanes_rot[4];
 
 	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
+	Mix_Chunk* m_roy_whistle;
 
 	// C++ rng
 	std::default_random_engine m_rng;
