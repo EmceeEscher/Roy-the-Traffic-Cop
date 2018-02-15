@@ -507,7 +507,8 @@
     <ClCompile Include="$(ProjectDir)..\src\lane.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\traffic_cop.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\game_timer.cpp" />
-    <ClCompile Include="..\src\background.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\lane_manager.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\background.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
