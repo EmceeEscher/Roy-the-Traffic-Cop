@@ -105,7 +105,7 @@ bool World::init(vec2 screen)
 
 	m_background.init(m_world_scale);
 	m_car.init(m_world_scale);
-	m_game_timer.init(m_world_scale);
+	m_game_timer.init();
 	return m_traffic_cop.init(m_world_scale);
 }
 

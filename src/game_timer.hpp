@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include <ctime>
+#include <sstream>
 using std::string;
 
 class GameTimer : public Renderable
@@ -11,7 +12,7 @@ public:
 	const int DaysAfterUnixDate = 17532; // January 1st, 2018: days because seconds lead to overflow
 
 	// Creates instance
-	bool init(float world_scale);
+	bool init();
 
 	// Returns the current in-game time
 	// Format: MONTH dd, yyyy (eg: December 18, 1995)

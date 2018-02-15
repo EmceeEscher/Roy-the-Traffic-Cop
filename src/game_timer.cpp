@@ -1,12 +1,7 @@
 // Header
 #include "game_timer.hpp"
 
-// stlib
-#include <vector>
-#include <algorithm>
-#include <sstream>
-
-bool GameTimer::init(float world_scale)
+bool GameTimer::init()
 {
 	struct tm init_time = {0};
 	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
