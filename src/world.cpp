@@ -117,8 +117,6 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_advanced_features = false;
-
 	m_background.init();
 	m_lane_manager.init();
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
@@ -243,12 +241,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
 	{
 		m_traffic_cop.set_rotation(lanes_rot[1]);
-		if(m_car.get_vel().x <= 0.f) {
-			m_car.signal_to_move(); // signal car to move
-
-			// I removed the condition functions, we will later use a queue to do this
-			m_car.speed_up();
-		}
+		//Car& new_car = m_lane_manager.get_cars_in_lane(direction::WEST);
+		//if (new_car.get_vel().x <= 0.f) {
+		//	new_car.signal_to_move();
+		//	new_car.speed_up();
+		//}
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
 		m_traffic_cop.set_rotation(lanes_rot[3]);

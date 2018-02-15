@@ -1,6 +1,8 @@
 // Header
 #include "lane.hpp"
 
+#define PI 3.14159265
+
 Lane::Lane(direction dir)
 {
 	m_dir = dir;
@@ -11,6 +13,10 @@ Lane::Lane(direction dir)
 // Releases all graphics resources
 bool Lane::init(direction dir)
 {
+	lanes_rot[0] = PI;			// North
+	lanes_rot[1] = PI / 2.0;		// West
+	lanes_rot[2] = 0;			// South
+	lanes_rot[3] = 3.0*PI / 2.0;	// East
 	m_dir = dir;
 	return true;
 }
@@ -68,6 +74,25 @@ void Lane::add_car(carType type)
 	else{
 		Car new_car;
 		if(new_car.init()){
+			if (m_dir == direction::NORTH) {
+				new_car.set_position({ 450.f,-100.f });
+				new_car.set_rotation(PI / 2);
+				new_car.set_lane(direction::NORTH);
+			}
+			else if (m_dir == direction::WEST) {
+				new_car.set_position({ -100.f,537.f });
+				new_car.set_lane(direction::WEST);
+			}
+			else if (m_dir == direction::EAST) {
+				new_car.set_position({ 1000.f,445.f });
+				new_car.set_rotation(PI);
+				new_car.set_lane(direction::EAST);
+			}
+			else if (m_dir == direction::SOUTH) {
+				new_car.set_position({ 537,1000.f });
+				new_car.set_rotation(3.0*PI / 2.0);
+				new_car.set_lane(direction::SOUTH);
+			}
 			m_cars.emplace_back(new_car);
 			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
 		}

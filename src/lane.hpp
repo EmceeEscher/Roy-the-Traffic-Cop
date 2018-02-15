@@ -57,6 +57,7 @@ public:
 
 
 private:
+	float lanes_rot[4];
     float const m_max_time_per_car = 20000; // Max time before a car will turn
     float m_time_remaining; // Time remaining on timer of car at front of lane
     direction m_dir;

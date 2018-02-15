@@ -7,7 +7,11 @@
 #include <vector>
 #include <algorithm>
 
+#define PI 3.14159265
+
+
 Texture Car::car_texture;
+
 
 bool Car::init()
 {
@@ -70,7 +74,7 @@ bool Car::init()
 	m_acceleration = { 3.f, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
-	//m_rotation = 0.f;
+	m_rotation = 0.f;
 
 	return true;
 }
@@ -101,6 +105,15 @@ void Car::update(float ms)
 	else if (m_velocity.x > m_max_speed) {
 		m_velocity.x = m_max_speed;
 	}
+	if (m_velocity.y > 0 && m_velocity.y < m_max_speed) {
+		m_velocity.y += m_acceleration.y;
+	}
+	else if (m_velocity.y < 0.f) {
+		m_velocity.y = 0.f;
+	}
+	else if (m_velocity.y > m_max_speed) {
+		m_velocity.y = m_max_speed;
+	}
 	//printf("%f", m_velocity.x);
 	vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 	move(m_displacement);
@@ -111,6 +124,7 @@ void Car::draw(const mat3& projection)
 	transform_begin();
 	transform_scale(m_scale);
 	transform_translate(m_position);
+	transform_rotate(m_rotation);
 	transform_end();
 
 	// Setting shaders
@@ -177,6 +191,19 @@ void Car::move(vec2 off)
 void Car::set_lane(direction dir)
 {
 	m_lane = dir;
+	if (dir == direction::NORTH) {
+		m_velocity = { .0f, 15.0f };
+		m_acceleration = { .0f, 3.0f };
+	}
+	else if (dir == direction::WEST) {
+		//Do Nothing
+	}
+	else if (dir == direction::EAST) {
+		//TODO
+	}
+	else if (dir == direction::SOUTH) {
+		//TODO
+	}
 }
 
 direction Car::get_lane()
