@@ -186,14 +186,20 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	m_position.x += off.x;
-	m_position.y += off.y;
+	if (m_lane == direction::WEST || m_lane == direction::NORTH) {
+		m_position.x += off.x;
+		m_position.y += off.y;
+	}
+	if (m_lane == direction::EAST||m_lane==direction::SOUTH) {
+		m_position.x -= off.x;
+		m_position.y -= off.y;
+	}
 }
 
 void Car::set_lane(direction dir)
 {
 	m_lane = dir;
-	if (dir == direction::NORTH) {
+	if (dir == direction::NORTH || dir == direction::SOUTH) {
 		m_velocity = { .0f, 15.0f };
 		m_acceleration = { .0f, 3.0f };
 	}
@@ -202,6 +208,7 @@ void Car::set_lane(direction dir)
 	}
 	else if (dir == direction::EAST) {
 		//TODO
+
 	}
 	else if (dir == direction::SOUTH) {
 		//TODO
@@ -225,12 +232,12 @@ void Car::set_position(vec2 position)
 void Car::slow_down()
 {
 	// TODO: y coordinates 
-	if (m_lane == direction::WEST) {
+	if (m_lane == direction::WEST || m_lane == direction::EAST) {
 		m_velocity.x = m_max_speed - m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 		m_acceleration.x *= -1.f;
 		m_acceleration.y = 0.f;
 	}
-	if (m_lane == direction::NORTH) {
+	if (m_lane == direction::NORTH || m_lane == direction::SOUTH) {
 		m_velocity.y = m_max_speed - m_acceleration.y; // gets the update loop running again, probably change to a smarter way within the update conditional
 		m_acceleration.y *= -1.f;
 		m_acceleration.x = 0.f;
