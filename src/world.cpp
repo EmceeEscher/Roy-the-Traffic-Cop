@@ -89,8 +89,9 @@ bool World::init(vec2 screen)
 	}
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
 
-	if (m_background_music == nullptr)
+	if (m_background_music == nullptr || m_roy_whistle == nullptr)
 	{
 		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
 		return false;
@@ -116,8 +117,6 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	m_advanced_features = false;
-
 	m_background.init();
 	m_lane_manager.init();
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
@@ -131,6 +130,8 @@ void World::destroy()
 {
 	if (m_background_music != nullptr)
 		Mix_FreeMusic(m_background_music);
+	if (m_roy_whistle != nullptr)
+		Mix_FreeChunk(m_roy_whistle);
 
 	Mix_CloseAudio();
 
@@ -230,22 +231,26 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE KEY PRESSES HERE
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
+	if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT|| key == GLFW_KEY_RIGHT)) {
+		Mix_PlayChannel(-1, m_roy_whistle, 0);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
 		m_traffic_cop.set_rotation(lanes_rot[0]);
-	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
+		m_lane_manager.turn_car(direction::NORTH);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
 		m_traffic_cop.set_rotation(lanes_rot[2]);
+		m_lane_manager.turn_car(direction::SOUTH);
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
 	{
 		m_traffic_cop.set_rotation(lanes_rot[1]);
-		if(m_car.get_vel().x <= 0.f) {
-			m_car.signal_to_move(); // signal car to move
-
-			// I removed the condition functions, we will later use a queue to do this
-			m_car.speed_up();
-		}
+		m_lane_manager.turn_car(direction::WEST);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
+	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
 		m_traffic_cop.set_rotation(lanes_rot[3]);
+		m_lane_manager.turn_car(direction::EAST);
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_W) {
 		m_lane_manager.input_create_cars(direction::NORTH);
 	}

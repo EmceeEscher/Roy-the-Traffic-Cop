@@ -8,8 +8,8 @@ bool LaneManager::init()
   m_lanes[direction::WEST] = new Lane(direction::WEST);
   lanes[0] = { 450.f,400.f };
   lanes[1] = { 400.f,540.f };
-  lanes[2] = { 550.f,600.f };
-  lanes[3] = { 600.f,450.f };
+  lanes[2] = { 550.f,590.f };
+  lanes[3] = { 760.f,450.f };
 
   m_time_remaining = m_time_per_action;
 
@@ -32,7 +32,7 @@ bool LaneManager::update(float ms)
 		}
 	
 		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
-			if (car.is_approaching_stop(lanes[0]) && car.get_acc().x > 0.f)
+			if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
 			{
 				car.slow_down();
 			}
@@ -48,7 +48,7 @@ bool LaneManager::update(float ms)
 		}
 	
 		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
-			if (car.is_approaching_stop(lanes[2]) && car.get_acc().x > 0.f)
+			if (car.is_approaching_stop(lanes[2]) && car.get_acc().y > 0.f)
 			{
 				car.slow_down();
 			}
@@ -111,7 +111,7 @@ std::vector<Car> LaneManager::get_cars_in_lane(direction dir) {
 
 void LaneManager::turn_car(direction dir)
 {
-  m_lanes[dir]->turn_car();
+	 m_lanes[dir]->turn_car();
 }
 
 //Temporary manual input to test before implementation of AI
