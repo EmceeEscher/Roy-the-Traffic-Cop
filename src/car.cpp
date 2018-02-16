@@ -105,6 +105,8 @@ void Car::update(float ms)
 	else if (m_velocity.x > m_max_speed) {
 		m_velocity.x = m_max_speed;
 	}
+
+	//For Y position in North Lane
 	if (m_velocity.y > 0 && m_velocity.y < m_max_speed) {
 		m_velocity.y += m_acceleration.y;
 	}
@@ -223,9 +225,16 @@ void Car::set_position(vec2 position)
 void Car::slow_down()
 {
 	// TODO: y coordinates 
-	m_velocity.x = m_max_speed-m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
-	m_acceleration.x *= -1.f;
-	m_acceleration.y = 0.f;
+	if (m_lane == direction::WEST) {
+		m_velocity.x = m_max_speed - m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+		m_acceleration.x *= -1.f;
+		m_acceleration.y = 0.f;
+	}
+	if (m_lane == direction::NORTH) {
+		m_velocity.y = m_max_speed - m_acceleration.y; // gets the update loop running again, probably change to a smarter way within the update conditional
+		m_acceleration.y *= -1.f;
+		m_acceleration.x = 0.f;
+	}
 }
 
 void Car::speed_up() {

@@ -32,7 +32,7 @@ bool LaneManager::update(float ms)
 		}
 	
 		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
-			if (car.is_approaching_stop(lanes[0]) && car.get_acc().x > 0.f)
+			if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
 			{
 				car.slow_down();
 			}
