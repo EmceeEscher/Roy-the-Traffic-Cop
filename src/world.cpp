@@ -234,21 +234,23 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT|| key == GLFW_KEY_RIGHT)) {
 		Mix_PlayChannel(-1, m_roy_whistle, 0);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_UP)
+	if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
 		m_traffic_cop.set_rotation(lanes_rot[0]);
-	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN)
+		m_lane_manager.turn_car(direction::NORTH);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
 		m_traffic_cop.set_rotation(lanes_rot[2]);
+		m_lane_manager.turn_car(direction::SOUTH);
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
 	{
 		m_traffic_cop.set_rotation(lanes_rot[1]);
-		//Car& new_car = m_lane_manager.get_cars_in_lane(direction::WEST);
-		//if (new_car.get_vel().x <= 0.f) {
-		//	new_car.signal_to_move();
-		//	new_car.speed_up();
-		//}
+		m_lane_manager.turn_car(direction::WEST);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT)
+	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
 		m_traffic_cop.set_rotation(lanes_rot[3]);
+		m_lane_manager.turn_car(direction::EAST);
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_W) {
 		m_lane_manager.input_create_cars(direction::NORTH);
 	}

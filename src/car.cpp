@@ -246,8 +246,14 @@ void Car::slow_down()
 
 void Car::speed_up() {
 	// TODO: y acceleration/velocity
-	m_acceleration.x *= -1.f;
-	m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+	if (m_lane == direction::WEST || m_lane == direction::EAST) {
+		m_acceleration.x *= -1.f;
+		m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
+	}
+	if (m_lane == direction::NORTH || m_lane == direction::SOUTH) {
+		m_acceleration.y *= -1.f;
+		m_velocity.y += m_acceleration.y;
+	}
 }
 
 vec2 Car::get_acc()

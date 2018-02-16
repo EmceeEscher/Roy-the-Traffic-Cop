@@ -102,9 +102,17 @@ void Lane::add_car(carType type)
 void Lane::turn_car()
 {
 	if (!this->is_lane_empty()) {
-		//m_cars[0].turn(); //tell the car at the front of the lane to turn
+		Car& new_car = m_cars.front();
+		if (new_car.get_vel().x <= 0.f) {
+			new_car.signal_to_move();
+			new_car.speed_up();
+		}
+		//if (new_car.get_vel().y <= 0.f) {
+		//	new_car.signal_to_move();
+		//	new_car.speed_up();
+		//}
 		//wait...
-		this->erase_first_car();
+		//this->erase_first_car();
 		for(std::vector<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
 		{
 			//*it.advance(); //<-- tell remaining cars to move up in the lane
@@ -120,7 +128,7 @@ bool Lane::is_lane_full() const
 
 bool Lane::is_lane_empty() const
 {
-	return m_cars.size() > 0;
+	return m_cars.size() == 0;
 }
 
 void Lane::erase_first_car()

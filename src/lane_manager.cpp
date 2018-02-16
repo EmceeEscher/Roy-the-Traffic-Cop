@@ -111,7 +111,7 @@ std::vector<Car> LaneManager::get_cars_in_lane(direction dir) {
 
 void LaneManager::turn_car(direction dir)
 {
-  m_lanes[dir]->turn_car();
+	 m_lanes[dir]->turn_car();
 }
 
 //Temporary manual input to test before implementation of AI
