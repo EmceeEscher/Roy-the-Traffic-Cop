@@ -103,14 +103,19 @@ void Lane::turn_car()
 {
 	if (!this->is_lane_empty()) {
 		Car& new_car = m_cars.front();
-		if (new_car.get_vel().x <= 0.f) {
-			new_car.signal_to_move();
-			new_car.speed_up();
+		if (m_dir == direction::WEST || m_dir == direction::EAST) {
+			if (new_car.get_vel().x <= 0.f) {
+				new_car.signal_to_move();
+				new_car.speed_up();
+			}
 		}
-		//if (new_car.get_vel().y <= 0.f) {
-		//	new_car.signal_to_move();
-		//	new_car.speed_up();
-		//}
+
+		if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
+			if (new_car.get_vel().y <= 0.f) {
+				new_car.signal_to_move();
+				new_car.speed_up();
+			}
+		}
 		//wait...
 		//this->erase_first_car();
 		for(std::vector<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
