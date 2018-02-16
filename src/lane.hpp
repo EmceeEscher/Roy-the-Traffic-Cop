@@ -7,21 +7,27 @@
 
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 
 class Lane
 {
 public:
 	const int MaxCarsPerLane = 4;
+	float const MaxTimePerCar = 5000; // Max time before a car will turn
 
     // constructor/destructor
-    Lane(direction dir);
+    Lane(direction dir, float villainSpawnProbability);
     ~Lane();
 
 	// Creates instance
-	bool init(direction dir);
+	bool init(direction dir, float villainSpawnProbability);
 
 	// Returns the current time remaining on the timer
-    float get_time_remaining() const;
+	float get_time_remaining() const;
+
+	// Sets the time remaining
+	void set_time_remaining(float time_remaining);
 
 	// Set stop sign location
 	void set_stop_sign(vec2 loc);
@@ -55,9 +61,9 @@ public:
 
 private:
     std::vector<Car> m_cars; // Cars in the lane
-    float const m_max_time_per_car = 20000; // Max time before a car will turn
     float m_time_remaining; // Time remaining on timer of car at front of lane
     direction m_dir;
+	float m_villain_spawn_probability; // Probability that a car spawned in this lane will be a villain
 
 	vec2 m_stop_sign_loc;
 	int m_lane_num;

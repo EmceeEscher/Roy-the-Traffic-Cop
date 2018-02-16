@@ -1,13 +1,15 @@
 #include "lane_manager.hpp"
 
-bool LaneManager::init()
+bool LaneManager::init(AI ai)
 {
-  m_lanes[direction::NORTH] = new Lane(direction::NORTH);
-  m_lanes[direction::EAST] = new Lane(direction::EAST);
-  m_lanes[direction::SOUTH] = new Lane(direction::SOUTH);
-  m_lanes[direction::WEST] = new Lane(direction::WEST);
+  m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
+  m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
+  m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
+  m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
 
   m_time_remaining = m_time_per_action;
+
+  m_ai = &ai;
 
   return true;
 }
@@ -59,4 +61,5 @@ void LaneManager::add_car()
 void LaneManager::turn_car(direction dir)
 {
   m_lanes[dir]->turn_car();
+  m_ai->make_villains_decide(m_lanes);
 }

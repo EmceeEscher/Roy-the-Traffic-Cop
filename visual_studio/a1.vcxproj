@@ -506,6 +506,7 @@
     <ClCompile Include="$(ProjectDir)..\src\car.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\lane.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\traffic_cop.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\ai.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\lane_manager.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\background.cpp" />
   </ItemGroup>

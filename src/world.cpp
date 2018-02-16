@@ -118,9 +118,10 @@ bool World::init(vec2 screen)
 	lanes[3] = { 600.f,450.f };
 
 	m_background.init();
-	m_lane_manager.init();
+	m_ai.init();
+	m_lane_manager.init(m_ai);
 	//TODO: remove the following two lines. Car initialization should be handled by lanes, not world
-	m_car.init();
+	m_car.init(false);
 	m_car.set_lane(direction::WEST);
 	return m_traffic_cop.init();
 }

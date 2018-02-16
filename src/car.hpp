@@ -12,7 +12,7 @@ class Car : public Renderable
 public:
 
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(bool isVillain);
 
 	// Releases all associated resources
 	void destroy();
@@ -27,8 +27,14 @@ public:
 	// Returns the current position
 	vec2 get_position()const;
 
+	// Returns whether the car is a villain
+	bool is_villain()const;
+
 	// Returns the desired direction of car
 	direction get_desired_direction()const;
+
+	// Sets the desired direction for the car and removes it's villainy
+	void set_desired_direction(direction dir);
 
 	// Moves the position by the specified offset
 	void move(vec2 off);
@@ -69,6 +75,7 @@ private:
 	vec2 m_velocity;
 	vec2 m_acceleration;
 	bool m_can_move;
+	bool m_is_villain;
 	vec2 m_displacement;
 	direction m_lane;
 	direction m_desired_direction;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lane.hpp"
+#include "ai.hpp"
 #include "car.hpp"
 #include "direction.hpp"
 #include "car_type.hpp"
@@ -11,9 +12,11 @@
 class LaneManager
 {
 public:
+	const float VillainSpawnProbability = 0.2; // We may want to make this level dependent in the future. Revise when levels are added.
+
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
-    bool init();
+    bool init(AI ai);
 
     // Releases instance
     void destroy();
@@ -31,4 +34,5 @@ private:
     std::map<direction, Lane*> m_lanes;
     float const m_time_per_action = 5000;
     float m_time_remaining;
+	AI* m_ai;
 };

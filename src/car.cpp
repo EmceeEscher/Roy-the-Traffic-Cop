@@ -9,7 +9,7 @@
 
 Texture Car::car_texture;
 
-bool Car::init()
+bool Car::init(bool isVillain)
 {
 	// Load shared texture
 	if (!car_texture.is_valid())
@@ -70,6 +70,7 @@ bool Car::init()
 	m_acceleration = { 3.f, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
+	m_is_villain = isVillain;
 	//m_rotation = 0.f;
 
 	return true;
@@ -163,6 +164,11 @@ vec2 Car::get_position()const
 	return m_position;
 }
 
+bool Car::is_villain()const
+{
+	return m_is_villain;
+}
+
 direction Car::get_desired_direction()const
 {
 	return m_desired_direction;
@@ -177,6 +183,12 @@ void Car::move(vec2 off)
 void Car::set_lane(direction dir)
 {
 	m_lane = dir;
+}
+
+void Car::set_desired_direction(direction dir)
+{
+	m_desired_direction = dir;
+	m_is_villain = false;
 }
 
 direction Car::get_lane()
