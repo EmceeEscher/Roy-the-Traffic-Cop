@@ -7,6 +7,7 @@ Lane::Lane(direction dir)
 {
 	m_dir = dir;
 	m_time_remaining = m_max_time_per_car;
+	m_lane_counter = 0;
 }
 
 
@@ -102,11 +103,14 @@ void Lane::add_car(carType type)
 void Lane::turn_car()
 {
 	if (!this->is_lane_empty()) {
-		Car& new_car = m_cars.front();
+		Car& new_car = m_cars[m_lane_counter];
 		if (m_dir == direction::WEST || m_dir == direction::EAST) {
 			if (new_car.get_vel().x <= 0.f) {
 				new_car.signal_to_move();
 				new_car.speed_up();
+				if (m_cars.size() > m_lane_counter + 1) {
+					m_lane_counter++;
+				}
 			}
 		}
 
@@ -114,6 +118,9 @@ void Lane::turn_car()
 			if (new_car.get_vel().y <= 0.f) {
 				new_car.signal_to_move();
 				new_car.speed_up();
+				if (m_cars.size() > m_lane_counter + 1) {
+					m_lane_counter++;
+				}
 			}
 		}
 		//wait...
