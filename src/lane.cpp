@@ -67,10 +67,10 @@ bool Lane::update(float ms)
 
 void Lane::add_car(carType type)
 {
-	if (this->is_lane_full()) {
+	if (!this->is_lane_full()) {
 		// change following code based on carType once we have more than one
 		Car new_car;
-		bool new_villain = (rand() / (RAND_MAX + 1.)) <= m_villain_spawn_probability;
+		bool new_villain = (rand() / (RAND_MAX + 1.)) <= m_villain_spawn_probability && !is_lane_empty();
 		if(new_car.init(new_villain)){
 			m_cars.emplace_back(new_car);
 			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
