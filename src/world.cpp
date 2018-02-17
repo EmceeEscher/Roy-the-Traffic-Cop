@@ -270,4 +270,5 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	printf("%f,%f\n", xpos, ypos);
 }

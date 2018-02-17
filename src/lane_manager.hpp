@@ -24,7 +24,9 @@ public:
     // Will try to add a car that will be frustrating for player
     void add_car();
 
-	std::vector<Car> get_cars_in_lane(direction dir);
+	bool car_delete(vec2 pos);
+
+	std::deque<Car> get_cars_in_lane(direction dir);
 
     // Will tell the first car in the lane in direction dir to turn
     void turn_car(direction dir);
