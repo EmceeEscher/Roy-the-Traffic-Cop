@@ -29,6 +29,9 @@ bool LaneManager::update(float ms)
 				car.slow_down();
 			}
 			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::WEST]->m_cars.pop_front();
+			}
 		}
 	
 		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
@@ -37,6 +40,9 @@ bool LaneManager::update(float ms)
 				car.slow_down();
 			}
 			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::NORTH]->m_cars.pop_front();
+			}
 		}
 	
 		for (Car& car : m_lanes[direction::EAST]->m_cars) {
@@ -45,6 +51,9 @@ bool LaneManager::update(float ms)
 				car.slow_down();
 			}
 			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::EAST]->m_cars.pop_front();
+			}
 		}
 	
 		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
@@ -53,6 +62,9 @@ bool LaneManager::update(float ms)
 				car.slow_down();
 			}
 			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::SOUTH]->m_cars.pop_front();
+			}
 		
 	}
 
@@ -94,7 +106,7 @@ void LaneManager::add_car()
   }
 }
 
-std::vector<Car> LaneManager::get_cars_in_lane(direction dir) {
+std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	if (dir == direction::NORTH) {
 		return this->m_lanes[direction::NORTH]->get_cars();
 	}
@@ -118,4 +130,24 @@ void LaneManager::turn_car(direction dir)
 
 void LaneManager::input_create_cars(direction dir) {
 	m_lanes[dir]->add_car(carType::REGULAR);
+}
+
+bool LaneManager::car_delete(vec2 pos) {
+	if (pos.x > 1100 && 518 < pos.y && pos.y < 590) {
+		printf("destroy east");
+		return true;
+	}
+	if (pos.x < -100 && 400 < pos.y && pos.y < 478) {
+		printf("destroy west");
+		return true;
+	}
+	if (pos.y < -100 && 518 < pos.x && pos.x < 591) {
+		printf("destroy north");
+		return true;
+	}
+	if (pos.y > 1100 && 407 < pos.x && pos.x < 485) {
+		printf("destroy south");
+		return true;
+	}
+	return false;
 }

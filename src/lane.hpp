@@ -5,6 +5,7 @@
 #include "direction.hpp"
 #include "car_type.hpp"
 
+#include <deque>
 #include <vector>
 #include <algorithm>
 
@@ -33,7 +34,7 @@ public:
 	int get_lane_num()const;
 
     // Returns the cars in the lane
-    std::vector<Car> get_cars() const;
+    std::deque<Car> get_cars() const;
 
     // Moves the game ahead by ms milliseconds
     bool update(float ms);
@@ -53,7 +54,7 @@ public:
     // Erases the first car in the lane. (Call this after that car has finished turning)
     void erase_first_car();
 
-	std::vector<Car> m_cars; // Cars in the lane
+	std::deque<Car> m_cars; // Cars in the lane
 
 
 private:
@@ -61,7 +62,6 @@ private:
     float const m_max_time_per_car = 20000; // Max time before a car will turn
     float m_time_remaining; // Time remaining on timer of car at front of lane
     direction m_dir;
-	int m_lane_counter;
 
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
