@@ -111,20 +111,20 @@ void Lane::turn_car()
 			}
 		}
 		if (index < m_cars.size()) {
-			printf("Index: %d\n", index);
-			printf("Array Size: %d\n", m_cars.size());
-			Car& new_car = m_cars.at(index);
+			//printf("Index: %d\n", index);
+			//printf("Array Size: %d\n", m_cars.size());
+			Car& selected_car = m_cars.at(index);
 			if (m_dir == direction::WEST || m_dir == direction::EAST) {
-				if (new_car.get_vel().x <= 0.f) {
-					new_car.signal_to_move();
-					new_car.speed_up();
+				if (selected_car.get_vel().x <= 0.f) {
+					selected_car.signal_to_move();
+					selected_car.speed_up();
 				}
 			}
 
 			if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
-				if (new_car.get_vel().y <= 0.f) {
-					new_car.signal_to_move();
-					new_car.speed_up();
+				if (selected_car.get_vel().y <= 0.f) {
+					selected_car.signal_to_move();
+					selected_car.speed_up();
 				}
 			}
 		}
