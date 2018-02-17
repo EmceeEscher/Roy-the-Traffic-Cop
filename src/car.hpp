@@ -63,6 +63,9 @@ public:
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
+	// Return if in or beyond intersection
+	bool is_in_beyond_intersec();
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -77,4 +80,5 @@ private:
 	float m_max_speed;
 	float m_wr;
 	float m_hr;
+	bool m_in_beyond_intersection;
 };

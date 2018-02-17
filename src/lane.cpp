@@ -104,18 +104,28 @@ void Lane::turn_car()
 	//TODO Bug where references only the front car until it is popped out of screen.
 	//This means that there is a delay in execution between the 1st car and 2nd car.
 	if (!this->is_lane_empty()) {
-		Car& new_car = m_cars.front();
-		if (m_dir == direction::WEST || m_dir == direction::EAST) {
-			if (new_car.get_vel().x <= 0.f) {
-				new_car.signal_to_move();
-				new_car.speed_up();
+		int index = 0;
+		for (Car& car : m_cars) {
+			if (car.is_in_beyond_intersec()) {
+				++index;
 			}
 		}
+		if (index < m_cars.size()) {
+			printf("Index: %d\n", index);
+			printf("Array Size: %d\n", m_cars.size());
+			Car& new_car = m_cars.at(index);
+			if (m_dir == direction::WEST || m_dir == direction::EAST) {
+				if (new_car.get_vel().x <= 0.f) {
+					new_car.signal_to_move();
+					new_car.speed_up();
+				}
+			}
 
-		if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
-			if (new_car.get_vel().y <= 0.f) {
-				new_car.signal_to_move();
-				new_car.speed_up();
+			if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
+				if (new_car.get_vel().y <= 0.f) {
+					new_car.signal_to_move();
+					new_car.speed_up();
+				}
 			}
 		}
 		//wait...
@@ -123,6 +133,8 @@ void Lane::turn_car()
 		for(std::deque<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
 		{
 			//*it.advance(); //<-- tell remaining cars to move up in the lane
+			//Do we need to tell them? I'm assuming that they will just move forward until a hit the previous car's collision
+			//box, or until it's touch a stop collision box in which case turn car will then allow them to proceed through. How feasible is this?
 		}
 	}
 }

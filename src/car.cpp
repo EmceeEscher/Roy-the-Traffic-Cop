@@ -75,6 +75,7 @@ bool Car::init()
 	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_rotation = 0.f;
+	m_in_beyond_intersection = false;
 
 	return true;
 }
@@ -276,6 +277,7 @@ float Car::get_max_speed()
 void Car::signal_to_move()
 {
 	m_can_move = true;
+	m_in_beyond_intersection = true;
 }
 
 float Car::compute_stopping_dis(float velocity, float acc)
@@ -295,4 +297,8 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 		return true;
 	else
 		return false;
+}
+
+bool Car::is_in_beyond_intersec() {
+	return m_in_beyond_intersection;
 }
