@@ -131,7 +131,7 @@ bool World::update(float elapsed_ms)
 	vec2 screen = { (float)w, (float)h };
 
 	m_game_timer.advance_time(elapsed_ms / 1000);
-	m_game_timer.get_current_time_string();
+	m_game_timer.get_current_time();
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 
