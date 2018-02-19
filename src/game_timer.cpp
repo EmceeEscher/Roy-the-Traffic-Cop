@@ -2,7 +2,7 @@
 #include "game_timer.hpp"
 
 Texture GameTimer::calendar_tex;
-TexturedVertex vertices[8];
+TexturedVertex2 vertices[8];
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -33,14 +33,14 @@ bool GameTimer::init()
 	vertices[6].position = { wr, -hr, 0.f };
 	vertices[7].position = { 0.0f, -hr, 0.f };
 
-	vertices[0].texcoord = { 0.0f, 0.5f };
-	vertices[1].texcoord = { 0.1f, 0.5f };
-	vertices[2].texcoord = { 0.1f, 0.0f };
-	vertices[3].texcoord = { 0.0f, 0.0f };
-	vertices[4].texcoord = { 0.8f, 0.5f };
-	vertices[5].texcoord = { 0.9f, 0.5f };
-	vertices[6].texcoord = { 0.9f, 0.0f };
-	vertices[7].texcoord = { 0.8f, 0.0f };
+	vertices[0].texcoord = { 0.0f, 0.5f, 0.0f };
+	vertices[1].texcoord = { 0.1f, 0.5f, 0.0f };
+	vertices[2].texcoord = { 0.1f, 0.0f, 0.0f };
+	vertices[3].texcoord = { 0.0f, 0.0f, 0.0f };
+	vertices[4].texcoord = { 0.0f, 0.5f, 1.0f };
+	vertices[5].texcoord = { 0.1f, 0.5f, 1.0f };
+	vertices[6].texcoord = { 0.1f, 0.0f, 1.0f };
+	vertices[7].texcoord = { 0.0f, 0.0f, 1.0f };
 
 	// counterclockwise as it's the default opengl front winding direction
 
@@ -52,7 +52,7 @@ bool GameTimer::init()
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 8, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 8, vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
@@ -118,11 +118,6 @@ void GameTimer::draw(const mat3& projection) {
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 
-	// Getting uniform locations for glUniform* calls
-	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-
 	// Setting vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
@@ -133,18 +128,27 @@ void GameTimer::draw(const mat3& projection) {
 	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_texcoord_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)0);
+	glVertexAttribPointer(in_texcoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)sizeof(vec3));
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, calendar_tex.id);
+
+	// Getting uniform locations for glUniform* calls
+	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
+	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+	GLint date_0_loc = glGetUniformLocation(effect.program, "date_0_offset");
+	GLint date_1_loc = glGetUniformLocation(effect.program, "date_1_offset");
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniform1f(date_0_loc, 0.2f);
+	glUniform1f(date_1_loc, 0.8f);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, nullptr);

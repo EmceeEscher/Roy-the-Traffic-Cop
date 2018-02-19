@@ -54,6 +54,13 @@ struct TexturedVertex
 	vec2 texcoord;
 };
 
+// Textured Vertex Hack to allow modification of offset
+struct TexturedVertex2
+{
+	vec3 position;
+	vec3 texcoord;
+};
+
 // Texture wrapper
 struct Texture
 {
