@@ -275,7 +275,7 @@ char* get_month_from_index(int month_index)
 		return "October";
 	case 10:
 		return "November";
-	case 11:
+	default:
 		return "December";
 	}
 }
