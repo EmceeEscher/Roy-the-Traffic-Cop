@@ -2,6 +2,7 @@
 #include "game_timer.hpp"
 
 Texture GameTimer::calendar_tex;
+TexturedVertex vertices[8];
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -23,20 +24,19 @@ bool GameTimer::init()
 	float wr = calendar_tex.width * 0.2f;
 	float hr = calendar_tex.height * 0.5f;
 
-	TexturedVertex vertices[8];
 	vertices[0].position = { -wr, +hr, 0.f };
 	vertices[1].position = { 0, +hr, 0.f };
 	vertices[2].position = { 0, -hr, 0.f };
 	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[0].texcoord = { 0.0f, 0.5f };//top left
-	vertices[1].texcoord = { 0.1f, 0.5f };//top right
-	vertices[2].texcoord = { 0.1f, 0.0f };//bottom right
-	vertices[3].texcoord = { 0.0f, 0.0f };//bottom left
-
 	vertices[4].position = { 0.0f, +hr, 0.f };
 	vertices[5].position = { wr, +hr, 0.f };
 	vertices[6].position = { wr, -hr, 0.f };
 	vertices[7].position = { 0.0f, -hr, 0.f };
+
+	vertices[0].texcoord = { 0.0f, 0.5f };
+	vertices[1].texcoord = { 0.1f, 0.5f };
+	vertices[2].texcoord = { 0.1f, 0.0f };
+	vertices[3].texcoord = { 0.0f, 0.0f };
 	vertices[4].texcoord = { 0.8f, 0.5f };
 	vertices[5].texcoord = { 0.9f, 0.5f };
 	vertices[6].texcoord = { 0.9f, 0.0f };
@@ -63,7 +63,7 @@ bool GameTimer::init()
 	glGenVertexArrays(1, &mesh.vao);
 
 	// Loading shaders
-	effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl"));
+	effect.load_from_file(shader_path("gameTimer.vs.glsl"), shader_path("gameTimer.fs.glsl"));
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	m_scale.x = 0.25;
@@ -106,7 +106,6 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 }
 
 void GameTimer::draw(const mat3& projection) {
-
 	transform_begin();
 	transform_translate(m_position);
 	transform_scale(m_scale);
