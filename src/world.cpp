@@ -212,7 +212,6 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
-	//m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
 
