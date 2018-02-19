@@ -3,6 +3,10 @@
 
 Texture GameTimer::calendar_tex;
 TexturedVertex2 vertices[8];
+float m_time;
+double m_changetime;
+float offset1;
+float offset2;
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -69,7 +73,8 @@ bool GameTimer::init()
 	m_scale.x = 0.25;
 	m_scale.y = 0.25;
 	m_position = { 500.f, 500.f };
-
+	m_time = 0;
+	m_changetime = 0;
 
 	return true;
 }
@@ -105,6 +110,20 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 	m_current_time = mktime(&new_time);
 }
 
+void GameTimer::update(float ms) {
+	if (m_changetime == 0) {
+		m_changetime = 2000.0;
+		offset1 += 0.1;
+	}else{
+		m_changetime -= 100.0;
+		if (std::fmod(m_changetime, 1000) == 0) {
+			offset2 += 0.1;
+		}
+		//printf("%f\n", ms);
+	}
+	m_time += 1.0f;
+}
+
 void GameTimer::draw(const mat3& projection) {
 	transform_begin();
 	transform_translate(m_position);
@@ -137,18 +156,21 @@ void GameTimer::draw(const mat3& projection) {
 
 	// Getting uniform locations for glUniform* calls
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 	GLint date_0_loc = glGetUniformLocation(effect.program, "date_0_offset");
 	GLint date_1_loc = glGetUniformLocation(effect.program, "date_1_offset");
+
+	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+	GLint time_uloc = glGetUniformLocation(effect.program, "time");
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-	glUniform1f(date_0_loc, 0.2f);
-	glUniform1f(date_1_loc, 0.8f);
+	glUniform1f(date_0_loc, offset1);
+	glUniform1f(date_1_loc, offset2);
+	glUniform1f(time_uloc, m_time);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, nullptr);
