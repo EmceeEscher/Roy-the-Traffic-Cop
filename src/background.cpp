@@ -6,7 +6,7 @@
 
 Texture Background::background_texture;
 
-bool Background::init(float world_scale)
+bool Background::init()
 {
 	// Load shared texture
 	if (!background_texture.is_valid())
@@ -18,8 +18,8 @@ bool Background::init(float world_scale)
 		}
 	}
 	// The position (0,0) corresponds to the center of the texture
-	float wr = background_texture.width * 0.5 * world_scale;
-	float hr = background_texture.height * 0.5 * world_scale;
+	float wr = background_texture.width * 0.5;
+	float hr = background_texture.height * 0.5;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, 0.f };
@@ -60,9 +60,8 @@ bool Background::init(float world_scale)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 500.f * world_scale, 500.f * world_scale};
+	m_position = { 500.f, 500.f};
 	//m_rotation = 0.f;
-
 	return true;
 }
 

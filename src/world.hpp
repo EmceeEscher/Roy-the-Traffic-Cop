@@ -6,6 +6,9 @@
 #include "background.hpp"
 #include "car.hpp"
 #include "game_timer.hpp"
+#include "lane_manager.hpp"
+#include "lane.hpp"
+#include "direction.hpp"
 
 // stlib
 #include <vector>
@@ -38,8 +41,6 @@ public:
 	// Should the game be over ?
 	bool is_over()const;
 
-	// Returns the scale between window coordinates/game coordinates (for high-density displays)
-	float get_world_scale();
 
 private:
 	// !!! INPUT CALLBACK FUNCTIONS
@@ -57,16 +58,16 @@ private:
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
 	Background m_background;
+	LaneManager m_lane_manager;
 	//Just a single car to show for now.
 	Car m_car;
-	//std::vector<Car> m_cars;
+  
+	float lanes_rot[4];
 
-
-	float m_world_scale;
-
-	bool m_advanced_features;
+	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
+	Mix_Chunk* m_roy_whistle;
 
 	// C++ rng
 	std::default_random_engine m_rng;
