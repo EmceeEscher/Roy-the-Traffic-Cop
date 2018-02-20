@@ -13,6 +13,7 @@ bool GameTimer::init()
 	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
 	init_time.tm_year = 70; // mktime starts from 1900 for some reason
 	m_current_time = mktime(&init_time);
+<<<<<<< HEAD
 
 	//load texture
 	if (!calendar_tex.is_valid())
@@ -76,6 +77,8 @@ bool GameTimer::init()
 	m_time = 0;
 	m_changetime = 0;
 
+=======
+>>>>>>> add_game_timer_logic
 	return true;
 }
 
@@ -92,9 +95,7 @@ CurrentTime GameTimer::get_current_time()
 	SplitSetDateDigits(current_time->tm_mday);
 =======
 
-	printf("Month: %d Day: %d Year: %d\n", return_time.month
-		, return_time.day
-		, return_time.year);
+	printf("Month: %d Day: %d Year: %d\n", return_time.month, return_time.day, return_time.year);
 
 >>>>>>> add_game_timer_logic
 	return return_time;
@@ -106,6 +107,7 @@ void GameTimer::SplitSetDateDigits(int date) {
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
+<<<<<<< HEAD
 {
 	const int SECONDS_IN_DAY = 86400;
 
@@ -122,8 +124,15 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 	new_time.tm_sec = seconds_elapsed + current_seconds;
 	new_time.tm_mday = current_days + 1;
 	new_time.tm_year = 70;
+=======
+{	
+	const int One_Day = 86400;
+>>>>>>> add_game_timer_logic
 
-	m_current_time = mktime(&new_time);
+	//In one second, how many days do you need to go by? X * One_Day, ie 2*, 1 second = 2 days in game. 
+	struct tm * adv_time = localtime(&m_current_time);
+	adv_time->tm_sec += real_time_seconds_elapsed * 2*One_Day;
+	m_current_time = mktime(adv_time);
 }
 
 void GameTimer::update(float ms) {
