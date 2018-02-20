@@ -61,8 +61,10 @@ private:
 	direction get_most_villainous_direction(direction active_lane, std::map<direction, Lane*> current_lanes);
 
 	// Given two lanes and the cars in them, determine whether or not both lanes can be safely sent at once
-	bool can_lanes_go_at_once(int lane_1_position, int lane_2_position,
-		int car_1_destination, int car_2_destination, bool car_1_villain, bool car_2_villain);
+	bool can_lanes_go_at_once(int lane_1_position, int lane_2_position, int car_1_destination, int car_2_destination);
+
+	// Given a car's position and destination, returns 90 for a right turn, 180 for going straight and -90 for a left turn
+	int convert_angle_to_turn_angle(int car_position, int car_destination);
 
 	// Convert direction to the position of the direction on the compass (0 for south, 90 for east, 180 for north, 270 for west)
 	int get_lane_position_from_direction(direction direction);

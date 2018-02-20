@@ -76,6 +76,7 @@ bool Car::init(bool isVillain)
 	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+	std::srand(std::time(nullptr));
 
 	return true;
 }
@@ -225,6 +226,16 @@ void Car::set_desired_direction(direction dir)
 {
 	m_desired_direction = dir;
 	m_is_villain = false;
+}
+
+void Car::generate_desired_direction()
+{
+	if (!m_is_villain) {
+		m_desired_direction = m_lane;
+		while (m_desired_direction == m_lane) {
+			m_desired_direction = direction(rand() % 4);
+		}
+	}
 }
 
 direction Car::get_lane()

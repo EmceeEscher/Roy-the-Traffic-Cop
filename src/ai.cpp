@@ -16,7 +16,9 @@ void AI::make_villains_decide(std::map<direction, Lane*> lanes)
 		// vehicles generated into lanes without cars already in them are not eligible to be villains
 		if (carsInLane.size() > 1) {
 			if (carsInLane[1].is_villain()) {
-				carsInLane[1].set_desired_direction(make_villain_decide(it->first, lanes));
+				direction new_direction = make_villain_decide(it->first, lanes);
+				printf("direction: %i\n", new_direction);
+				carsInLane[1].set_desired_direction(new_direction);
 			}
 		}
 	}
@@ -66,7 +68,12 @@ void AI::get_best_turning_direction(
 		float current_cars_turned_per_move = (float)cars_turned / (float)current_ply;
 		if (current_cars_turned_per_move > bestPlayerOutcome->cars_turned_per_move) {
 			bestPlayerOutcome->cars_turned_per_move = current_cars_turned_per_move;
-			bestPlayerOutcome->most_villainous_direction = direction(rand() % 4);
+			direction new_direction = active_lane;
+			while (active_lane == new_direction) {
+				new_direction = direction(rand() % 4);
+			}
+
+			bestPlayerOutcome->most_villainous_direction = new_direction;
 		}
 
 		return;
@@ -83,7 +90,8 @@ void AI::get_best_turning_direction(
 	{
 		apply_move_to_lanes(*it, new_lanes);
 		bool is_moving_active_lane = it->find(active_lane) != it->end();
-		get_best_turning_direction(active_lane, new_lanes, current_ply++, cars_turned + it->size(), is_moving_active_lane, bestPlayerOutcome);
+
+		get_best_turning_direction(active_lane, new_lanes, current_ply + 1, cars_turned + it->size(), is_moving_active_lane, bestPlayerOutcome);
 		new_lanes = deep_copy_lanes(current_lanes);
 	}
 }
@@ -131,21 +139,30 @@ std::vector<std::set<direction>> AI::generate_moves(std::map<direction, Lane*> c
 		bool contains_most_urgent_lane = false;
 		std::set<direction> move;
 		for (int j = 0; j < combination_size; j++) {
-			if (directions[j] == most_urgent_lane) {
+			int current_proposed_lane = combination[j];
+
+			if (directions[current_proposed_lane] == most_urgent_lane) {
 				// This combination will involve the player moving the lane that's closest to going on its own.
 				contains_most_urgent_lane = true;
 			}
 			for (int k = j + 1; k < combination_size; k++) {
 				// If any two lanes in this combination aren't able to move at the same time, then this combination
 				// is invalid.
-				valid_combination = valid_combination && compatibility_matrix[j][k];
+				valid_combination = valid_combination && compatibility_matrix[current_proposed_lane][combination[k]];
 			}
+
+			if (current_lanes[direction(current_proposed_lane)]->get_cars().size() == 0) {
+				// If this lane is empty, it can't be moved
+				valid_combination = false;
+			}
+			
 			if (!valid_combination) {
 				// If any two of the lanes can't move in unison then this move is invalid so no point in checking more.
 				break;
 			}
+
 			// Convert integer to direction
-			move.insert(directions[j]);
+			move.insert(directions[combination[j]]);
 		}
 
 		// If there's very low time left on a lane's clock, then a move isn't valid unless it involves moving the car in that lane.
@@ -192,17 +209,22 @@ std::vector<std::vector<bool>> AI::calculate_compatibility_matrix(std::map<direc
 			if (lane1_cars.size() == 0 || lane2_cars.size() == 0) {
 				// Can't move both lanes at once if one lane can't move at all because it has no car
 				compatibility_matrix[i][j] = false;
+				break;
+			}
+			Car car1 = lane1_cars[0];
+			Car car2 = lane2_cars[0];
+			if (car1.is_villain() || car2.is_villain()) {
+				// If either car is a villain then assume that they won't allow the player to move them at once.
+				// This avoids complicated double recursive non-terminating logic where each villain needs to know
+				// about the other villain before it can come to a decision.
+				compatibility_matrix[i][j] = false;
 			}
 			else {
-				Car car1 = lane1_cars[0];
-				Car car2 = lane2_cars[0];
 				compatibility_matrix[i][j] = can_lanes_go_at_once(
 					get_lane_position_from_direction(direction1),
 					get_lane_position_from_direction(direction2),
 					get_lane_position_from_direction(car1.get_desired_direction()),
-					get_lane_position_from_direction(car2.get_desired_direction()),
-					car1.is_villain(),
-					car2.is_villain()
+					get_lane_position_from_direction(car2.get_desired_direction())
 				);
 			}
 		}
@@ -218,7 +240,7 @@ void AI::apply_move_to_lanes(std::set<direction> move, std::map<direction, Lane*
 		if (move.find(it->first) != move.end()) {
 			// If the move involves this lane then turn the car in this lane and reset the time remaining.
 			currentLane->set_time_remaining(currentLane->MaxTimePerCar);
-			currentLane->turn_car();
+			currentLane->erase_first_car();
 		}
 		else {
 			// If the move doesn't involve this lane, then subtract our estimated time remaining to simulate
@@ -271,34 +293,24 @@ bool AI::can_lanes_go_at_once(
 	int lane_1_position, 
 	int lane_2_position, 
 	int car_1_destination, 
-	int car_2_destination, 
-	bool car_1_villain, 
-	bool car_2_villain
+	int car_2_destination
 ) {
-	if (car_1_villain || car_2_villain) {
-		// If either car is a villain then assume that they won't allow the player to move them at once.
-		// This avoids complicated double recursive non-terminating logic where each villain needs to know
-		// about the other villain before it can come to a decision.
-		return false;
-	}
+	int lane_angle = lane_2_position - lane_1_position; // Angle (> 0) between the two lanes
 
-	int delta_position = lane_2_position - lane_1_position; // Angle (> 0) between the two lanes
+	int car_1_turn_desire = convert_angle_to_turn_angle(lane_1_position, car_1_destination);
+	int car_2_turn_desire = convert_angle_to_turn_angle(lane_2_position, car_2_destination);
 
-	int delta_car_1 = car_1_destination - lane_1_position; // Angle that car 1 wants to travel
-	int delta_car_2 = car_2_destination - lane_2_position; // Angle that car 2 wants to travel
-
-	switch (delta_position) {
+	switch (lane_angle) {
 	case 90:
 		// The lanes are 90 degrees apart
 		// Lane 1 is to the LEFT of lane 2
-		switch (delta_car_1) {
+		switch (car_1_turn_desire) {
 		case 90:
 			// The first car wants to turn right
 			// It's always safe for both cars to go
 			return true;
 		case -90:
 		case 180:
-		case -180:
 			// The first car wants to go straight or turn left
 			// It's never safe for both cars to go
 			return false;
@@ -307,37 +319,52 @@ bool AI::can_lanes_go_at_once(
 		}
 	case 180:
 		// The lanes are across from eachother
-		switch (delta_car_1) {
+		switch (car_1_turn_desire) {
 		case -90:
 			// The first car wants to go left
 			// It's never safe for both cars to go
 			return false;
 		case 90:
 		case 180:
-		case -180:
 			// The first car wants to go straight or right
 			// It's safe to go as long as the second car doesn't want to turn left
-			return delta_car_2 != -90;
+			return car_2_turn_desire != -90;
 		default:
 			throw std::invalid_argument("received invalid car destinations");
 		}
 	case 270:
 		// The lanes are 90 degrees apart
 		// Lane 1 is to the RIGHT of lane 2
-		switch (delta_car_2) {
+		switch (car_2_turn_desire) {
 		case 90:
 			// The second car wants to turn right
 			// It's always safe for both cars to go
 			return true;
 		case -90:
 		case 180:
-		case -180:
 			// The second car wants to go straight or turn left
 			// It's never safe for both cars to go
 			return false;
 		default:
 			throw std::invalid_argument("received invalid car destinations");
 		}
+	default:
+		throw std::invalid_argument("received invalid lane positions");
+	}
+}
+
+int AI::convert_angle_to_turn_angle(int car_position, int car_destination) {
+	int angle = car_destination - car_position;
+	switch (angle) {
+	case -90:
+	case 270:
+		return -90;
+	case 180:
+	case -180:
+		return 180;
+	case 90:
+	case -270:
+		return 90;
 	default:
 		throw std::invalid_argument("received invalid lane positions");
 	}

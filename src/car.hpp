@@ -3,6 +3,8 @@
 #include "common.hpp"
 #include "direction.hpp"
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 using std::string;
 
@@ -35,6 +37,10 @@ public:
 
 	// Sets the desired direction for the car and removes it's villainy
 	void set_desired_direction(direction dir);
+
+	// Randomly assignes the desired direction for the car
+	// Call after set_lane to ensure desired direction != our lane
+	void generate_desired_direction();
 
 	// Moves the position by the specified offset
 	void move(vec2 off);

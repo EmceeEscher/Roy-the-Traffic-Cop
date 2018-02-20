@@ -101,6 +101,7 @@ void Lane::add_car(carType type)
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
 			}
+			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
 			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
 		}
