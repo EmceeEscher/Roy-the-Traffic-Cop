@@ -72,6 +72,9 @@ void AI::get_best_turning_direction(
 		return;
 	}
 
+	// If the villain isn't at the front of his lane and we aren't at our max depth, then let's build out our tree for each
+	// possible (valid) move that the player could make.
+
 	// Don't want to modify the real game lanes
 	std::map<direction, Lane*> new_lanes = deep_copy_lanes(current_lanes);
 	std::vector<std::set<direction>> possible_moves = generate_moves(new_lanes);
