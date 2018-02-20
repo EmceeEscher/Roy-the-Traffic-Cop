@@ -2,8 +2,14 @@
 
 #include "common.hpp"
 #include <ctime>
-#include <sstream>
 using std::string;
+
+struct CurrentTime
+{
+	int year;
+	string month;
+	int day;
+};
 
 class GameTimer : public Renderable
 {
@@ -20,7 +26,7 @@ public:
 	// Note: We're probably not going to be printing a string at the end,
 	// so this function may need to change to return a struct with the month, day and year
 	// Depends on how we want to display the timer
-	string get_current_time_string();
+	CurrentTime get_current_time();
 
 	// Advances the current in-game time by the appropriate amount of time for the clock tick
 	void advance_time(float real_time_seconds_elapsed);
