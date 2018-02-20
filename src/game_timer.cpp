@@ -85,16 +85,22 @@ CurrentTime GameTimer::get_current_time()
 	string month = std::string(get_month_from_index(current_time->tm_mon));
 	CurrentTime return_time = {
 		current_time->tm_year + 1900,
-		month,
+		current_time->tm_mon,
 		current_time->tm_mday
 	};
-
+	SplitSetDateDigits(current_time->tm_mday);
 	return return_time;
+}
+
+void GameTimer::SplitSetDateDigits(int date) {
+	offset2 = std::fmodf(date, 10) * 0.1f; 
+	offset1 = std::fmodf(date / 10, 10)*0.1f;
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {
 	const int SECONDS_IN_DAY = 86400;
+
 
 	// Hacky workaround for the fact that mktime requires ints to be passed and ints are overflowy.
 	// Works for date ranges in reasonable timeframes, so works for us unless Roy is going to live to be thousands of years old
@@ -102,6 +108,7 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 	int current_days = current_seconds_elapsed / SECONDS_IN_DAY;
 	int current_seconds = current_seconds_elapsed - (current_days * SECONDS_IN_DAY);
 	int seconds_elapsed = real_time_seconds_elapsed * GameToRealSecondsRatio;
+	//printf("seconds_elapsed: %d\n", seconds_elapsed);
 
 	struct tm new_time = {0};
 	new_time.tm_sec = seconds_elapsed + current_seconds;
@@ -112,17 +119,17 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 }
 
 void GameTimer::update(float ms) {
-	if (m_changetime == 0) {
-		m_changetime = 2000.0;
-		offset1 += 0.1;
-	}else{
-		m_changetime -= 100.0;
-		if (std::fmod(m_changetime, 1000) == 0) {
-			offset2 += 0.1;
-		}
-		//printf("%f\n", ms);
-	}
-	m_time += 1.0f;
+	//if (m_changetime == 0) {
+	//	m_changetime = 2000.0;
+	//	offset1 += 0.1;
+	//}else{
+	//	m_changetime -= 100.0;
+	//	if (std::fmod(m_changetime, 1000) == 0) {
+	//		offset2 += 0.1;
+	//	}
+	//	//printf("%f\n", ms);
+	//}
+	//m_time += 1.0f;
 }
 
 void GameTimer::draw(const mat3& projection) {
@@ -166,11 +173,12 @@ void GameTimer::draw(const mat3& projection) {
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	float color[] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 	glUniform1f(date_0_loc, offset1);
 	glUniform1f(date_1_loc, offset2);
+
+	float color[] = { 1.f, 1.f, 1.f };
+	glUniform3fv(color_uloc, 1, color);
 	glUniform1f(time_uloc, m_time);
 
 	// Drawing!

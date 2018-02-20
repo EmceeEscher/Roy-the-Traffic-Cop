@@ -7,7 +7,7 @@ using std::string;
 struct CurrentTime
 {
 	int year;
-	string month;
+	int month;
 	int day;
 };
 
@@ -30,6 +30,9 @@ public:
 
 	// Advances the current in-game time by the appropriate amount of time for the clock tick
 	void advance_time(float real_time_seconds_elapsed);
+
+	// Split and set Date digits for texture offset
+	void SplitSetDateDigits(int date);
 
 	// Renders
 	void draw(const mat3& projection) override;
