@@ -6,6 +6,10 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
+  lanes[0] = { 450.f,400.f };
+  lanes[1] = { 400.f,540.f };
+  lanes[2] = { 550.f,590.f };
+  lanes[3] = { 760.f,450.f }
 
   m_time_remaining = m_time_per_action;
 
@@ -21,7 +25,52 @@ void LaneManager::destroy()
 
 bool LaneManager::update(float ms)
 {
-  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+		for (Car& car : m_lanes[direction::WEST]->m_cars) {
+			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::WEST]->m_cars.pop_front();
+			}
+		}
+	
+		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
+			if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::NORTH]->m_cars.pop_front();
+			}
+		}
+	
+		for (Car& car : m_lanes[direction::EAST]->m_cars) {
+			if (car.is_approaching_stop(lanes[3]) && car.get_acc().x > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::EAST]->m_cars.pop_front();
+			}
+		}
+	
+		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
+			if (car.is_approaching_stop(lanes[2]) && car.get_acc().y > 0.f)
+			{
+				car.slow_down();
+			}
+			car.update(ms);
+			if (car_delete(car.get_position())) {
+				m_lanes[direction::SOUTH]->m_cars.pop_front();
+			}
+		
+	}
+
+/*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
   {
     it->second->update(ms);
   }
@@ -32,6 +81,7 @@ bool LaneManager::update(float ms)
     this->add_car();
     m_time_remaining = m_time_per_action;
   }
+  */
   return true;
 }
 
@@ -58,8 +108,49 @@ void LaneManager::add_car()
   }
 }
 
+std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
+	if (dir == direction::NORTH) {
+		return this->m_lanes[direction::NORTH]->get_cars();
+	}
+	else if (dir == direction::WEST) {
+		return this->m_lanes[direction::WEST]->get_cars();
+	}
+	else if (dir == direction::EAST) {
+		return this->m_lanes[direction::EAST]->get_cars();
+	}
+	else if (dir == direction::SOUTH) {
+		return this->m_lanes[direction::SOUTH]->get_cars();
+	}
+}
+
 void LaneManager::turn_car(direction dir)
 {
   m_lanes[dir]->turn_car();
   m_ai->make_villains_decide(m_lanes);
+}
+
+//Temporary manual input to test before implementation of AI
+
+void LaneManager::input_create_cars(direction dir) {
+	m_lanes[dir]->add_car(carType::REGULAR);
+}
+
+bool LaneManager::car_delete(vec2 pos) {
+	if (pos.x > 1100 && 518 < pos.y && pos.y < 590) {
+		printf("destroy east");
+		return true;
+	}
+	if (pos.x < -100 && 400 < pos.y && pos.y < 478) {
+		printf("destroy west");
+		return true;
+	}
+	if (pos.y < -100 && 518 < pos.x && pos.x < 591) {
+		printf("destroy north");
+		return true;
+	}
+	if (pos.y > 1100 && 407 < pos.x && pos.x < 485) {
+		printf("destroy south");
+		return true;
+	}
+	return false;
 }
