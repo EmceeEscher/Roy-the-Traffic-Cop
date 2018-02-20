@@ -15,7 +15,10 @@ class GameTimer : public Renderable
 {
 	static Texture calendar_tex;
 public:
-	const long int GameToRealSecondsRatio = 172800; // One real second corresponds to two days in game
+	const long int GameToRealSecondsRatio = 
+		20
+		/*172800*/
+		; // One real second corresponds to two days in game
 	const int DaysAfterUnixDate = 17532; // January 1st, 2018: days because seconds lead to overflow
 
 	// Creates instance

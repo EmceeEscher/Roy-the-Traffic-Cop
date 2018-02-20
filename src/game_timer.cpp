@@ -88,7 +88,15 @@ CurrentTime GameTimer::get_current_time()
 		current_time->tm_mon,
 		current_time->tm_mday
 	};
+<<<<<<< HEAD
 	SplitSetDateDigits(current_time->tm_mday);
+=======
+
+	printf("Month: %d Day: %d Year: %d\n", return_time.month
+		, return_time.day
+		, return_time.year);
+
+>>>>>>> add_game_timer_logic
 	return return_time;
 }
 
