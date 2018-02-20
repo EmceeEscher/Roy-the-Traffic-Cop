@@ -40,6 +40,12 @@ private:
 	// A move consists of turning one or more cars without causing a collision.
 	std::vector<std::set<direction>> generate_moves(std::map<direction, Lane*> current_lanes);
 
+	// For a given set of lanes, calculate which lane requires most urgent attention
+	direction calculate_most_urgent_direction(std::map<direction, Lane*> current_lanes);
+
+	// For a given set of lanes, calculate a compatibility matrix to determine which lanes can move at the same time
+	std::vector<std::vector<bool>> calculate_compatibility_matrix(std::map<direction, Lane*> current_lanes, std::vector<direction> directions);
+
 	// Make deepcopy of the lanes so we can simulate moves without affecting the true gamestate
 	std::map<direction, Lane*> deep_copy_lanes(std::map<direction, Lane*>);
 	

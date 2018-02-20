@@ -99,7 +99,71 @@ std::map<direction, Lane*> AI::deep_copy_lanes(std::map<direction, Lane*> lanes)
 }
 
 std::vector<std::set<direction>> AI::generate_moves(std::map<direction, Lane*> current_lanes) {
-	// This is the lane that is next going to auto-turn the car, and the time remaining on that lane
+	// This is the lane that is next going to auto-turn the car
+	direction most_urgent_lane = calculate_most_urgent_direction(current_lanes);
+	
+	// We need to generate a compatibility matrix. This matrix is 4x4 and each cell represents a 
+	// relationship between two lanes. If the value of the cell is "true" then that means that the cars
+	// in both of those lanes can be moved at the same time without causing a collision. If the value in
+	// the cell is false, that means that if both of those lanes are moved simultaneously, a collision will
+	// result.
+	std::vector<direction> directions{ direction::SOUTH, direction::EAST, direction::NORTH, direction::WEST };
+	std::vector<std::vector<bool>> compatibility_matrix = calculate_compatibility_matrix(current_lanes, directions);
+	
+
+	std::vector<std::vector<int>> combinations{ {0,1,2,3}, {0,1,2}, {0,1,3}, {0,2,3}, {0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}, {0}, {1}, {2}, {3} }; // hacky
+	std::vector<std::set<direction>> moves;
+
+	// Check to see if each possible move is valid. For instance, if {0,1,2,3} is valid, then all four lanes can move simultaneously.
+	// If {1,2} is valid then the East and North lanes can move simultaneously. Each valid combination is a valid move that the user could
+	// take. At least one combination must be valid unless all lanes are empty, in which case this function will never be called.
+	for (int i = 0; i < combinations.size(); i++) {
+		std::vector<int> combination = combinations[i];
+		int combination_size = combination.size(); // The number of lanes that would simultaneously turn if the player took this move
+		if (moves.size() > 0) {
+			if (moves.back().size() > combination_size) {
+				// If we've found a combination with more lanes moving than the current combination, then let's move on.
+				// A user should never turn only n lanes if he can instead move more than n, so there's no need to proceed.
+				break;
+			}
+		}
+		bool valid_combination = true;
+		bool contains_most_urgent_lane = false;
+		std::set<direction> move;
+		for (int j = 0; j < combination_size; j++) {
+			if (directions[j] == most_urgent_lane) {
+				// This combination will involve the player moving the lane that's closest to going on its own.
+				contains_most_urgent_lane = true;
+			}
+			for (int k = j + 1; k < combination_size; k++) {
+				// If any two lanes in this combination aren't able to move at the same time, then this combination
+				// is invalid.
+				valid_combination = valid_combination && compatibility_matrix[j][k];
+			}
+			if (!valid_combination) {
+				// If any two of the lanes can't move in unison then this move is invalid so no point in checking more.
+				break;
+			}
+			// Convert integer to direction
+			move.insert(directions[j]);
+		}
+
+		// If there's very low time left on a lane's clock, then a move isn't valid unless it involves moving the car in that lane.
+		float most_urgent_lane_time_remaining = current_lanes[most_urgent_lane]->get_time_remaining();
+		if (most_urgent_lane_time_remaining < EstimatedPlayerMoveTime) {
+			valid_combination = valid_combination && contains_most_urgent_lane;
+		}
+		
+		// Only return this combination as a move if it's a valid move.
+		if (valid_combination) {
+			moves.push_back(move);
+		}
+	}
+
+	return moves;
+}
+
+direction AI::calculate_most_urgent_direction(std::map<direction, Lane*> current_lanes) {
 	direction most_urgent_lane;
 	float most_urgent_lane_time_remaining = std::numeric_limits<float>::max();
 
@@ -112,12 +176,10 @@ std::vector<std::set<direction>> AI::generate_moves(std::map<direction, Lane*> c
 		}
 	}
 
-	// We need to generate a compatibility matrix. This matrix is 4x4 and each cell represents a 
-	// relationship between two lanes. If the value of the cell is "true" then that means that the cars
-	// in both of those lanes can be moved at the same time without causing a collision. If the value in
-	// the cell is false, that means that if both of those lanes are moved simultaneously, a collision will
-	// result.
-	std::vector<direction> directions{ direction::SOUTH, direction::EAST, direction::NORTH, direction::WEST };
+	return most_urgent_lane;
+}
+
+std::vector<std::vector<bool>> AI::calculate_compatibility_matrix(std::map<direction, Lane*> current_lanes, std::vector<direction> directions) {
 	std::vector<std::vector<bool>> compatibility_matrix;
 	compatibility_matrix.resize(4, std::vector<bool>(4, false)); // Matrix is now 4x4
 
@@ -146,54 +208,7 @@ std::vector<std::set<direction>> AI::generate_moves(std::map<direction, Lane*> c
 		}
 	}
 
-	std::vector<std::vector<int>> combinations{ {0,1,2,3}, {0,1,2}, {0,1,3}, {0,2,3}, {0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}, {0}, {1}, {2}, {3} }; // hacky
-	std::vector<std::set<direction>> moves;
-
-	// Check to see if each possible move is valid. For instance, if {0,1,2,3} is valid, then all four lanes can move simultaneously.
-	// If {1,2} is valid then the East and North lanes can move simultaneously. Each valid combination is a valid move that the user could
-	// take.
-	for (int i = 0; i < combinations.size(); i++) {
-		std::vector<int> combination = combinations[i];
-		int combination_size = combination.size();
-		if (moves.size() > 0) {
-			if (moves.back().size() > combination_size) {
-				// If we've found a combination with more lanes moving than the current combination, then let's move on.
-				// A user should never move only one lane if he can move two, so there's no need to proceed.
-				break;
-			}
-		}
-		bool valid_combination = true;
-		bool contains_most_urgent_lane = false;
-		std::set<direction> move;
-		for (int j = 0; j < combination_size; j++) {
-			if (directions[j] == most_urgent_lane) {
-				// This combination will involve the player moving the lane that's closest to going on its own.
-				contains_most_urgent_lane = true;
-			}
-			for (int k = j + 1; k < combination_size; k++) {
-				// If any two lanes in this combination aren't able to move at the same time, then this combination
-				// is invalid.
-				valid_combination = valid_combination && compatibility_matrix[j][k];
-			}
-			if (!valid_combination) {
-				break;
-			}
-			// Convert integer to direction
-			move.insert(directions[j]);
-		}
-
-		// If there's very low time left on a lane's clock, then a move isn't valid unless it involves moving the car in that lane.
-		if (most_urgent_lane_time_remaining < EstimatedPlayerMoveTime) {
-			valid_combination = valid_combination && contains_most_urgent_lane;
-		}
-		
-		// Only return this combination as a move if it's a valid move.
-		if (valid_combination) {
-			moves.push_back(move);
-		}
-	}
-
-	return moves;
+	return compatibility_matrix;
 }
 
 void AI::apply_move_to_lanes(std::set<direction> move, std::map<direction, Lane*> lanes) {
@@ -221,19 +236,37 @@ direction AI::get_most_villainous_direction(direction active_lane, std::map<dire
 	int best_direction_score = 5;
 
 	// Test all four directions and see which one involves the fewest cars moving on the player's next turn.
+	Car villain = current_lanes[active_lane]->get_cars()[0];
 	for (int i = 0; i < directions.size(); i++) {
-		current_lanes[active_lane]->get_cars()[0].set_desired_direction(directions[i]);
+		direction current_direction = directions[i];
+		if (current_direction == active_lane) {
+			continue; // No U-Turns
+		}
+		villain.set_desired_direction(directions[i]);
+
+		// If the villain chooses this direction, what moves will be available to the player
 		std::vector<std::set<direction>> moves = generate_moves(current_lanes);
-		if (moves.begin()->size() < best_direction_score) {
+		
+		// generate_moves will only generate moves that move the most number of cars possible
+		// the number of simultaneous lanes moving will be constant across all moves in moves
+		int best_move_size = moves.begin()->size();
+
+		if (best_move_size < best_direction_score) {
 			best_direction = directions[i];
-			best_direction_score = moves.begin()->size();
+			best_direction_score = best_move_size;
 		}
 	}
 
 	return best_direction;
 }
 
-// lane_1_position must be less than lane_2_position, therefore car1 is always from a lower position lane than car2.
+// INVARIANT: lane_1_position must be less than lane_2_position
+// therefore car1 is always from a lower position lane than car2
+// lane positions:
+// 0 - South
+// 90 - East
+// 180 - North
+// 270 - West
 bool AI::can_lanes_go_at_once(
 	int lane_1_position, 
 	int lane_2_position, 
@@ -244,10 +277,12 @@ bool AI::can_lanes_go_at_once(
 ) {
 	if (car_1_villain || car_2_villain) {
 		// If either car is a villain then assume that they won't allow the player to move them at once.
+		// This avoids complicated double recursive non-terminating logic where each villain needs to know
+		// about the other villain before it can come to a decision.
 		return false;
 	}
 
-	int delta_position = lane_2_position - lane_1_position; // Angle between the two lanes
+	int delta_position = lane_2_position - lane_1_position; // Angle (> 0) between the two lanes
 
 	int delta_car_1 = car_1_destination - lane_1_position; // Angle that car 1 wants to travel
 	int delta_car_2 = car_2_destination - lane_2_position; // Angle that car 2 wants to travel
