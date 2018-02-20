@@ -17,9 +17,13 @@ CurrentTime GameTimer::get_current_time()
 	string month = std::string(get_month_from_index(current_time->tm_mon));
 	CurrentTime return_time = {
 		current_time->tm_year + 1900,
-		month,
+		current_time->tm_mon,
 		current_time->tm_mday
 	};
+
+	printf("Month: %d Day: %d Year: %d\n", return_time.month
+		, return_time.day
+		, return_time.year);
 
 	return return_time;
 }
