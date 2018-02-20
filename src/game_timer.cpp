@@ -11,16 +11,17 @@ bool GameTimer::init()
 	return true;
 }
 
-string GameTimer::get_current_time_string()
+CurrentTime GameTimer::get_current_time()
 {
 	tm* current_time = gmtime(&m_current_time);
-	char* month = get_month_from_index(current_time->tm_mon);
+	string month = std::string(get_month_from_index(current_time->tm_mon));
+	CurrentTime return_time = {
+		current_time->tm_year + 1900,
+		month,
+		current_time->tm_mday
+	};
 
-	std::stringstream time_string;
-	time_string << month << " " << current_time->tm_mday << ", " << current_time->tm_year + 1900 << std::endl;
-	string current_time_string = time_string.str();
-
-	return current_time_string;
+	return return_time;
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)

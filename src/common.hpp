@@ -3,6 +3,7 @@
 // stlib
 #include <fstream> // stdout, stderr..
 #include <cmath>
+#include <stdexcept>
 
 // glfw
 #define NOMINMAX
