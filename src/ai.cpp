@@ -11,7 +11,7 @@ void AI::make_villains_decide(std::map<direction, Lane*> lanes)
 {
 	for (std::map<direction, Lane*>::iterator it = lanes.begin(); it != lanes.end(); it++)
 	{
-		std::vector<Car> carsInLane = it->second->get_cars();
+		std::deque<Car> carsInLane = it->second->get_cars();
 		// Villains should never remain villains after making it to second in line in the intersection.
 		// vehicles generated into lanes without cars already in them are not eligible to be villains
 		if (carsInLane.size() > 1) {
@@ -187,8 +187,8 @@ std::vector<std::vector<bool>> AI::calculate_compatibility_matrix(std::map<direc
 		for (int j = i + 1; j < directions.size(); j++) {
 			direction direction1 = directions[i];
 			direction direction2 = directions[j];
-			std::vector<Car> lane1_cars = current_lanes[direction1]->get_cars();
-			std::vector<Car> lane2_cars = current_lanes[direction2]->get_cars();
+			std::deque<Car> lane1_cars = current_lanes[direction1]->get_cars();
+			std::deque<Car> lane2_cars = current_lanes[direction2]->get_cars();
 			if (lane1_cars.size() == 0 || lane2_cars.size() == 0) {
 				// Can't move both lanes at once if one lane can't move at all because it has no car
 				compatibility_matrix[i][j] = false;

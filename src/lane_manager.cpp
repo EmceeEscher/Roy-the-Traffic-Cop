@@ -9,7 +9,7 @@ bool LaneManager::init(AI ai)
   lanes[0] = { 450.f,400.f };
   lanes[1] = { 400.f,540.f };
   lanes[2] = { 550.f,590.f };
-  lanes[3] = { 760.f,450.f }
+  lanes[3] = { 760.f,450.f };
 
   m_time_remaining = m_time_per_action;
 
