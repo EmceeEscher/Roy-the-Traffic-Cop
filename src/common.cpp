@@ -275,7 +275,7 @@ char* get_month_from_index(int month_index)
 		return "October";
 	case 10:
 		return "November";
-	default:
+	case 11:
 		return "December";
 	default:
 		throw std::invalid_argument("received invalid month index");
