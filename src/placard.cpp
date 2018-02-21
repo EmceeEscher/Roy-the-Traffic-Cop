@@ -14,7 +14,7 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
   m_wr = placard_texture.width * 0.5;
   m_hr = placard_texture.height * 0.5;
 
-  float sprite_width = placard_texture.width / 4;
+  m_sprite_width = placard_texture.width / 4;
 
   //initialize the map telling which section of the spritesheet to show
   m_texture_coords[turn_direction::STRAIGHT] = {0.f, 0.25f};
@@ -29,9 +29,9 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
 	TexturedVertex vertices[4];
 	vertices[0].position = { -m_wr, +m_hr, 0.f };
 	vertices[0].texcoord = { m_texture_coords[m_desired_turn].x, 1.f };//top left
-	vertices[1].position = { -m_wr + sprite_width, +m_hr, 0.f };
+	vertices[1].position = { -m_wr + m_sprite_width, +m_hr, 0.f };
 	vertices[1].texcoord = { m_texture_coords[m_desired_turn].y, 1.f };//top right
-	vertices[2].position = { -m_wr + sprite_width, -m_hr, 0.f };
+	vertices[2].position = { -m_wr + m_sprite_width, -m_hr, 0.f };
 	vertices[2].texcoord = { m_texture_coords[m_desired_turn].y, 0.f };//bottom right
 	vertices[3].position = { -m_wr, -m_hr, 0.f };
 	vertices[3].texcoord = { m_texture_coords[m_desired_turn].x, 0.f };//bottom left
@@ -136,8 +136,7 @@ void Placard::draw(const mat3& projection)
   // This is how we change the color of the sign
   float color[] = {1.f, 1.f, 1.f}; // default to white
   if (m_is_counting_down) {
-    //otherwise, interpolate between green and red depending on how much time left
-
+    //if timer is counting down interpolate between green and red depending on how much time left
     float interpolation_value = (m_max_time - m_curr_time) / m_max_time;
 
     color[0] = interpolation_value; //RED (should be 1 when time is up)
@@ -163,4 +162,27 @@ void Placard::set_rotation(float parent_rotation) {
 
   m_position.x = m_position.x + cos(m_rotation) * m_offset_from_parent;
   m_position.y = m_position.y + sin(m_rotation) * m_offset_from_parent;
+}
+
+void Placard::set_turn_direction(turn_direction new_direction) {
+  m_desired_turn = new_direction;
+
+  TexturedVertex vertices[4];
+	vertices[0].position = { -m_wr, +m_hr, 0.f };
+	vertices[0].texcoord = { m_texture_coords[m_desired_turn].x, 1.f };//top left
+	vertices[1].position = { -m_wr + m_sprite_width, +m_hr, 0.f };
+	vertices[1].texcoord = { m_texture_coords[m_desired_turn].y, 1.f };//top right
+	vertices[2].position = { -m_wr + m_sprite_width, -m_hr, 0.f };
+	vertices[2].texcoord = { m_texture_coords[m_desired_turn].y, 0.f };//bottom right
+	vertices[3].position = { -m_wr, -m_hr, 0.f };
+	vertices[3].texcoord = { m_texture_coords[m_desired_turn].x, 0.f };//bottom left
+
+  // counterclockwise as it's the default opengl front winding direction
+	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+
+  glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
 }

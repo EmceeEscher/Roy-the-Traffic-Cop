@@ -34,12 +34,16 @@ public:
   // Changes the placard's rotation (argument is in radians)
   void set_rotation(float parent_rotation);
 
+  // Changes the direction of the turn arrow
+  void set_turn_direction(turn_direction new_direction);
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
   float m_wr;
   float m_hr;
+  float m_sprite_width;
   float m_curr_time; //in ms
   float m_max_time; //in ms
 	size_t m_num_indices; // passed to glDrawElements
