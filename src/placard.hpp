@@ -48,5 +48,5 @@ private:
   std::map<turn_direction, vec2> m_texture_positions;
   std::map<turn_direction, vec2> m_texture_coords;
 
-  turn_direction m_desired_turn = turn_direction::EMERGENCY;
+  turn_direction m_desired_turn = turn_direction::STRAIGHT;
 };

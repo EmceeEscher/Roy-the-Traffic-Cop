@@ -6,5 +6,4 @@ enum class turn_direction : int
 	LEFT,
 	RIGHT,
 	STRAIGHT,
-	BACKGROUND
 };
