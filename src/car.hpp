@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "direction.hpp"
+#include "placard.hpp"
 #include <string>
 
 using std::string;
@@ -59,7 +60,7 @@ public:
 
 	// Intersection Detection
 	bool is_approaching_stop(vec2 lane_pos);
-	
+
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
@@ -81,4 +82,5 @@ private:
 	float m_wr;
 	float m_hr;
 	bool m_in_beyond_intersection;
+	Placard* m_turn_placard;
 };

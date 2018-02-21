@@ -25,8 +25,10 @@ bool Car::init()
 		}
 	}
 
+
+
 	// The position (0,0) corresponds to the center of the texture
-  
+
 	m_wr = car_texture.width * 0.5;
 	m_hr = car_texture.height * 0.5;
 
@@ -76,6 +78,7 @@ bool Car::init()
 	m_can_move = false;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+	m_turn_placard = new Placard(m_position, m_rotation);
 
 	return true;
 }
@@ -83,6 +86,8 @@ bool Car::init()
 // Releases all graphics resources
 void Car::destroy()
 {
+	//delete m_turn_placard;
+
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
 	glDeleteBuffers(1, &mesh.vao);
@@ -95,6 +100,8 @@ void Car::destroy()
 // Called on each frame by World::update()
 void Car::update(float ms)
 {
+	m_turn_placard->update(m_position, ms);
+
 	// TODO: Implement Update Car [Theo, Mason]
 	if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
 		m_velocity.x += m_acceleration.x;
@@ -124,6 +131,8 @@ void Car::update(float ms)
 
 void Car::draw(const mat3& projection)
 {
+	m_turn_placard->draw(projection);
+
 	transform_begin();
 	transform_scale(m_scale);
 	transform_translate(m_position);
@@ -232,7 +241,7 @@ void Car::set_position(vec2 position)
 
 void Car::slow_down()
 {
-	// TODO: y coordinates 
+	// TODO: y coordinates
 	if (m_lane == direction::WEST || m_lane == direction::EAST) {
 		m_velocity.x = m_max_speed - m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 		m_acceleration.x *= -1.f;

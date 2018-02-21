@@ -33,7 +33,7 @@ bool LaneManager::update(float ms)
 				m_lanes[direction::WEST]->m_cars.pop_front();
 			}
 		}
-	
+
 		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
 			if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
 			{
@@ -44,7 +44,7 @@ bool LaneManager::update(float ms)
 				m_lanes[direction::NORTH]->m_cars.pop_front();
 			}
 		}
-	
+
 		for (Car& car : m_lanes[direction::EAST]->m_cars) {
 			if (car.is_approaching_stop(lanes[3]) && car.get_acc().x > 0.f)
 			{
@@ -55,7 +55,7 @@ bool LaneManager::update(float ms)
 				m_lanes[direction::EAST]->m_cars.pop_front();
 			}
 		}
-	
+
 		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
 			if (car.is_approaching_stop(lanes[2]) && car.get_acc().y > 0.f)
 			{
@@ -65,21 +65,15 @@ bool LaneManager::update(float ms)
 			if (car_delete(car.get_position())) {
 				m_lanes[direction::SOUTH]->m_cars.pop_front();
 			}
-		
+
 	}
 
-/*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+ 	for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
   {
     it->second->update(ms);
   }
 
-  m_time_remaining -= ms;
-  if (m_time_remaining <= 0)
-  {
-    this->add_car();
-    m_time_remaining = m_time_per_action;
-  }
-  */
+
   return true;
 }
 
