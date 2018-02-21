@@ -13,7 +13,6 @@ bool GameTimer::init()
 	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
 	init_time.tm_year = 70; // mktime starts from 1900 for some reason
 	m_current_time = mktime(&init_time);
-<<<<<<< HEAD
 
 	//load texture
 	if (!calendar_tex.is_valid())
@@ -74,11 +73,10 @@ bool GameTimer::init()
 	m_scale.x = 0.25;
 	m_scale.y = 0.25;
 	m_position = { 500.f, 500.f };
+
 	m_time = 0;
 	m_changetime = 0;
 
-=======
->>>>>>> add_game_timer_logic
 	return true;
 }
 
@@ -91,13 +89,11 @@ CurrentTime GameTimer::get_current_time()
 		current_time->tm_mon,
 		current_time->tm_mday
 	};
-<<<<<<< HEAD
-	SplitSetDateDigits(current_time->tm_mday);
-=======
 
+
+	SplitSetDateDigits(current_time->tm_mday);
 	printf("Month: %d Day: %d Year: %d\n", return_time.month, return_time.day, return_time.year);
 
->>>>>>> add_game_timer_logic
 	return return_time;
 }
 
@@ -107,32 +103,13 @@ void GameTimer::SplitSetDateDigits(int date) {
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
-<<<<<<< HEAD
-{
-	const int SECONDS_IN_DAY = 86400;
-
-
-	// Hacky workaround for the fact that mktime requires ints to be passed and ints are overflowy.
-	// Works for date ranges in reasonable timeframes, so works for us unless Roy is going to live to be thousands of years old
-	double current_seconds_elapsed = difftime(m_current_time, 0);
-	int current_days = current_seconds_elapsed / SECONDS_IN_DAY;
-	int current_seconds = current_seconds_elapsed - (current_days * SECONDS_IN_DAY);
-	int seconds_elapsed = real_time_seconds_elapsed * GameToRealSecondsRatio;
-	//printf("seconds_elapsed: %d\n", seconds_elapsed);
-
-	struct tm new_time = {0};
-	new_time.tm_sec = seconds_elapsed + current_seconds;
-	new_time.tm_mday = current_days + 1;
-	new_time.tm_year = 70;
-=======
 {	
-	const int One_Day = 86400;
->>>>>>> add_game_timer_logic
+	const int One_Day_Sec = 86400;
 
-	//In one second, how many days do you need to go by? X * One_Day, ie 2*, 1 second = 2 days in game. 
 	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += real_time_seconds_elapsed * 2*One_Day;
+	adv_time->tm_sec += One_Day_Sec/20;
 	m_current_time = mktime(adv_time);
+
 }
 
 void GameTimer::update(float ms) {
