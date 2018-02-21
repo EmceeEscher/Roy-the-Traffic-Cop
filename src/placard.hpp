@@ -50,9 +50,12 @@ private:
   float m_sprite_width;
   float m_curr_time; //in ms
   float m_max_time; //in ms
+  float m_flash_time;
+  float m_flash_length = 100.f;
 	size_t m_num_indices; // passed to glDrawElements
   float m_offset_from_parent = 100.f;
   bool m_is_counting_down = false;
+  bool m_has_flashed = false;
   float m_red = 1.f;
   float m_blue = 1.f;
   float m_green = 1.f;

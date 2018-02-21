@@ -87,6 +87,7 @@ Placard::~Placard()
 void Placard::update(vec2 parent_position, float ms) {
   if (m_is_counting_down) {
     m_curr_time -= ms;
+    m_flash_time -= ms;
   }
   m_position = parent_position;
   m_position.x = m_position.x + cos(m_rotation) * m_offset_from_parent;
@@ -137,11 +138,27 @@ void Placard::draw(const mat3& projection)
   float color[] = {m_red, m_blue, m_green}; // default color
   if (m_is_counting_down) {
     //if timer is counting down interpolate between green and red depending on how much time left
-    float interpolation_value = (m_max_time - m_curr_time) / m_max_time;
+    if (m_curr_time > m_max_time / 4) {
+      float interpolation_value = (m_max_time - m_curr_time) / m_max_time;
 
-    color[0] = interpolation_value; //RED (should be 1 when time is up)
-    color[1] = 1.f - interpolation_value; //GREEN (should be 0 when time is up)
-    color[2] = 0.f; //BLUE
+      color[0] = interpolation_value; //RED (should be 1 when time is up)
+      color[1] = 1.f - interpolation_value; //GREEN (should be 0 when time is up)
+      color[2] = 0.f; //BLUE
+    } else {
+      // flash back and forth between red and black
+      if (m_has_flashed) {
+        color[0] = 0.f;
+      } else {
+        color[0] = 1.f;
+      }
+      if (m_flash_time < 0) {
+        m_has_flashed = !m_has_flashed;
+        m_flash_time = m_flash_length;
+      }
+
+      color[1] = 0.f;
+      color[2] = 0.f;
+    }
   }
 
 	glUniform3fv(color_uloc, 1, color);
@@ -155,6 +172,7 @@ void Placard::start_timer(float max_time) {
   m_is_counting_down = true;
   m_max_time = max_time;
   m_curr_time = max_time;
+  m_flash_time = m_flash_length;
 }
 
 void Placard::set_rotation(float parent_rotation) {
