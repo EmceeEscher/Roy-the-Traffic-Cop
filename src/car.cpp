@@ -87,7 +87,7 @@ bool Car::init()
 // Releases all graphics resources
 void Car::destroy()
 {
-	//delete m_turn_placard;
+	delete m_turn_placard;
 
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
