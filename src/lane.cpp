@@ -67,6 +67,12 @@ bool Lane::update(float ms)
 
 void Lane::add_car(carType type)
 {
+	//timer will still run even if there are no cars in line, so need to reset it
+	//when adding to an empty lane
+	if (this->is_lane_empty()) {
+		m_time_remaining = m_max_time_per_car;
+	}
+
 	if (this->is_lane_full()) {
 		// change following code based on carType once we have more than one
 		fprintf(stderr, "lane is full");
