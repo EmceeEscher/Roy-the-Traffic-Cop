@@ -35,7 +35,11 @@ public:
   void set_rotation(float parent_rotation);
 
   // Changes the direction of the turn arrow
-  void set_turn_direction(turn_direction new_direction);
+  void change_turn_direction(turn_direction new_direction);
+
+  // Changes the default color of the turn arrow to the values given
+  // Note: this color will be overwritten when the car reaches the front of the line by the timer colors (green->red)
+  void change_color(float red, float green, float blue);
 
 private:
 	vec2 m_position; // Window coordinates
@@ -49,6 +53,9 @@ private:
 	size_t m_num_indices; // passed to glDrawElements
   float m_offset_from_parent = 100.f;
   bool m_is_counting_down = false;
+  float m_red = 1.f;
+  float m_blue = 1.f;
+  float m_green = 1.f;
 
   //for the vec2s in both of these maps, x is the left boundary of the sprite, y is the right boundary
   //TODO: maybe shouldn't use a vec2, but C++ doesn't have nice tuples...

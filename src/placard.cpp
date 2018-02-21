@@ -134,7 +134,7 @@ void Placard::draw(const mat3& projection)
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 
   // This is how we change the color of the sign
-  float color[] = {1.f, 1.f, 1.f}; // default to white
+  float color[] = {m_red, m_blue, m_green}; // default color
   if (m_is_counting_down) {
     //if timer is counting down interpolate between green and red depending on how much time left
     float interpolation_value = (m_max_time - m_curr_time) / m_max_time;
@@ -164,7 +164,7 @@ void Placard::set_rotation(float parent_rotation) {
   m_position.y = m_position.y + sin(m_rotation) * m_offset_from_parent;
 }
 
-void Placard::set_turn_direction(turn_direction new_direction) {
+void Placard::change_turn_direction(turn_direction new_direction) {
   m_desired_turn = new_direction;
 
   TexturedVertex vertices[4];
@@ -185,4 +185,10 @@ void Placard::set_turn_direction(turn_direction new_direction) {
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+}
+
+void Placard::change_color(float red, float green, float blue){
+  m_red = red;
+  m_green = green;
+  m_blue = blue;
 }
