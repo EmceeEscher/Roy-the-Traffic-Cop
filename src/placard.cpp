@@ -16,12 +16,7 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
 
   float sprite_width = placard_texture.width / 4;
 
-  //initialize the map telling which sign direction to show
-  m_texture_positions[turn_direction::STRAIGHT] = {-m_wr + sprite_width * 0, -m_wr + sprite_width * 1};
-  m_texture_positions[turn_direction::RIGHT] = {-m_wr + sprite_width * 1, -m_wr + sprite_width * 2};
-  m_texture_positions[turn_direction::LEFT] = {-m_wr + sprite_width * 2, -m_wr + sprite_width * 3};
-  m_texture_positions[turn_direction::EMERGENCY] = {-m_wr + sprite_width * 3, -m_wr + sprite_width * 4};
-
+  //initialize the map telling which section of the spritesheet to show
   m_texture_coords[turn_direction::STRAIGHT] = {0.f, 0.25f};
   m_texture_coords[turn_direction::RIGHT] = {0.25f, 0.5f};
   m_texture_coords[turn_direction::LEFT] = {0.5f, 0.75f};
@@ -90,6 +85,9 @@ Placard::~Placard()
 }
 
 void Placard::update(vec2 parent_position, float ms) {
+  if (m_is_counting_down) {
+    m_curr_time -= ms;
+  }
   m_position = parent_position;
   m_position.x = m_position.x + cos(m_rotation) * m_offset_from_parent;
   m_position.y = m_position.y + sin(m_rotation) * m_offset_from_parent;
@@ -134,10 +132,28 @@ void Placard::draw(const mat3& projection)
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	float color[] = { 1.f, 1.f, 1.f };
+
+  // This is how we change the color of the sign
+  float color[] = {1.f, 1.f, 1.f}; // default to white
+  if (m_is_counting_down) {
+    //otherwise, interpolate between green and red depending on how much time left
+
+    float interpolation_value = (m_max_time - m_curr_time) / m_max_time;
+
+    color[0] = interpolation_value; //RED (should be 1 when time is up)
+    color[1] = 1.f - interpolation_value; //GREEN (should be 0 when time is up)
+    color[2] = 0.f; //BLUE
+  }
+
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+}
+
+void Placard::start_timer(float max_time) {
+  m_is_counting_down = true;
+  m_max_time = max_time;
+  m_curr_time = max_time;
 }

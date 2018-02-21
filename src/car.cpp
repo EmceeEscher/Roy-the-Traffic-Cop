@@ -131,7 +131,9 @@ void Car::update(float ms)
 
 void Car::draw(const mat3& projection)
 {
-	m_turn_placard->draw(projection);
+	if (!m_in_beyond_intersection) {
+		m_turn_placard->draw(projection);
+	}
 
 	transform_begin();
 	transform_scale(m_scale);
@@ -310,4 +312,8 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 
 bool Car::is_in_beyond_intersec() {
 	return m_in_beyond_intersection;
+}
+
+void Car::start_timer(float max_time) {
+	m_turn_placard->start_timer(max_time);
 }

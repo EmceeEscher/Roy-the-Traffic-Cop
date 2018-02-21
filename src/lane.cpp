@@ -94,7 +94,9 @@ void Lane::add_car(carType type)
 				new_car.set_lane(direction::SOUTH);
 			}
 			m_cars.emplace_back(new_car);
-			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
+			if (m_cars.size() == 1) {
+				m_cars[0].start_timer(m_max_time_per_car);
+			}
 		}
 	}
 }
@@ -128,6 +130,11 @@ void Lane::turn_car()
 				}
 			}
 		}
+
+		if (index + 1 < m_cars.size()) {
+			m_cars[index + 1].start_timer(m_max_time_per_car);
+		}
+
 		//wait...
 		//this->erase_first_car();
 		for(std::deque<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
