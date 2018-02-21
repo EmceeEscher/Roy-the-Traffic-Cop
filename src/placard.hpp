@@ -1,8 +1,10 @@
 #pragma once
 
 #include "common.hpp"
+#include "turn_direction.hpp"
 
 #include <math.h>
+#include <map>
 
 class Placard : public Renderable
 {
@@ -38,6 +40,13 @@ private:
   float m_hr;
   float m_timer; //in ms
 	size_t m_num_indices; // passed to glDrawElements
-  float m_offset_from_parent = 50.0f;
+  float m_offset_from_parent = 100.f;
   bool m_is_counting_down = false;
+
+  //for the vec2s in both of these maps, x is the left boundary of the sprite, y is the right boundary
+  //TODO: maybe shouldn't use a vec2, but C++ doesn't have nice tuples...
+  std::map<turn_direction, vec2> m_texture_positions;
+  std::map<turn_direction, vec2> m_texture_coords;
+
+  turn_direction m_desired_turn = turn_direction::EMERGENCY;
 };

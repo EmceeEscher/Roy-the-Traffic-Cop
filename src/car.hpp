@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "direction.hpp"
 #include "placard.hpp"
+#include "turn_direction.hpp"
 #include <string>
 
 using std::string;

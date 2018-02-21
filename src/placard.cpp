@@ -11,19 +11,37 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
   }
 
   // The position (0,0) corresponds to the center of the texture
+  m_wr = placard_texture.width * 0.5;
+  m_hr = placard_texture.height * 0.5;
 
-	m_wr = placard_texture.width * 0.5;
-	m_hr = placard_texture.height * 0.5;
+  float sprite_width = placard_texture.width / 5;
 
+  //initialize the map telling which sign direction to show
+  m_texture_positions[turn_direction::EMERGENCY] = {-m_wr + sprite_width * 0, -m_wr + sprite_width * 1};
+  m_texture_positions[turn_direction::RIGHT] = {-m_wr + sprite_width * 1, -m_wr + sprite_width * 2};
+  m_texture_positions[turn_direction::LEFT] = {-m_wr + sprite_width * 2, -m_wr + sprite_width * 3};
+  m_texture_positions[turn_direction::STRAIGHT] = {-m_wr + sprite_width * 3, -m_wr + sprite_width * 4};
+  m_texture_positions[turn_direction::BACKGROUND] = {-m_wr + sprite_width * 4, -m_wr + sprite_width * 5};
+
+  m_texture_coords[turn_direction::EMERGENCY] = {0.f, 0.2f};
+  m_texture_coords[turn_direction::RIGHT] = {0.2f, 0.4f};
+  m_texture_coords[turn_direction::LEFT] = {0.4f, 0.6f};
+  m_texture_coords[turn_direction::STRAIGHT] = {0.6f, 0.8f};
+  m_texture_coords[turn_direction::BACKGROUND] = {0.8f, 1.0f};
+
+
+  //for setting the array below: x refers to the left boundary of the sprite,
+  //y refers to the right boundary (NOT vertical positioning)
+  //sprites are laid out in a single row in the spritesheet, so they all use the full height
 	TexturedVertex vertices[4];
 	vertices[0].position = { -m_wr, +m_hr, 0.f };
-	vertices[0].texcoord = { 0.f, 1.f };//top left
-	vertices[1].position = { +m_wr, +m_hr, 0.f };
-	vertices[1].texcoord = { 1.f, 1.f };//top right
-	vertices[2].position = { +m_wr, -m_hr, 0.f };
-	vertices[2].texcoord = { 1.f, 0.f };//bottom right
+	vertices[0].texcoord = { m_texture_coords[m_desired_turn].x, 1.f };//top left
+	vertices[1].position = { -m_wr + sprite_width, +m_hr, 0.f };
+	vertices[1].texcoord = { m_texture_coords[m_desired_turn].y, 1.f };//top right
+	vertices[2].position = { -m_wr + sprite_width, -m_hr, 0.f };
+	vertices[2].texcoord = { m_texture_coords[m_desired_turn].y, 0.f };//bottom right
 	vertices[3].position = { -m_wr, -m_hr, 0.f };
-	vertices[3].texcoord = { 0.f, 0.f };//bottom left
+	vertices[3].texcoord = { m_texture_coords[m_desired_turn].x, 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -53,7 +71,7 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
 		//return false;
 
   m_scale = {1.f, 1.f};
-  m_rotation = parent_rotation;
+  m_rotation = parent_rotation + M_PI / 2;
   m_position = parent_position;
   m_position.x = m_position.x + sin(m_rotation) * m_offset_from_parent;
   m_position.y = m_position.y + cos(m_rotation) * m_offset_from_parent;
