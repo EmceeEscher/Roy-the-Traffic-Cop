@@ -15,11 +15,11 @@ uniform float date_1_offset;
 void main()
 {
 	vec3 tmp_txcoord = in_texcoord;
-	//first number
+	//first digit
 	if (in_texcoord.z == 0){
 		tmp_txcoord.x += date_0_offset;
 	}
-	//second number
+	//second digit
 	if (in_texcoord.z == 1){
 		tmp_txcoord.x += date_1_offset;
 	}
