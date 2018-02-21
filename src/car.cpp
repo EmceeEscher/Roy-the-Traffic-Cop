@@ -78,6 +78,7 @@ bool Car::init()
 	m_can_move = false;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+
 	m_turn_placard = new Placard(m_position, m_rotation);
 
 	return true;
@@ -235,6 +236,7 @@ direction Car::get_lane()
 void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
+	m_turn_placard->set_rotation(m_rotation);
 }
 void Car::set_position(vec2 position)
 {

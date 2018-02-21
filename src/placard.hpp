@@ -28,8 +28,11 @@ public:
   void draw(const mat3& projection)override;
 
 
-  // Will start the placard changing color to show remaining time
+  // Will start the placard changing color to show remaining time (argument is in ms)
   void start_timer(float max_time);
+
+  // Changes the placard's rotation (argument is in radians)
+  void set_rotation(float parent_rotation);
 
 private:
 	vec2 m_position; // Window coordinates

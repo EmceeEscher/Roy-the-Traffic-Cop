@@ -157,3 +157,10 @@ void Placard::start_timer(float max_time) {
   m_max_time = max_time;
   m_curr_time = max_time;
 }
+
+void Placard::set_rotation(float parent_rotation) {
+  m_rotation = parent_rotation + M_PI / 2;
+  
+  m_position.x = m_position.x + cos(m_rotation) * m_offset_from_parent;
+  m_position.y = m_position.y + sin(m_rotation) * m_offset_from_parent;
+}
