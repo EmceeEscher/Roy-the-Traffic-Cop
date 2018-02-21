@@ -302,3 +302,17 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 bool Car::is_in_beyond_intersec() {
 	return m_in_beyond_intersection;
 }
+
+bool Car::collides_with(const Car& car)
+{
+	float dx = m_position.x - car.get_position().x;
+	float dy = m_position.y - car.get_position().y;
+	float d_sq = dx * dx + dy * dy;
+	float other_r = std::max(car.get_bounding_box().x, car.get_bounding_box().y);
+	float my_r = std::max(m_scale.x, m_scale.y);
+	float r = std::max(other_r, my_r);
+	r *= 0.6f;
+	if (d_sq < r * r)
+		return true;
+	return false;
+}

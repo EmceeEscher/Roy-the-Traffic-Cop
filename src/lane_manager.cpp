@@ -24,6 +24,10 @@ void LaneManager::destroy()
 bool LaneManager::update(float ms)
 {
 		for (Car& car : m_lanes[direction::WEST]->m_cars) {
+			if (car.collides_with(car))
+			{
+				car.slow_down();
+			}
 			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
 			{
 				car.slow_down();
