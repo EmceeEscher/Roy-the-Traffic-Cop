@@ -57,6 +57,8 @@ public:
 	vec2 get_vel();
 	float get_max_speed();
 
+	vec2 get_scale();
+
 	// Intersection Detection
 	bool is_approaching_stop(vec2 lane_pos);
 	
@@ -65,8 +67,6 @@ public:
 
 	// Return if in or beyond intersection
 	bool is_in_beyond_intersec();
-
-	bool collides_with(const Car & car);
 
 private:
 	vec2 m_position; // Window coordinates

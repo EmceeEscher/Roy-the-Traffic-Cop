@@ -24,9 +24,11 @@ void LaneManager::destroy()
 bool LaneManager::update(float ms)
 {
 		for (Car& car : m_lanes[direction::WEST]->m_cars) {
-			if (car.collides_with(car))
-			{
-				car.slow_down();
+			if (&car != &(m_lanes[direction::WEST]-> m_cars.front())) {
+				if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars) && car.get_acc().x > 0.f)
+				{
+					car.slow_down();
+				}
 			}
 			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
 			{
@@ -152,6 +154,20 @@ bool LaneManager::car_delete(vec2 pos) {
 	if (pos.y > 1100 && 407 < pos.x && pos.x < 485) {
 		printf("destroy south");
 		return true;
+	}
+	return false;
+}
+bool LaneManager::lane_collision_check(Car& current_car, std::deque<Car> m_cars) {
+	if (m_cars.size() > 1) {
+		for (Car& other_car : m_cars) {
+			//TODO: I tried with addresses but they referenced different car objects - is there a better way to do this?
+			if (current_car.get_position().x != other_car.get_position().x || current_car.get_position().y != other_car.get_position().y) {
+				float x_margin = abs(current_car.get_position().x - other_car.get_position().x);
+				float y_margin = abs(current_car.get_position().y - other_car.get_position().y);
+				if (std::max(x_margin, y_margin) <= 210.f)
+					return true;
+			}
+		}
 	}
 	return false;
 }

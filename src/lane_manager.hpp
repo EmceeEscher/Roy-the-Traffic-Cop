@@ -33,6 +33,9 @@ public:
 
 	void input_create_cars(direction dir);
 
+	bool LaneManager::lane_collision_check(Car& car, std::deque<Car> m_cars);
+
+
 private:
     std::map<direction, Lane*> m_lanes;
     float const m_time_per_action = 5000;
