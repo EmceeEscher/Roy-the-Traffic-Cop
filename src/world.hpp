@@ -5,10 +5,10 @@
 #include "traffic_cop.hpp"
 #include "background.hpp"
 #include "car.hpp"
+#include "game_timer.hpp"
 #include "lane_manager.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
-
 
 // stlib
 #include <vector>
@@ -55,6 +55,7 @@ private:
 	unsigned int m_points;
 
 	// Game entities
+	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
 	Background m_background;
 	LaneManager m_lane_manager;
