@@ -41,6 +41,8 @@ public:
 
 	void set_position(vec2 position);
 
+	void set_at_intersection(bool boolean);
+
 	// get or set the lane associated with car
 	void set_lane(direction dir);
 	direction get_lane();
@@ -61,12 +63,16 @@ public:
 
 	// Intersection Detection
 	bool is_approaching_stop(vec2 lane_pos);
+
+	bool is_at_stop(vec2 lane_pos);
 	
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
 	// Return if in or beyond intersection
 	bool is_in_beyond_intersec();
+
+	bool is_at_front();
 
 private:
 	vec2 m_position; // Window coordinates
@@ -83,4 +89,5 @@ private:
 	float m_wr;
 	float m_hr;
 	bool m_in_beyond_intersection;
+	bool m_at_intersection;
 };

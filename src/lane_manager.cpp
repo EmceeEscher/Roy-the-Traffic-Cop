@@ -23,70 +23,100 @@ void LaneManager::destroy()
 
 bool LaneManager::update(float ms)
 {
-		for (Car& car : m_lanes[direction::WEST]->m_cars) {
-			if (&car != &(m_lanes[direction::WEST]-> m_cars.front())) {
-				if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars) && car.get_acc().x > 0.f)
-				{
+	int index = 0;
+	//The index of the first car at the front of the queue
+	for (Car& car : m_lanes[direction::WEST]->m_cars) {
+		if (car.is_in_beyond_intersec()) {
+			++index;
+		}
+	}
+	for (Car& car : m_lanes[direction::WEST]->m_cars) {
+		car.update(ms);
+		//NEW APPROACH - CAR MUST BE AT POSITION OF LANE[1] so it keeps moving until it hits that. Stops if car ahead is stopped to prevent collisions else keeps moving
+		if (!car.is_in_beyond_intersec() && !m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
+
+			//For the very first car
+			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+			{
+				printf("0");
+				car.slow_down();
+				car.set_at_intersection(true);
+			}
+			//For every other car subsequently, if the front of the car is at intersection
+			else {
+				if (car.get_acc().x > 0.f) {
+					if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
+						printf("car hit\n");
+						printf("1");
+
+						car.slow_down();
+					}
+				}
+				else if (car.get_vel().x <= 0.f) {
+					car.speed_up();
+					printf("2");
+				}
+			}
+		}
+		else if (m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
+			if (car.get_acc().x > 0.f) {
+				if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
 					car.slow_down();
 				}
 			}
-			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
-			{
-				car.slow_down();
-			}
-			car.update(ms);
-			if (car_delete(car.get_position())) {
-				m_lanes[direction::WEST]->m_cars.pop_front();
-			}
 		}
-	
-		for (Car& car : m_lanes[direction::NORTH]->m_cars) {
-			if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
-			{
-				car.slow_down();
-			}
-			car.update(ms);
-			if (car_delete(car.get_position())) {
-				m_lanes[direction::NORTH]->m_cars.pop_front();
-			}
+		if (car_delete(car.get_position())) {
+			m_lanes[direction::WEST]->m_cars.pop_front();
 		}
-	
-		for (Car& car : m_lanes[direction::EAST]->m_cars) {
-			if (car.is_approaching_stop(lanes[3]) && car.get_acc().x > 0.f)
-			{
-				car.slow_down();
-			}
-			car.update(ms);
-			if (car_delete(car.get_position())) {
-				m_lanes[direction::EAST]->m_cars.pop_front();
-			}
-		}
-	
-		for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
-			if (car.is_approaching_stop(lanes[2]) && car.get_acc().y > 0.f)
-			{
-				car.slow_down();
-			}
-			car.update(ms);
-			if (car_delete(car.get_position())) {
-				m_lanes[direction::SOUTH]->m_cars.pop_front();
-			}
-		
 	}
 
-/*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
-  {
-    it->second->update(ms);
-  }
+	for (Car& car : m_lanes[direction::NORTH]->m_cars) {
+		if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
+		{
+			car.slow_down();
+		}
+		car.update(ms);
+		if (car_delete(car.get_position())) {
+			m_lanes[direction::NORTH]->m_cars.pop_front();
+		}
+	}
 
-  m_time_remaining -= ms;
-  if (m_time_remaining <= 0)
-  {
-    this->add_car();
-    m_time_remaining = m_time_per_action;
-  }
-  */
-  return true;
+	for (Car& car : m_lanes[direction::EAST]->m_cars) {
+		if (car.is_approaching_stop(lanes[3]) && car.get_acc().x > 0.f)
+		{
+			car.slow_down();
+		}
+		car.update(ms);
+		if (car_delete(car.get_position())) {
+			m_lanes[direction::EAST]->m_cars.pop_front();
+		}
+	}
+
+	for (Car& car : m_lanes[direction::SOUTH]->m_cars) {
+		if (car.is_approaching_stop(lanes[2]) && car.get_acc().y > 0.f)
+		{
+			car.slow_down();
+		}
+		car.update(ms);
+		if (car_delete(car.get_position())) {
+			m_lanes[direction::SOUTH]->m_cars.pop_front();
+		}
+
+	}
+
+	/*  for(std::map<direction,Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+	  {
+		it->second->update(ms);
+	  }
+
+	  m_time_remaining -= ms;
+	  if (m_time_remaining <= 0)
+	  {
+		this->add_car();
+		m_time_remaining = m_time_per_action;
+	  }
+	  */
+	return true;
 }
 
 void LaneManager::add_car()
