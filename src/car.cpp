@@ -71,7 +71,7 @@ bool Car::init()
 	m_scale.y = 1;
 	m_position = { 5.f, 537.f };
 	m_velocity = { 15.0f, .0f };
-	m_acceleration = { 3.f, .0f };
+	m_acceleration = { 4.f, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_rotation = 0.f;
@@ -262,6 +262,18 @@ void Car::speed_up() {
 		}
 }
 
+void Car::move_slowly() {
+	// TODO: y acceleration/velocity
+	if (m_lane == direction::WEST || m_lane == direction::EAST) {
+		m_acceleration.x *= -1.f;
+		m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional	}
+	}
+		if (m_lane == direction::NORTH || m_lane == direction::SOUTH) {
+		m_acceleration.y *= -1.f;
+		m_velocity.y += m_acceleration.y;
+	}
+}
+
 vec2 Car::get_acc()
 {
 	return m_acceleration;
@@ -302,8 +314,7 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	float stop_y = lane_pos.y;
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
-	printf("%f,%f\n", x_margin, y_margin);
-	if (std::max(x_margin, y_margin) <= 160.f && m_position.x <= stop_x && (m_can_move == false))
+	if (std::max(x_margin, y_margin) <= 130.f && m_position.x <= stop_x && (m_can_move == false))
 		return true;
 	else
 		return false;
