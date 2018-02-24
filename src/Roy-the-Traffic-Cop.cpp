@@ -13,7 +13,7 @@ using Clock = std::chrono::high_resolution_clock;
 
 // Global
 World world;
-const int width = 1000;
+const int width = 1500;
 const int height = 1000;
 const char* title = "Roy the Traffic Cop";
 

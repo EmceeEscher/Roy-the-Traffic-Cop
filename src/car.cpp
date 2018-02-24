@@ -302,6 +302,7 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	float stop_y = lane_pos.y;
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
+	printf("%f,%f\n", x_margin, y_margin);
 	if (std::max(x_margin, y_margin) <= 160.f && m_position.x <= stop_x && (m_can_move == false))
 		return true;
 	else
@@ -312,7 +313,7 @@ bool Car::is_at_stop(vec2 lane_pos) {
 	float stop_y = lane_pos.y;
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
-	if (std::max(x_margin, y_margin) <= 40.f && m_position.x <= stop_x && (m_can_move == false))
+	if (std::max(x_margin, y_margin) <= 55.f)
 		return true;
 	else
 		return false;

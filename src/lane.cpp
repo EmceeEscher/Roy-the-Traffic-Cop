@@ -80,7 +80,7 @@ void Lane::add_car(carType type)
 				new_car.set_lane(direction::NORTH);
 			}
 			else if (m_dir == direction::WEST) {
-				new_car.set_position({ -100.f,537.f });
+				new_car.set_position({ -130.f,537.f });
 				new_car.set_lane(direction::WEST);
 			}
 			else if (m_dir == direction::EAST) {

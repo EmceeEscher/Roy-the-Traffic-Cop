@@ -33,7 +33,7 @@ public:
 
 	void input_create_cars(direction dir);
 
-	bool LaneManager::lane_collision_check(Car& car, std::deque<Car> m_cars);
+	bool LaneManager::lane_collision_check(Car& current_car, Car& front_car);
 
 
 private:

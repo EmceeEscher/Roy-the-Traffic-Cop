@@ -23,52 +23,96 @@ void LaneManager::destroy()
 
 bool LaneManager::update(float ms)
 {
+	std::deque<Car> &cars = m_lanes[direction::WEST]->m_cars;
+	//Finding out which is currently front
 	int index = 0;
-	//The index of the first car at the front of the queue
-	for (Car& car : m_lanes[direction::WEST]->m_cars) {
-		if (car.is_in_beyond_intersec()) {
-			++index;
+	if (!m_lanes[direction::WEST]->is_lane_empty()) {
+		for (Car& car : cars) {
+			if (car.is_in_beyond_intersec()) {
+				++index;
+			}
 		}
 	}
-	for (Car& car : m_lanes[direction::WEST]->m_cars) {
-		car.update(ms);
-		//NEW APPROACH - CAR MUST BE AT POSITION OF LANE[1] so it keeps moving until it hits that. Stops if car ahead is stopped to prevent collisions else keeps moving
-		if (!car.is_in_beyond_intersec() && !m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
+	bool occupied_front_boundary_box = false;
 
-			//For the very first car
-			if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+	for (Car& car : cars) {
+		if (car.is_at_stop(lanes[1])) {
+			occupied_front_boundary_box = true;
+			break;
+		}
+		else {
+			occupied_front_boundary_box = false;
+		}
+	}
+	for (int i = 0; i < cars.size(); i++) {
+		cars[i].update(ms);
+		//For all cars current in lane
+		if (!cars[i].is_in_beyond_intersec()) {
+			if (cars[i].is_approaching_stop(lanes[1]) && cars[i].get_acc().x > 0.f)
 			{
-				printf("0");
-				car.slow_down();
-				car.set_at_intersection(true);
+				cars[i].slow_down();
 			}
-			//For every other car subsequently, if the front of the car is at intersection
-			else {
-				if (car.get_acc().x > 0.f) {
-					if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
-						printf("car hit\n");
-						printf("1");
-
-						car.slow_down();
+			if (&cars[i] != &cars[index]) {
+				if (lane_collision_check(cars[i], cars[i - 1]) && cars[i].get_acc().x > 0.f) {
+					printf("not ocuupied hit\n");
+					cars[i].slow_down();
+				}
+				if (!lane_collision_check(cars[i], cars[i - 1]) && cars[i].get_acc().x < 0.f) {
+					printf("not ocuupied  no collision\n");
+					if (cars[i].get_vel().x <= 0) {
+						cars[i].speed_up();
 					}
 				}
-				else if (car.get_vel().x <= 0.f) {
-					car.speed_up();
-					printf("2");
-				}
 			}
+
 		}
-		else if (m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
-			if (car.get_acc().x > 0.f) {
-				if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
-					car.slow_down();
-				}
-			}
-		}
-		if (car_delete(car.get_position())) {
+		if (car_delete(cars[i].get_position())) {
 			m_lanes[direction::WEST]->m_cars.pop_front();
 		}
 	}
+
+	//for (Car& car : m_lanes[direction::WEST]->m_cars) {
+	//	car.update(ms);
+	//	if (!car.is_in_beyond_intersec() && !m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
+	//		if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+	//		{
+	//			printf("first car at front\n");
+	//			car.slow_down();
+	//			car.set_at_intersection(true);
+	//		}
+	//		else {
+	//			if (car.get_acc().x > 0.f) {
+	//				if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
+	//					printf("car hit\n");
+	//					printf("1");
+
+	//					car.slow_down();
+	//				}
+	//			}
+	//			else if (car.get_vel().x <= 0.f) {
+	//				printf("car at a stop\n");
+	//				car.speed_up();
+	//	
+	//			}
+	//		}
+	//	}
+	//	else if (m_lanes[direction::WEST]->m_cars.front().is_at_front()) {
+	//		if (car.is_approaching_stop(lanes[1]) && car.get_acc().x > 0.f)
+	//		{
+	//			printf("there is a car at front");
+	//			car.slow_down();
+	//			car.set_at_intersection(true);
+	//		}
+	//		if (car.get_acc().x > 0.f) {
+	//			if (lane_collision_check(car, m_lanes[direction::WEST]->m_cars)) {
+	//				car.slow_down();
+	//			}
+	//		}
+	//	}
+	//	if (car_delete(car.get_position())) {
+	//		m_lanes[direction::WEST]->m_cars.pop_front();
+	//	}
+	//}
 
 	for (Car& car : m_lanes[direction::NORTH]->m_cars) {
 		if (car.is_approaching_stop(lanes[0]) && car.get_acc().y > 0.f)
@@ -187,17 +231,16 @@ bool LaneManager::car_delete(vec2 pos) {
 	}
 	return false;
 }
-bool LaneManager::lane_collision_check(Car& current_car, std::deque<Car> m_cars) {
-	if (m_cars.size() > 1) {
-		for (Car& other_car : m_cars) {
-			//TODO: I tried with addresses but they referenced different car objects - is there a better way to do this?
-			if (current_car.get_position().x != other_car.get_position().x || current_car.get_position().y != other_car.get_position().y) {
-				float x_margin = abs(current_car.get_position().x - other_car.get_position().x);
-				float y_margin = abs(current_car.get_position().y - other_car.get_position().y);
-				if (std::max(x_margin, y_margin) <= 210.f)
-					return true;
-			}
-		}
-	}
+bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
+	//104 x margin distance away min
+	//210 x margin start to slow
+	float vel = current_car.get_vel().x;
+	float bounding_box_distance = ((220 * vel / 200.f) + (150 * (1 - vel / 200.f)));
+	float x_margin = abs(current_car.get_position().x - front_car.get_position().x);
+	float y_margin = abs(current_car.get_position().y - front_car.get_position().y);
+	//printf("%f%f\n", x_margin, y_margin);
+	if (std::max(x_margin, y_margin) <= bounding_box_distance)
+		return true;
+
 	return false;
 }
