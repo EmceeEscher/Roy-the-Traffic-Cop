@@ -203,17 +203,7 @@ void Car::set_lane(direction dir)
 	m_lane = dir;
 	if (dir == direction::NORTH || dir == direction::SOUTH) {
 		m_velocity = { .0f, 15.0f };
-		m_acceleration = { .0f, 3.0f };
-	}
-	else if (dir == direction::WEST) {
-		//Do Nothing
-	}
-	else if (dir == direction::EAST) {
-		//TODO
-
-	}
-	else if (dir == direction::SOUTH) {
-		//TODO
+		m_acceleration = { .0f, 4.0f };
 	}
 }
 
@@ -262,17 +252,6 @@ void Car::speed_up() {
 		}
 }
 
-void Car::move_slowly() {
-	// TODO: y acceleration/velocity
-	if (m_lane == direction::WEST || m_lane == direction::EAST) {
-		m_acceleration.x *= -1.f;
-		m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional	}
-	}
-		if (m_lane == direction::NORTH || m_lane == direction::SOUTH) {
-		m_acceleration.y *= -1.f;
-		m_velocity.y += m_acceleration.y;
-	}
-}
 
 vec2 Car::get_acc()
 {
@@ -314,7 +293,8 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	float stop_y = lane_pos.y;
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
-	if (std::max(x_margin, y_margin) <= 130.f && m_position.x <= stop_x && (m_can_move == false))
+	//printf("%f,%f\n", x_margin, y_margin);
+	if (std::max(x_margin, y_margin) <= 130.f && (m_can_move == false))
 		return true;
 	else
 		return false;

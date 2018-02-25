@@ -51,8 +51,6 @@ public:
 	void slow_down();
 	void speed_up();
 
-	void move_slowly();
-
 	// Set indicator for passage
 	void signal_to_move();
 

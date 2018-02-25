@@ -35,6 +35,8 @@ public:
 
 	bool LaneManager::lane_collision_check(Car& current_car, Car& front_car);
 
+	void lane_queue(Lane* lane, vec2 lane_intersection,float ms);
+
 
 private:
     std::map<direction, Lane*> m_lanes;
