@@ -1,4 +1,5 @@
 #include "placard.hpp"
+#define PI 3.14159265
 
 Texture Placard::placard_texture;
 
@@ -64,7 +65,7 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
 		//return false;
 
   m_scale = {1.f, 1.f};
-  m_rotation = parent_rotation + M_PI / 2;
+  m_rotation = parent_rotation + PI / 2;
   m_position = parent_position;
   m_position.x = m_position.x + sin(m_rotation) * m_offset_from_parent;
   m_position.y = m_position.y + cos(m_rotation) * m_offset_from_parent;
@@ -176,7 +177,7 @@ void Placard::start_timer(float max_time) {
 }
 
 void Placard::set_rotation(float parent_rotation) {
-  m_rotation = parent_rotation + M_PI / 2;
+  m_rotation = parent_rotation + PI / 2;
 
   m_position.x = m_position.x + cos(m_rotation) * m_offset_from_parent;
   m_position.y = m_position.y + sin(m_rotation) * m_offset_from_parent;
