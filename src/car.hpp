@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 #include "direction.hpp"
+#include "placard.hpp"
+#include "turn_direction.hpp"
 #include <string>
 
 using std::string;
@@ -72,6 +74,9 @@ public:
 	// Return if in or beyond intersection
 	bool is_in_beyond_intersec();
 
+	// Starts the color change of the placard
+	void start_timer(float max_time);
+
 	bool is_at_front();
 
 private:
@@ -89,5 +94,6 @@ private:
 	float m_wr;
 	float m_hr;
 	bool m_in_beyond_intersection;
+	Placard* m_turn_placard;
 	bool m_at_intersection;
 };
