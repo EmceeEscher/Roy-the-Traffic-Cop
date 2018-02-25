@@ -86,7 +86,7 @@ void Lane::add_car(carType type)
 				new_car.set_lane(direction::NORTH);
 			}
 			else if (m_dir == direction::WEST) {
-				new_car.set_position({ -100.f,537.f });
+				new_car.set_position({ -130.f,537.f });
 				new_car.set_lane(direction::WEST);
 			}
 			else if (m_dir == direction::EAST) {
@@ -125,7 +125,9 @@ void Lane::turn_car()
 			if (m_dir == direction::WEST || m_dir == direction::EAST) {
 				if (selected_car.get_vel().x <= 0.f) {
 					selected_car.signal_to_move();
-					selected_car.speed_up();
+					if (selected_car.is_in_beyond_intersec()) {
+						selected_car.speed_up();
+					}
 				}
 			}
 
