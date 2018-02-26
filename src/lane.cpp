@@ -76,7 +76,7 @@ void Lane::add_car(carType type)
 	//timer will still run even if there are no cars in line, so need to reset it
 	//when adding to an empty lane
 	if (this->is_lane_empty()) {
-		m_time_remaining = m_max_time_per_car;
+		m_time_remaining = MaxTimePerCar;
 	}
 
 	if (this->is_lane_full()) {
@@ -86,7 +86,7 @@ void Lane::add_car(carType type)
 	else{
 		Car new_car;
 		bool new_villain = (rand() / (RAND_MAX + 1.)) <= m_villain_spawn_probability && !is_lane_empty();
-    
+
 		if(new_car.init(new_villain)){
 			if (m_dir == direction::NORTH) {
 				new_car.set_position({ 450.f,-100.f });
@@ -110,7 +110,7 @@ void Lane::add_car(carType type)
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
 			if (m_cars.size() == 1) {
-				m_cars[0].start_timer(m_max_time_per_car);
+				m_cars[0].start_timer(MaxTimePerCar);
 			}
 		}
 	}
@@ -149,7 +149,7 @@ void Lane::turn_car()
 		}
 
 		if (index + 1 < m_cars.size()) {
-			m_cars[index + 1].start_timer(m_max_time_per_car);
+			m_cars[index + 1].start_timer(MaxTimePerCar);
 		}
 
 		//wait...
