@@ -3,9 +3,19 @@
 
 Texture GameTimer::calendar_tex;
 TexturedVertex2 vertices[8];
-double m_changetime;
 float offset1;
 float offset2;
+int flip_0;
+int flip_1;
+
+float flip_rad;
+float flip_offset_actual;
+const float m_pi = 3.141592653589793;
+float old_offset;
+float new_offset;
+float num_offset;
+int invert_backside;
+
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -31,21 +41,13 @@ bool GameTimer::init()
 	vertices[1].position = { 0, +hr, 0.f };
 	vertices[2].position = { 0, -hr, 0.f };
 	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[4].position = { 0.0f, +hr, 0.f };
-	vertices[5].position = { wr, +hr, 0.f };
-	vertices[6].position = { wr, -hr, 0.f };
-	vertices[7].position = { 0.0f, -hr, 0.f };
 
 	vertices[0].texcoord = { 0.0f, 0.5f, 0.0f };
 	vertices[1].texcoord = { 0.1f, 0.5f, 0.0f };
 	vertices[2].texcoord = { 0.1f, 0.0f, 0.0f };
 	vertices[3].texcoord = { 0.0f, 0.0f, 0.0f };
-	vertices[4].texcoord = { 0.0f, 0.5f, 1.0f };
-	vertices[5].texcoord = { 0.1f, 0.5f, 1.0f };
-	vertices[6].texcoord = { 0.1f, 0.0f, 1.0f };
-	vertices[7].texcoord = { 0.0f, 0.0f, 1.0f };
 
-	uint16_t indices[] = { 0,3,1,1,3,2,4,7,5,5,7,6 };
+	uint16_t indices[] = { 0,3,1,1,3,2 };
 
 	// Clearing errors
 	gl_flush_errors();
@@ -70,9 +72,13 @@ bool GameTimer::init()
 	m_scale.x = 0.25;
 	m_scale.y = 0.25;
 	m_position = { 500.f, 500.f };
-
-	m_changetime = 0;
-
+	flip_0 = 0 ;
+	flip_1 = 0;
+	flip_rad = 0.0f;
+	flip_offset_actual = 0.0f;
+	old_offset = 0.0f;
+	new_offset = 0.1f;
+	invert_backside = 1; 
 	return true;
 }
 
@@ -85,32 +91,49 @@ CurrentTime GameTimer::get_current_time()
 		current_time->tm_mon,
 		current_time->tm_mday
 	};
-
-
-	SplitSetDateDigits(current_time->tm_mday);
 	printf("Month: %d Day: %d Year: %d\n", return_time.month, return_time.day, return_time.year);
-
 	return return_time;
 }
 
 void GameTimer::SplitSetDateDigits(int date) {
-	offset2 = std::fmodf(date, 10) * 0.1f; 
-	offset1 = std::fmodf(date / 10, 10)*0.1f;
+	num_offset = std::fmodf(date, 10) * 0.1f;
+	if (new_offset != num_offset) {
+		old_offset = new_offset;
+		new_offset = num_offset;
+		flip_rad = 0;
+	}
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {	
 	const int One_Day_Sec = 86400;
-
 	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += One_Day_Sec/20;
+	adv_time->tm_sec += One_Day_Sec/150;
 	m_current_time = mktime(adv_time);
+
+	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday);
+	
+
+	flip_rad += 0.05;
+	if (flip_rad >= m_pi) {
+		flip_rad = m_pi;
+	}
+	if (flip_rad < m_pi / 2) {
+		flip_offset_actual = old_offset;
+		invert_backside = 1;
+	}else{
+		flip_offset_actual = old_offset+0.1;
+		invert_backside = -1;
+	}
+
+	//flip_next_num = flip_rad / 2 == 0 ? 1: 0;
 
 }
 
 void GameTimer::draw(const mat3& projection) {
 	transform_begin();
 	transform_translate(m_position);
+	transform_rotate(flip_rad);
 	transform_scale(m_scale);
 	transform_end();
 
@@ -143,20 +166,28 @@ void GameTimer::draw(const mat3& projection) {
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 	GLint date_0_loc = glGetUniformLocation(effect.program, "date_0_offset");
 	GLint date_1_loc = glGetUniformLocation(effect.program, "date_1_offset");
+	GLint flip_offset_actual_uloc = glGetUniformLocation(effect.program, "flip_offset_actual");
 
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+	GLint flip_0_uloc = glGetUniformLocation(effect.program, "flip_0");
+	GLint flip_1_uloc = glGetUniformLocation(effect.program, "flip_1");
+	GLint invert_backside_uloc = glGetUniformLocation(effect.program, "invert_backside");
 
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniform1f(flip_offset_actual_uloc , flip_offset_actual);
 	glUniform1f(date_0_loc, offset1);
 	glUniform1f(date_1_loc, offset2);
 
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
+	glUniform1i(flip_0_uloc, flip_0);
+	glUniform1i(flip_0_uloc, flip_1);
+	glUniform1i(invert_backside_uloc, invert_backside);
 
 
 	// Drawing!
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 }

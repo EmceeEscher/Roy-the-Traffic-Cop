@@ -235,7 +235,7 @@ void Renderable::transform_rotate(float radians)
 {
 	float c = cosf(radians);
 	float s = sinf(radians);
-	mat3 R = { { c, s, 0.f },{ -s, c, 0.f },{ 0.f, 0.f, 1.f } };
+	mat3 R = { { 1, 0.f, 0.f },{0 , c, -s },{ 0.f, s, c } };
 	transform = mul(transform, R);
 }
 

@@ -147,14 +147,8 @@ bool World::update(float elapsed_ms)
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
 
-	//printf("%f\n", elapsed_ms);
-
-	m_game_timer.update(elapsed_ms);
 	m_game_timer.advance_time(elapsed_ms / 10000);
 	m_game_timer.get_current_time();
-	//printf("Month: %d\n",m_game_timer.get_current_time().month);
-	//printf("Day: %d\n", m_game_timer.get_current_time().day);
-	//printf("Year: %d\n", m_game_timer.get_current_time().year);
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 	m_lane_manager.update(elapsed_ms);
