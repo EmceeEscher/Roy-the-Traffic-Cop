@@ -118,6 +118,7 @@ private:
 	float m_hr;
 	float t;
 	bool m_in_beyond_intersection;
+	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 };

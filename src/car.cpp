@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #define PI 3.14159265
-
+#define ACC 4.0f
 
 Texture Car::car_texture;
 
@@ -73,11 +73,12 @@ bool Car::init()
 	m_scale.y = 1;
 	m_position = { 5.f, 537.f };
 	m_velocity = { 15.0f, .0f };
-	m_acceleration = { 4.f, .0f };
+	m_acceleration = { ACC, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+	m_turned = false;
 	t = 0.f;
 
 	m_turn_placard = new Placard(m_position, m_rotation);
@@ -107,26 +108,49 @@ void Car::update(float ms)
 	// TODO: Implement Update Car [Theo, Mason]
 	if (m_in_beyond_intersection == false)
 	{
-		if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
-			m_velocity.x += m_acceleration.x;
-			m_velocity.y += m_acceleration.y;
-		}
-		else if (m_velocity.x < 0.f) {
-			m_velocity.x = 0.f;
-		}
-		else if (m_velocity.x > m_max_speed) {
-			m_velocity.x = m_max_speed;
-		}
+		if (m_turned == false) {
+			if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+				m_velocity.x += m_acceleration.x;
+				m_velocity.y += m_acceleration.y;
+			}
+			else if (m_velocity.x < 0.f) {
+				m_velocity.x = 0.f;
+			}
+			else if (m_velocity.x > m_max_speed) {
+				m_velocity.x = m_max_speed;
+			}
 
-		//For Y position in North Lane
-		if (m_velocity.y > 0 && m_velocity.y < m_max_speed) {
-			m_velocity.y += m_acceleration.y;
+			//For Y position in North Lane
+			if (m_velocity.y > 0.f && m_velocity.y < m_max_speed) {
+				m_velocity.y += m_acceleration.y;
+			}
+			else if (m_velocity.y < 0.f) {
+				m_velocity.y = 0.f;
+			}
+			else if (m_velocity.y > m_max_speed) {
+				m_velocity.y = m_max_speed;
+			}
 		}
-		else if (m_velocity.y < 0.f) {
-			m_velocity.y = 0.f;
-		}
-		else if (m_velocity.y > m_max_speed) {
-			m_velocity.y = m_max_speed;
+		else if (m_turned == true) {
+			if (m_velocity.x < abs(m_max_speed)) {
+				m_velocity.x += m_acceleration.x;
+			}
+			else if (m_velocity.x < -m_max_speed) {
+				m_velocity.x = -m_max_speed;
+			}
+			else if (m_velocity.x > m_max_speed) {
+				m_velocity.x = m_max_speed;
+			}
+
+			if (m_velocity.y < abs(m_max_speed)) {
+				m_velocity.y += m_acceleration.y;
+			}
+			else if (m_velocity.x < -m_max_speed) {
+				m_velocity.x = -m_max_speed;
+			}
+			else if (m_velocity.x > m_max_speed) {
+				m_velocity.x = m_max_speed;
+			}
 		}
 		//printf("%f", m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
@@ -142,8 +166,26 @@ void Car::update(float ms)
 			update_rotation_on_turn(t);
 			//printf("%f", t);
 		}
-		else
-			m_in_beyond_intersection == false;
+		else {
+			// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
+			m_in_beyond_intersection = false;
+			m_turned = true; 
+			if (m_desired_direction == direction::EAST) {
+				m_velocity.y = 0.f;
+				m_acceleration.x = ACC;
+				m_acceleration.y = 0.f;
+			}
+			else if (m_desired_direction == direction::WEST) {
+				m_velocity.y = 0.f;
+				m_acceleration.x = -ACC;
+				m_acceleration.y = 0.f;
+			}
+			else if (m_desired_direction == direction::NORTH || m_desired_direction == direction::SOUTH) {
+				m_velocity.x = 0.f;
+				m_acceleration.x = 0.f;
+				m_acceleration.y = -ACC;
+			}
+		}
 	}
 }
 
@@ -231,7 +273,7 @@ void Car::set_lane(direction dir)
 	m_lane = dir;
 	if (dir == direction::NORTH || dir == direction::SOUTH) {
 		m_velocity = { .0f, 15.0f };
-		m_acceleration = { .0f, 4.0f };
+		m_acceleration = { .0f, ACC };
 	}
 }
 
