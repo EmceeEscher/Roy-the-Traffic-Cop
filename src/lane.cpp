@@ -3,21 +3,24 @@
 
 #define PI 3.14159265
 
-Lane::Lane(direction dir)
+Lane::Lane(direction dir, float villainSpawnProbability)
 {
 	m_dir = dir;
-	m_time_remaining = m_max_time_per_car;
+	m_time_remaining = MaxTimePerCar;
+	m_villain_spawn_probability = villainSpawnProbability;
+	std::srand(std::time(nullptr));
 }
 
-
-// Releases all graphics resources
-bool Lane::init(direction dir)
+bool Lane::init(direction dir, float villainSpawnProbability)
 {
 	lanes_rot[0] = PI;			// North
 	lanes_rot[1] = PI / 2.0;		// West
 	lanes_rot[2] = 0;			// South
 	lanes_rot[3] = 3.0*PI / 2.0;	// East
 	m_dir = dir;
+	m_time_remaining = MaxTimePerCar;
+	m_villain_spawn_probability = villainSpawnProbability;
+	std::srand(std::time(nullptr));
 	return true;
 }
 
@@ -34,6 +37,10 @@ int Lane::get_lane_num()const
 float Lane::get_time_remaining() const
 {
     return m_time_remaining;
+}
+
+void Lane::set_time_remaining(float time_remaining) {
+	m_time_remaining = time_remaining;
 }
 
 void Lane::set_stop_sign(vec2 loc)
@@ -57,11 +64,6 @@ std::deque<Car> Lane::get_cars() const
 bool Lane::update(float ms)
 {
 	m_time_remaining -= ms;
-	if (m_time_remaining <= 0)
-	{
-		this->turn_car();
-		m_time_remaining = m_max_time_per_car;
-	}
 	return true;
 }
 
@@ -70,7 +72,7 @@ void Lane::add_car(carType type)
 	//timer will still run even if there are no cars in line, so need to reset it
 	//when adding to an empty lane
 	if (this->is_lane_empty()) {
-		m_time_remaining = m_max_time_per_car;
+		m_time_remaining = MaxTimePerCar;
 	}
 
 	if (this->is_lane_full()) {
@@ -79,7 +81,9 @@ void Lane::add_car(carType type)
 	}
 	else{
 		Car new_car;
-		if(new_car.init()){
+		bool new_villain = (rand() / (RAND_MAX + 1.)) <= m_villain_spawn_probability && !is_lane_empty();
+
+		if(new_car.init(new_villain)){
 			if (m_dir == direction::NORTH) {
 				new_car.set_position({ 450.f,-100.f });
 				new_car.set_rotation(PI / 2);
@@ -99,9 +103,10 @@ void Lane::add_car(carType type)
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
 			}
+			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
 			if (m_cars.size() == 1) {
-				m_cars[0].start_timer(m_max_time_per_car);
+				m_cars[0].start_timer(MaxTimePerCar);
 			}
 		}
 	}
@@ -140,7 +145,7 @@ void Lane::turn_car()
 		}
 
 		if (index + 1 < m_cars.size()) {
-			m_cars[index + 1].start_timer(m_max_time_per_car);
+			m_cars[index + 1].start_timer(MaxTimePerCar);
 		}
 
 		//wait...

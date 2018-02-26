@@ -1,17 +1,19 @@
 #include "lane_manager.hpp"
 
-bool LaneManager::init()
+bool LaneManager::init(AI ai)
 {
-  m_lanes[direction::NORTH] = new Lane(direction::NORTH);
-  m_lanes[direction::EAST] = new Lane(direction::EAST);
-  m_lanes[direction::SOUTH] = new Lane(direction::SOUTH);
-  m_lanes[direction::WEST] = new Lane(direction::WEST);
+  m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
+  m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
+  m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
+  m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
   lanes[0] = { 450.f,398.f };
   lanes[1] = { 400.f,540.f };
   lanes[2] = { 550.f,590.f };
   lanes[3] = { 610.f,450.f };
 
   m_time_remaining = m_time_per_action;
+
+  m_ai = &ai;
 
   return true;
 }
@@ -73,7 +75,8 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 
 void LaneManager::turn_car(direction dir)
 {
-	 m_lanes[dir]->turn_car();
+  m_lanes[dir]->turn_car();
+  m_ai->make_villains_decide(m_lanes);
 }
 
 //Temporary manual input to test before implementation of AI
@@ -119,6 +122,13 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	return false;
 }
 void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
+	lane->update(ms);
+	if (lane->get_time_remaining() <= 0)
+	{
+		lane->turn_car();
+		lane->set_time_remaining(lane->MaxTimePerCar);
+		// m_ai->make_villains_decide(m_lanes); TODO (JORDAN): MAKE THIS WORK!!!!!
+	}
 	std::deque<Car> &cars = lane->m_cars;
 	//Finding out which is currently front
 	bool occupied_front_boundary_box = false;
@@ -170,7 +180,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 							}
 						}
 					}
-					//If not within the stopping boundary 
+					//If not within the stopping boundary
 					else if (!cars[i].is_approaching_stop(lane_intersection)) {
 						//If negative movement, move
 						if (cars[i].get_acc().x < 0.f) {
@@ -212,7 +222,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 							}
 						}
 					}
-					//If not within the stopping boundary 
+					//If not within the stopping boundary
 					else if (!cars[i].is_approaching_stop(lane_intersection)) {
 						//If negative movement, move
 						if (cars[i].get_acc().y < 0.f) {

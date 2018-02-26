@@ -12,8 +12,7 @@
 
 Texture Car::car_texture;
 
-
-bool Car::init()
+bool Car::init(bool isVillain)
 {
 	// Load shared texture
 	if (!car_texture.is_valid())
@@ -76,9 +75,11 @@ bool Car::init()
 	m_acceleration = { 4.f, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
+	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
 	m_at_intersection = false;
+	std::srand(std::time(nullptr));
 
 	m_turn_placard = new Placard(m_position, m_rotation);
 
@@ -193,6 +194,11 @@ vec2 Car::get_position()const
 	return m_position;
 }
 
+bool Car::is_villain()const
+{
+	return m_is_villain;
+}
+
 direction Car::get_desired_direction()const
 {
 	return m_desired_direction;
@@ -217,6 +223,74 @@ void Car::set_lane(direction dir)
 		m_velocity = { .0f, 15.0f };
 		m_acceleration = { .0f, 4.0f };
 	}
+}
+
+void Car::set_desired_direction(direction turn_dir)
+{
+	m_desired_direction = turn_dir;
+	m_turn_placard->change_turn_direction(get_turn_direction());
+	m_is_villain = false;
+}
+
+turn_direction Car::get_turn_direction()
+{
+	switch (m_desired_direction) {
+	case direction::EAST:
+		switch (m_lane) {
+		case direction::NORTH:
+			return turn_direction::RIGHT;
+		case direction::SOUTH:
+			return turn_direction::LEFT;
+		case direction::WEST:
+			return turn_direction::STRAIGHT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::NORTH:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::LEFT;
+		case direction::SOUTH:
+			return turn_direction::STRAIGHT;
+		case direction::WEST:
+			return turn_direction::RIGHT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::SOUTH:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::RIGHT;
+		case direction::NORTH:
+			return turn_direction::STRAIGHT;
+		case direction::WEST:
+			return turn_direction::LEFT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::WEST:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::STRAIGHT;
+		case direction::SOUTH:
+			return turn_direction::RIGHT;
+		case direction::NORTH:
+			return turn_direction::LEFT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	default:
+		throw std::invalid_argument("received invalid direction pairing");
+	}
+}
+
+void Car::generate_desired_direction()
+{
+	m_desired_direction = m_lane;
+	while (m_desired_direction == m_lane) {
+		m_desired_direction = direction(rand() % 4);
+	}
+	m_turn_placard->change_turn_direction(get_turn_direction());
 }
 
 direction Car::get_lane()

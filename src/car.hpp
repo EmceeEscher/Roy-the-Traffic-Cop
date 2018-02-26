@@ -5,6 +5,9 @@
 #include "placard.hpp"
 #include "turn_direction.hpp"
 #include <string>
+#include <cstdlib>
+#include <ctime>
+#include <stdexcept>
 
 using std::string;
 
@@ -14,7 +17,7 @@ class Car : public Renderable
 public:
 
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(bool isVillain);
 
 	// Releases all associated resources
 	void destroy();
@@ -29,8 +32,18 @@ public:
 	// Returns the current position
 	vec2 get_position()const;
 
+	// Returns whether the car is a villain
+	bool is_villain()const;
+
 	// Returns the desired direction of car
 	direction get_desired_direction()const;
+
+	// Sets the desired direction for the car and removes it's villainy
+	void set_desired_direction(direction turn_dir);
+
+	// Randomly assignes the desired direction for the car
+	// Call after set_lane to ensure desired direction != our lane
+	void generate_desired_direction();
 
 	// Moves the position by the specified offset
 	void move(vec2 off);
@@ -79,6 +92,9 @@ public:
 
 	bool is_at_front();
 
+	// get the car's turning direction
+	turn_direction get_turn_direction();
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -87,6 +103,7 @@ private:
 	vec2 m_velocity;
 	vec2 m_acceleration;
 	bool m_can_move;
+	bool m_is_villain;
 	vec2 m_displacement;
 	direction m_lane;
 	direction m_desired_direction;
