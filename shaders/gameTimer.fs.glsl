@@ -5,8 +5,6 @@ in vec3 texcoord;
 // Application data
 uniform sampler2D sampler0;
 uniform vec3 fcolor;
-uniform int flip_0;
-uniform int flip_1;
 uniform int invert_backside;
 
 // Output color

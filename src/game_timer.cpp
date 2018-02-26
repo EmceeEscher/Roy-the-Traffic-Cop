@@ -3,10 +3,6 @@
 
 Texture GameTimer::calendar_tex;
 TexturedVertex2 vertices[8];
-float offset1;
-float offset2;
-int flip_0;
-int flip_1;
 
 float flip_rad;
 float flip_offset_actual;
@@ -72,8 +68,6 @@ bool GameTimer::init()
 	m_scale.x = 0.25;
 	m_scale.y = 0.25;
 	m_position = { 500.f, 500.f };
-	flip_0 = 0 ;
-	flip_1 = 0;
 	flip_rad = 0.0f;
 	flip_offset_actual = 0.0f;
 	old_offset = 0.0f;
@@ -125,9 +119,6 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 		flip_offset_actual = old_offset+0.1;
 		invert_backside = -1;
 	}
-
-	//flip_next_num = flip_rad / 2 == 0 ? 1: 0;
-
 }
 
 void GameTimer::draw(const mat3& projection) {
@@ -164,13 +155,9 @@ void GameTimer::draw(const mat3& projection) {
 	// Getting uniform locations for glUniform* calls
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-	GLint date_0_loc = glGetUniformLocation(effect.program, "date_0_offset");
-	GLint date_1_loc = glGetUniformLocation(effect.program, "date_1_offset");
 	GLint flip_offset_actual_uloc = glGetUniformLocation(effect.program, "flip_offset_actual");
 
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-	GLint flip_0_uloc = glGetUniformLocation(effect.program, "flip_0");
-	GLint flip_1_uloc = glGetUniformLocation(effect.program, "flip_1");
 	GLint invert_backside_uloc = glGetUniformLocation(effect.program, "invert_backside");
 
 
@@ -178,13 +165,9 @@ void GameTimer::draw(const mat3& projection) {
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 	glUniform1f(flip_offset_actual_uloc , flip_offset_actual);
-	glUniform1f(date_0_loc, offset1);
-	glUniform1f(date_1_loc, offset2);
 
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
-	glUniform1i(flip_0_uloc, flip_0);
-	glUniform1i(flip_0_uloc, flip_1);
 	glUniform1i(invert_backside_uloc, invert_backside);
 
 

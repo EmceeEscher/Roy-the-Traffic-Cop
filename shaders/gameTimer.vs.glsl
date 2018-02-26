@@ -9,8 +9,6 @@ out vec3 texcoord;
 // Application data
 uniform mat3 transform;
 uniform mat3 projection;
-uniform float date_0_offset;
-uniform float date_1_offset;
 uniform float flip_offset_actual;
 uniform int invert_backside;
 
@@ -20,11 +18,6 @@ void main()
 	//first digit
 	if (in_texcoord.z == 0){
 		tmp_txcoord.x += flip_offset_actual;
-	}
-
-	//second digit
-	if (in_texcoord.z == 1){
-		tmp_txcoord.x += date_1_offset;
 	}
 	texcoord = vec3(tmp_txcoord);
 	vec3 pos = projection * transform * vec3(in_position.x,invert_backside*in_position.y, 1.0);
