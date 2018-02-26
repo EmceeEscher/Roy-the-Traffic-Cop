@@ -413,7 +413,10 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 			return 'l';
 		}
 		else
+		{
+			m_turn_pivot = { 445.f, 445.f };
 			return 's';
+		}
 		break;
 	case direction::WEST:
 		if (desired_dir == direction::NORTH)
@@ -427,7 +430,10 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 			return 'r';
 		}
 		else
+		{
+			m_turn_pivot = { 537.f, 537.f };
 			return 's';
+		}
 		break;
 	case direction::SOUTH:
 		if (desired_dir == direction::EAST)
@@ -441,7 +447,10 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 			return 'l';
 		}
 		else
+		{
+			m_turn_pivot = { 550.f, 470.f };
 			return 's';
+		}
 		break;
 	case direction::NORTH:
 		if (desired_dir == direction::WEST)
@@ -451,11 +460,14 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else if (desired_dir == direction::EAST)
 		{
-			m_turn_pivot = { 540.f, 550.f };
+			m_turn_pivot = { 470.f, 550.f };
 			return 'l';
 		}
 		else
+		{
+			m_turn_pivot = { 450.f, 550.f };
 			return 's';
+		}
 		break;
 	default:
 		return 's';
