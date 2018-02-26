@@ -126,8 +126,8 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	if (lane->get_time_remaining() <= 0)
 	{
 		lane->turn_car();
-		m_ai->make_villains_decide(m_lanes);
 		lane->set_time_remaining(lane->MaxTimePerCar);
+		// m_ai->make_villains_decide(m_lanes); TODO (JORDAN): MAKE THIS WORK!!!!!
 	}
 	std::deque<Car> &cars = lane->m_cars;
 	//Finding out which is currently front
