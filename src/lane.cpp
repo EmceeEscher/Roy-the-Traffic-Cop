@@ -18,6 +18,7 @@ bool Lane::init(direction dir, float villainSpawnProbability)
 	lanes_rot[2] = 0;			// South
 	lanes_rot[3] = 3.0*PI / 2.0;	// East
 	m_dir = dir;
+	m_time_remaining = MaxTimePerCar;
 	m_villain_spawn_probability = villainSpawnProbability;
 	std::srand(std::time(nullptr));
 	return true;
@@ -63,11 +64,6 @@ std::deque<Car> Lane::get_cars() const
 bool Lane::update(float ms)
 {
 	m_time_remaining -= ms;
-	if (m_time_remaining <= 0)
-	{
-		this->turn_car();
-		this->set_time_remaining(MaxTimePerCar);
-	}
 	return true;
 }
 

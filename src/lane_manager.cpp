@@ -123,6 +123,12 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 }
 void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	lane->update(ms);
+	if (lane->get_time_remaining() <= 0)
+	{
+		lane->turn_car();
+		m_ai->make_villains_decide(m_lanes);
+		lane->set_time_remaining(lane->MaxTimePerCar);
+	}
 	std::deque<Car> &cars = lane->m_cars;
 	//Finding out which is currently front
 	bool occupied_front_boundary_box = false;

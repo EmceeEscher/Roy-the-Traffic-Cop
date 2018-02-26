@@ -227,6 +227,7 @@ void Car::set_lane(direction dir)
 
 void Car::set_desired_direction(direction turn_dir)
 {
+	printf("hi");
 	m_desired_direction = turn_dir;
 	m_turn_placard->change_turn_direction(get_turn_direction());
 	m_is_villain = false;
