@@ -2,6 +2,8 @@
 
 #include "common.hpp"
 #include "direction.hpp"
+#include "placard.hpp"
+#include "turn_direction.hpp"
 #include <string>
 
 using std::string;
@@ -44,6 +46,8 @@ public:
 
 	void set_position(vec2 position);
 
+	void set_at_intersection(bool boolean);
+
 	// get or set the lane associated with car
 	void set_lane(direction dir);
 	void set_desired_direction(direction dir);
@@ -61,14 +65,23 @@ public:
 	vec2 get_vel();
 	float get_max_speed();
 
+	vec2 get_scale();
+
 	// Intersection Detection
 	bool is_approaching_stop(vec2 lane_pos);
+
+	bool is_at_stop(vec2 lane_pos);
 	
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
 	// Return if in or beyond intersection
 	bool is_in_beyond_intersec();
+
+	// Starts the color change of the placard
+	void start_timer(float max_time);
+
+	bool is_at_front();
 
 	// Turning function according to a given direction
 	void turn(float t);
@@ -105,4 +118,6 @@ private:
 	float m_hr;
 	float t;
 	bool m_in_beyond_intersection;
+	Placard* m_turn_placard;
+	bool m_at_intersection;
 };

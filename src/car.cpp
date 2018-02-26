@@ -25,8 +25,10 @@ bool Car::init()
 		}
 	}
 
+
+
 	// The position (0,0) corresponds to the center of the texture
-  
+
 	m_wr = car_texture.width * 0.5;
 	m_hr = car_texture.height * 0.5;
 
@@ -71,12 +73,14 @@ bool Car::init()
 	m_scale.y = 1;
 	m_position = { 5.f, 537.f };
 	m_velocity = { 15.0f, .0f };
-	m_acceleration = { 3.f, .0f };
+	m_acceleration = { 4.f, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
 	t = 0.f;
+
+	m_turn_placard = new Placard(m_position, m_rotation);
 
 	return true;
 }
@@ -84,6 +88,8 @@ bool Car::init()
 // Releases all graphics resources
 void Car::destroy()
 {
+	delete m_turn_placard;
+
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
 	glDeleteBuffers(1, &mesh.vao);
@@ -96,6 +102,8 @@ void Car::destroy()
 // Called on each frame by World::update()
 void Car::update(float ms)
 {
+	m_turn_placard->update(m_position, ms);
+
 	// TODO: Implement Update Car [Theo, Mason]
 	if (m_in_beyond_intersection == false)
 	{
@@ -141,6 +149,10 @@ void Car::update(float ms)
 
 void Car::draw(const mat3& projection)
 {
+	if (!m_in_beyond_intersection) {
+		m_turn_placard->draw(projection);
+	}
+
 	transform_begin();
 	transform_scale(m_scale);
 	transform_translate(m_position);
@@ -219,17 +231,7 @@ void Car::set_lane(direction dir)
 	m_lane = dir;
 	if (dir == direction::NORTH || dir == direction::SOUTH) {
 		m_velocity = { .0f, 15.0f };
-		m_acceleration = { .0f, 3.0f };
-	}
-	else if (dir == direction::WEST) {
-		//Do Nothing
-	}
-	else if (dir == direction::EAST) {
-		//TODO
-
-	}
-	else if (dir == direction::SOUTH) {
-		//TODO
+		m_acceleration = { .0f, 4.0f };
 	}
 }
 
@@ -241,6 +243,7 @@ direction Car::get_lane()
 void Car::set_rotation(float radians)
 {
 	m_rotation = radians;
+	m_turn_placard->set_rotation(m_rotation);
 }
 
 void Car::set_original_rotation(float radians)
@@ -252,10 +255,14 @@ void Car::set_position(vec2 position)
 {
 	m_position = position;
 }
+void Car::set_at_intersection(bool boolean)
+{
+	m_at_intersection = boolean;
+}
 
 void Car::slow_down()
 {
-	// TODO: y coordinates 
+	// TODO: y coordinates
 	if (m_lane == direction::WEST || m_lane == direction::EAST) {
 		m_velocity.x = m_max_speed - m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
 		m_acceleration.x *= -1.f;
@@ -270,7 +277,6 @@ void Car::slow_down()
 
 void Car::speed_up() {
 	// TODO: y acceleration/velocity
-	if (m_can_move) {
 		if (m_lane == direction::WEST || m_lane == direction::EAST) {
 			m_acceleration.x *= -1.f;
 			m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
@@ -279,8 +285,8 @@ void Car::speed_up() {
 			m_acceleration.y *= -1.f;
 			m_velocity.y += m_acceleration.y;
 		}
-	}
 }
+
 
 vec2 Car::get_acc()
 {
@@ -296,11 +302,17 @@ float Car::get_max_speed()
 {
 	return m_max_speed;
 }
+vec2 Car::get_scale()
+{
+	return m_scale;
+}
+
 
 void Car::signal_to_move()
 {
 	m_can_move = true;
 	m_in_beyond_intersection = true;
+	m_at_intersection = false;
 }
 
 float Car::compute_stopping_dis(float velocity, float acc)
@@ -316,12 +328,22 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	float stop_y = lane_pos.y;
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
-	if (std::max(x_margin, y_margin) <= 160.f && m_position.x <= stop_x && (m_can_move == false))
+	//printf("%f,%f\n", x_margin, y_margin);
+	if (std::max(x_margin, y_margin) <= 130.f && (m_can_move == false))
 		return true;
 	else
 		return false;
 }
-
+bool Car::is_at_stop(vec2 lane_pos) {
+	float stop_x = lane_pos.x;
+	float stop_y = lane_pos.y;
+	float x_margin = abs(m_position.x - stop_x);
+	float y_margin = abs(m_position.y - stop_y);
+	if (std::max(x_margin, y_margin) <= 55.f)
+		return true;
+	else
+		return false;
+}
 bool Car::is_in_beyond_intersec() {
 	return m_in_beyond_intersection;
 }
@@ -485,3 +507,11 @@ void Car::update_rotation_on_turn(float t)
 	//printf("%f\n", m_rotation);
 	set_rotation(m_original_rot + t * angle);
 }
+
+void Car::start_timer(float max_time) {
+	m_turn_placard->start_timer(max_time);
+}
+bool Car::is_at_front() {
+	return m_at_intersection;
+}
+

@@ -67,6 +67,12 @@ bool Lane::update(float ms)
 
 void Lane::add_car(carType type)
 {
+	//timer will still run even if there are no cars in line, so need to reset it
+	//when adding to an empty lane
+	if (this->is_lane_empty()) {
+		m_time_remaining = m_max_time_per_car;
+	}
+
 	if (this->is_lane_full()) {
 		// change following code based on carType once we have more than one
 		fprintf(stderr, "lane is full");
@@ -81,7 +87,7 @@ void Lane::add_car(carType type)
 				new_car.set_lane(direction::NORTH);
 			}
 			else if (m_dir == direction::WEST) {
-				new_car.set_position({ -100.f,537.f });
+				new_car.set_position({ -130.f,537.f });
 				new_car.set_lane(direction::WEST);
 				new_car.set_rotation(0);
 				new_car.set_original_rotation(0);
@@ -101,7 +107,9 @@ void Lane::add_car(carType type)
 				new_car.set_lane(direction::SOUTH);
 			}
 			m_cars.emplace_back(new_car);
-			//new_car.enter_lane(direction dir); <-- function to animate moving car new up to previous car in line
+			if (m_cars.size() == 1) {
+				m_cars[0].start_timer(m_max_time_per_car);
+			}
 		}
 	}
 }
@@ -125,7 +133,9 @@ void Lane::turn_car()
 				if (selected_car.get_vel().x <= 0.f) {
 					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
-					selected_car.speed_up();
+					if (selected_car.is_in_beyond_intersec()) {
+						selected_car.speed_up();
+					}
 				}
 			}
 
@@ -136,6 +146,11 @@ void Lane::turn_car()
 				}
 			}
 		}
+
+		if (index + 1 < m_cars.size()) {
+			m_cars[index + 1].start_timer(m_max_time_per_car);
+		}
+
 		//wait...
 		//this->erase_first_car();
 		for(std::deque<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
