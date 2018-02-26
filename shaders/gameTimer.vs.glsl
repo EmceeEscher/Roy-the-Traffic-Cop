@@ -10,9 +10,10 @@ out vec2 texcoord;
 uniform mat3 transform;
 uniform mat3 projection;
 
+// vec4.x = old_offset, vec4.y = new_offset, vec4.z = show_offset, vec4.w = flip
 uniform vec3 date_digit_0;
 uniform vec3 date_digit_1;
-uniform vec3 month_digit_0;
+uniform vec4 month_digit_0;
 uniform vec3 month_digit_1;
 
 void main()
@@ -56,30 +57,27 @@ void main()
 		}
 	}
 
-
+	/////////////////////////////////////////////////////
 	if (in_texcoord.z == 0.3){
 		mod_tc.x += month_digit_0.y;
 	}
 	if (in_texcoord.z == 0.33){
-		if (date_digit_1.z == -1){
+		if (month_digit_0.w == -1){
 			mod_tc.x += month_digit_0.y;
 		}else{
 			mod_tc.x += month_digit_0.x;
 		}
 	}
 	if (in_texcoord.z == 3){
-		if (date_digit_1.z > 0){
-			mod_tc.x += month_digit_0.x;
-		}else{
-			mod_tc.x += month_digit_0.y;
-		}
+		mod_tc.x += month_digit_0.z;
 	}
+	/////////////////////////////////////////////////////
 
 	if (in_texcoord.z == 0.4){
 		mod_tc.x += month_digit_1.y;
 	}
 	if (in_texcoord.z == 0.44){
-		if (date_digit_1.z == -1){
+		if (month_digit_1.z == -1){
 			mod_tc.x += month_digit_1.y;
 		}else{
 			mod_tc.x += month_digit_1.x;
@@ -116,13 +114,15 @@ void main()
 			mod_tf.y = mod_tf.y * date_digit_1.z;	
 		}
 	}
+	//
 	if (in_position.z == 0.3){
-		if (month_digit_0.z < 0){
-			mod_tf.y = -1*mod_tf.y * month_digit_0.z;	
+		if (month_digit_0.w < 0){
+			mod_tf.y = -1*mod_tf.y * month_digit_0.w;	
 		}else{
-			mod_tf.y = mod_tf.y * month_digit_0.z;	
+			mod_tf.y = mod_tf.y * month_digit_0.w;	
 		}
 	}
+	//
 	if (in_position.z == 0.4){
 		if (month_digit_1.z < 0){
 			mod_tf.y = -1*mod_tf.y * month_digit_1.z;	

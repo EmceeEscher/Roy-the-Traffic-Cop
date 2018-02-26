@@ -15,6 +15,8 @@ int date_digit_1_flip = 0;
 int month_digit_0_flip = 0;
 int month_digit_1_flip = 0;
 
+float month_d0_shown_offset;
+
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -99,6 +101,7 @@ bool GameTimer::init()
 	vertices[22].texcoord = { uv * 1, 0.0f, 2.0f };
 	vertices[23].texcoord = { uv * 0, 0.0f, 2.0f };
 
+	///////////////////////////////////////////////////////////////////////////
 	//month digit 0 top -- new 
 	vertices[24].position = { s_p + 4 * i_w	, 0  , 0.f };
 	vertices[25].position = { s_p + 5 * i_w , 0  , 0.f };
@@ -120,14 +123,15 @@ bool GameTimer::init()
 	vertices[31].texcoord = { uv * 0.f, 0.5f,  0.33f };
 
 	//month display for date digit 0 -- rotating
-	vertices[32].position = { s_p + 4 * i_w	, +hr, 0.3f };
-	vertices[33].position = { s_p + 5 * i_w , +hr, 0.3f };
-	vertices[34].position = { s_p + 5 * i_w	, -hr, 0.3f };
-	vertices[35].position = { s_p + 4 * i_w	, -hr, 0.3f };
+	vertices[32].position = { s_p + 5 * i_w	, +hr, 0.3f };
+	vertices[33].position = { s_p + 6 * i_w , +hr, 0.3f };
+	vertices[34].position = { s_p + 6 * i_w	, -hr, 0.3f };
+	vertices[35].position = { s_p + 5 * i_w	, -hr, 0.3f };
 	vertices[32].texcoord = { uv * 0, 1.0f, 3.0f };
 	vertices[33].texcoord = { uv * 1, 1.0f, 3.0f };
 	vertices[34].texcoord = { uv * 1, 0.0f, 3.0f };
 	vertices[35].texcoord = { uv * 0, 0.0f, 3.0f };
+	///////////////////////////////////////////////////////////////////////////
 
 	//month digit 1 top -- new 
 	vertices[36].position = { s_p + 3 * i_w, 0  , 0.f };
@@ -190,19 +194,22 @@ bool GameTimer::init()
 
 	gt_date.digit_0.old_offset = uv * 1;
 	gt_date.digit_0.new_offset = uv * 1;
-	gt_date.digit_0.flip = 0;
+	gt_date.digit_0.flip = -1;
 
 	gt_date.digit_1.old_offset = 0.0f;
 	gt_date.digit_1.new_offset = 0.0f;
-	gt_date.digit_1.flip = 0; 
+	gt_date.digit_1.flip = -1; 
 
-	gt_month.digit_0.old_offset = uv * 1;
+	gt_month.digit_0.old_offset = 0.0f;
 	gt_month.digit_0.new_offset = uv * 1;
-	gt_month.digit_0.flip = 0;
+	gt_month.digit_0.flip = -1;
+	/////////////////////////////////////////
+	month_d0_shown_offset = uv * 1;
+	/////////////////////////////////////////
 	
 	gt_month.digit_1.old_offset = 0.0f;
 	gt_month.digit_1.new_offset = 0.0f;
-	gt_month.digit_1.flip = 0;
+	gt_month.digit_1.flip = -1;
 	return true;
 }
 
@@ -226,7 +233,6 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	float month_offset_digit1 = std::fmodf(mon / 10, 10) * uv;
 
 	if (gt_day->digit_0.new_offset != date_offset_digit0) {
-		printf("ducky\n");
 		gt_day->digit_0.old_offset = date_offset_digit0-uv;
 		gt_day->digit_0.new_offset = date_offset_digit0;
 		gt_day->digit_0.flip = 1;
@@ -241,7 +247,6 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	}
 
 	if (gt_day->digit_1.new_offset != date_offset_digit1) {
-		printf("RABBIT\n");
 		gt_day->digit_1.old_offset = date_offset_digit1-uv;
 		gt_day->digit_1.new_offset = date_offset_digit1;
 		gt_day->digit_1.flip = 1;
@@ -254,24 +259,32 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 			date_digit_1_flip = 0;
 		}
 	}
-
-	if (gt_mon->digit_0.new_offset != month_offset_digit0) {
-		printf("HAIRY\n");
-		gt_mon->digit_0.old_offset = month_offset_digit0 - uv;
+	///////////////////////////////////////////////////////////////////////////
+	if (gt_mon->digit_0.new_offset != month_offset_digit0) { //need to flip
+		//prepare flip
+		month_d0_shown_offset = gt_mon->digit_0.old_offset;
 		gt_mon->digit_0.new_offset = month_offset_digit0;
-		gt_mon->digit_0.flip = 1;
+		gt_mon->digit_0.old_offset = month_offset_digit0 - uv;
+		//flip
 		month_digit_0_flip = 1;
-	}
-	else  if (month_digit_0_flip == 1) {
-		gt_mon->digit_0.flip -= 0.05;
+		gt_mon->digit_0.flip = 1;
+
+	}else if (month_digit_0_flip == 1) {//middle of flipping
+		gt_mon->digit_0.flip -= 0.1;
+		if (gt_mon->digit_0.flip <= 0) {
+			month_d0_shown_offset = gt_mon->digit_0.new_offset; //show new_offset once flipped past halfway
+		}
 		if (gt_mon->digit_0.flip <= -1) {
 			gt_mon->digit_0.flip = -1;
-			month_digit_0_flip = 0;
+			month_digit_0_flip = 0; //indicate done flipping;
 		}
+		
+	}else if (month_digit_0_flip == 0) {//done flipping, waiting for new flip
+		gt_mon->digit_0.old_offset = month_offset_digit0;
 	}
+	///////////////////////////////////////////////////////////////////////////
 
 	if (gt_mon->digit_1.new_offset != month_offset_digit1) {
-		printf("GEORGE\n");
 		gt_mon->digit_1.old_offset = month_offset_digit1 - uv;
 		gt_mon->digit_1.new_offset = month_offset_digit1;
 		gt_mon->digit_1.flip = 1;
@@ -295,8 +308,6 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 	m_current_time = mktime(adv_time);
 
 	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date, gmtime(&m_current_time)->tm_mon + 1, &gt_month);
-	//SplitSetDateDigits(gmtime(&m_current_time)->tm_mon + 1, &gt_month);
-	//SplitSetDateDigits(gmtime(&m_current_time)->tm_mday);
 }
 
 void GameTimer::draw(const mat3& projection) {
@@ -345,10 +356,10 @@ void GameTimer::draw(const mat3& projection) {
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 	glUniform3f(date_digit_0_uloc, gt_date.digit_0.old_offset, gt_date.digit_0.new_offset, gt_date.digit_0.flip);
 	glUniform3f(date_digit_1_uloc, gt_date.digit_1.old_offset, gt_date.digit_1.new_offset, gt_date.digit_1.flip);
-	glUniform3f(month_digit_0_uloc, gt_month.digit_0.old_offset, gt_month.digit_0.new_offset, gt_month.digit_0.flip);
-	glUniform3f(month_digit_1_uloc, gt_month.digit_1.old_offset, gt_month.digit_1.new_offset, gt_month.digit_1.flip);
-	//printf("date_0_old: %f, date_0_new: %f\n", gt_date.digit_0.old_offset, gt_date.digit_0.new_offset);
-	//printf("date_1_old: %f, date_1_new: %f\n", gt_date.digit_1.old_offset, gt_date.digit_1.new_offset);
+
+	glUniform4f(month_digit_0_uloc, gt_month.digit_0.old_offset, gt_month.digit_0.new_offset, month_d0_shown_offset, gt_month.digit_0.flip);
+
+	glUniform3f(month_digit_1_uloc, gt_month.digit_1.old_offset, gt_month.digit_1.new_offset, gt_month.digit_1.flip);;
 
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
