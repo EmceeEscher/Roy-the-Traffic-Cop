@@ -15,7 +15,7 @@ class Lane
 {
 public:
 	const int MaxCarsPerLane = 4;
-	float const MaxTimePerCar = 5000; // Max time before a car will turn
+	float const MaxTimePerCar = 10000; // Max time before a car will turn
 
     // constructor/destructor
     Lane(direction dir, float villainSpawnProbability);
