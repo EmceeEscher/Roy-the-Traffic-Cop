@@ -91,8 +91,16 @@ void AI::get_best_turning_direction(
 		bool is_moving_active_lane = it->find(active_lane) != it->end();
 
 		get_best_turning_direction(active_lane, new_lanes, current_ply + 1, cars_turned + it->size(), is_moving_active_lane, bestPlayerOutcome);
+		for (auto current = new_lanes.begin(); current != new_lanes.end(); ++current) {
+			delete current->second;
+		}
+		new_lanes.clear();
 		new_lanes = deep_copy_lanes(current_lanes);
 	}
+	for (auto current = new_lanes.begin(); current != new_lanes.end(); ++current) {
+		delete current->second;
+	}
+	new_lanes.clear();
 }
 
 std::map<direction, Lane*> AI::deep_copy_lanes(std::map<direction, Lane*> lanes) {
