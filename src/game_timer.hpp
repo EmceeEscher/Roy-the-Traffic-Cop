@@ -34,7 +34,7 @@ public:
 	void advance_time(float real_time_seconds_elapsed);
 
 	// Split and set Date digits for texture offset
-	void SplitSetDateDigits(int number, gt_tracker* gt);
+	void SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_tracker* gt_mon);
 
 	// Renders
 	void draw(const mat3& projection) override;

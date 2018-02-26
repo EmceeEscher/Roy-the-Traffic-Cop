@@ -23,15 +23,15 @@ void main()
 	if (in_texcoord.z == 0.1){
 		mod_tc.x += date_digit_0.y;
 	}
-	if (in_texcoord.z == 0.11){
-		if (date_digit_0.z <= 0){
+	if (in_texcoord.z == 0.11  ){
+		if (date_digit_0.z == -1){
 			mod_tc.x += date_digit_0.y;
 		}else{
 			mod_tc.x += date_digit_0.x;
 		}
 	}
 	if (in_texcoord.z == 1){
-		if (date_digit_0.z <= 0){
+		if (date_digit_0.z <0){
 			mod_tc.x += date_digit_0.y;
 		}else{
 			mod_tc.x += date_digit_0.x;
@@ -41,36 +41,37 @@ void main()
 	if (in_texcoord.z == 0.2){
 		mod_tc.x += date_digit_1.y;
 	}
-	if (in_texcoord.z == 0.22){
-		if (date_digit_1.z <= 0.5){
+	if (in_texcoord.z == 0.22  ){
+		if (date_digit_1.z == -1){
 			mod_tc.x += date_digit_1.y;
 		}else{
 			mod_tc.x += date_digit_1.x;
 		}
 	}
 	if (in_texcoord.z == 2){
-		if (date_digit_1.z <= 1){
+		if (date_digit_1.z <0){
 			mod_tc.x += date_digit_1.y;
 		}else{
 			mod_tc.x += date_digit_1.x;
 		}
 	}
 
+
 	if (in_texcoord.z == 0.3){
 		mod_tc.x += month_digit_0.y;
 	}
 	if (in_texcoord.z == 0.33){
-		if (date_digit_1.z <= 0){
+		if (date_digit_1.z == -1){
 			mod_tc.x += month_digit_0.y;
 		}else{
 			mod_tc.x += month_digit_0.x;
 		}
 	}
 	if (in_texcoord.z == 3){
-		if (date_digit_1.z <= 0){
-			mod_tc.x += month_digit_0.y;
-		}else{
+		if (date_digit_1.z > 0){
 			mod_tc.x += month_digit_0.x;
+		}else{
+			mod_tc.x += month_digit_0.y;
 		}
 	}
 
@@ -78,17 +79,17 @@ void main()
 		mod_tc.x += month_digit_1.y;
 	}
 	if (in_texcoord.z == 0.44){
-		if (date_digit_1.z <= 0){
+		if (date_digit_1.z == -1){
 			mod_tc.x += month_digit_1.y;
 		}else{
 			mod_tc.x += month_digit_1.x;
 		}
 	}
 	if (in_texcoord.z == 4){
-		if (date_digit_1.z <= 1){
-			mod_tc.x += month_digit_1.y;
-		}else{
+		if (date_digit_1.z > 0){
 			mod_tc.x += month_digit_1.x;
+		}else{
+			mod_tc.x += month_digit_1.y;
 		}
 	}
 
@@ -101,29 +102,29 @@ void main()
 
 
 
-	if (in_position.z == 1){
-		if (date_digit_0.z <= 0){
+	if (in_position.z == 0.1){
+		if (date_digit_0.z < 0){
 			mod_tf.y = -1*mod_tf.y * date_digit_0.z;	
 		}else{
 			mod_tf.y = mod_tf.y * date_digit_0.z;	
 		}
 	}
-	if (in_position.z == 2){
-		if (date_digit_1.z <= 0){
+	if (in_position.z == 0.2){
+		if (date_digit_1.z < 0){
 			mod_tf.y = -1*mod_tf.y * date_digit_1.z;	
 		}else{
 			mod_tf.y = mod_tf.y * date_digit_1.z;	
 		}
 	}
-	if (in_position.z == 3){
-		if (month_digit_0.z <= 0){
+	if (in_position.z == 0.3){
+		if (month_digit_0.z < 0){
 			mod_tf.y = -1*mod_tf.y * month_digit_0.z;	
 		}else{
 			mod_tf.y = mod_tf.y * month_digit_0.z;	
 		}
 	}
-	if (in_position.z == 4){
-		if (month_digit_1.z <= 0){
+	if (in_position.z == 0.4){
+		if (month_digit_1.z < 0){
 			mod_tf.y = -1*mod_tf.y * month_digit_1.z;	
 		}else{
 			mod_tf.y = mod_tf.y * month_digit_1.z;	
