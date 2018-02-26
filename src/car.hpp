@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <stdexcept>
 
 using std::string;
 
@@ -38,7 +39,7 @@ public:
 	direction get_desired_direction()const;
 
 	// Sets the desired direction for the car and removes it's villainy
-	void set_desired_direction(direction dir);
+	void set_desired_direction(direction turn_dir);
 
 	// Randomly assignes the desired direction for the car
 	// Call after set_lane to ensure desired direction != our lane
@@ -90,6 +91,9 @@ public:
 	void start_timer(float max_time);
 
 	bool is_at_front();
+
+	// get the car's turning direction
+	turn_direction get_turn_direction();
 
 private:
 	vec2 m_position; // Window coordinates

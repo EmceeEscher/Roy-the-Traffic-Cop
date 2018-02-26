@@ -17,7 +17,6 @@ void AI::make_villains_decide(std::map<direction, Lane*> lanes)
 		if (carsInLane.size() > 1) {
 			if (carsInLane[1].is_villain()) {
 				direction new_direction = make_villain_decide(it->first, lanes);
-				printf("direction: %i\n", new_direction);
 				carsInLane[1].set_desired_direction(new_direction);
 			}
 		}
@@ -264,7 +263,7 @@ direction AI::get_most_villainous_direction(direction active_lane, std::map<dire
 		if (current_direction == active_lane) {
 			continue; // No U-Turns
 		}
-		villain.set_desired_direction(directions[i]);
+		villain.set_desired_direction(current_direction);
 
 		// If the villain chooses this direction, what moves will be available to the player
 		std::vector<std::set<direction>> moves = generate_moves(current_lanes);

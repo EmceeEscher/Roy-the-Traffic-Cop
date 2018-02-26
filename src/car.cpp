@@ -225,11 +225,63 @@ void Car::set_lane(direction dir)
 	}
 }
 
-void Car::set_desired_direction(direction dir)
+void Car::set_desired_direction(direction turn_dir)
 {
-	m_desired_direction = dir;
-	m_turn_placard->change_turn_direction(dir);
+	m_desired_direction = turn_dir;
+	m_turn_placard->change_turn_direction(get_turn_direction());
 	m_is_villain = false;
+}
+
+turn_direction Car::get_turn_direction()
+{
+	switch (m_desired_direction) {
+	case direction::EAST:
+		switch (m_lane) {
+		case direction::NORTH:
+			return turn_direction::RIGHT;
+		case direction::SOUTH:
+			return turn_direction::LEFT;
+		case direction::WEST:
+			return turn_direction::STRAIGHT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::NORTH:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::LEFT;
+		case direction::SOUTH:
+			return turn_direction::STRAIGHT;
+		case direction::WEST:
+			return turn_direction::RIGHT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::SOUTH:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::RIGHT;
+		case direction::NORTH:
+			return turn_direction::STRAIGHT;
+		case direction::WEST:
+			return turn_direction::LEFT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	case direction::WEST:
+		switch (m_lane) {
+		case direction::EAST:
+			return turn_direction::STRAIGHT;
+		case direction::SOUTH:
+			return turn_direction::RIGHT;
+		case direction::NORTH:
+			return turn_direction::LEFT;
+		default:
+			throw std::invalid_argument("received invalid direction pairing");
+		}
+	default:
+		throw std::invalid_argument("received invalid direction pairing");
+	}
 }
 
 void Car::generate_desired_direction()
@@ -238,6 +290,7 @@ void Car::generate_desired_direction()
 	while (m_desired_direction == m_lane) {
 		m_desired_direction = direction(rand() % 4);
 	}
+	m_turn_placard->change_turn_direction(get_turn_direction());
 }
 
 direction Car::get_lane()
