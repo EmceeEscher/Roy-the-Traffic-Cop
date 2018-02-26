@@ -118,9 +118,9 @@ bool World::init(vec2 screen)
 	lanes[3] = { 600.f,450.f };
 
 	m_background.init();
-	m_lane_manager.init();
+	m_ai.init();
 	m_game_timer.init();
-
+	m_lane_manager.init(m_ai);
 	return m_traffic_cop.init();
 }
 
@@ -272,5 +272,5 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	printf("%f,%f\n", xpos, ypos);
+	// printf("mouse position: %f,%f\n", xpos, ypos);
 }

@@ -3,6 +3,7 @@
 // internal
 #include "common.hpp"
 #include "traffic_cop.hpp"
+#include "ai.hpp"
 #include "background.hpp"
 #include "car.hpp"
 #include "game_timer.hpp"
@@ -58,6 +59,7 @@ private:
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
 	Background m_background;
+	AI m_ai;
 	LaneManager m_lane_manager;
 	//Just a single car to show for now.
 	Car m_car;
