@@ -509,6 +509,7 @@
     <ClCompile Include="$(ProjectDir)..\src\ai.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\lane_manager.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\background.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\placard.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
