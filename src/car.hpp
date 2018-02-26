@@ -63,7 +63,7 @@ public:
 
 	// get or set the lane associated with car
 	void set_lane(direction dir);
-	void set_desired_direction(direction dir);
+
 	direction get_lane();
 
 	// car to slows down to stop sign or speeds away

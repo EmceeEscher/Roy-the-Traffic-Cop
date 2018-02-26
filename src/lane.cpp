@@ -110,7 +110,7 @@ void Lane::add_car(carType type)
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
-				new_car.set_desired_direction(direction::EAST);
+				new_car.set_desired_direction(direction::NORTH);
 			}
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
@@ -148,8 +148,11 @@ void Lane::turn_car()
 
 			if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
 				if (selected_car.get_vel().y <= 0.f) {
+					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
-					selected_car.speed_up();
+					if (selected_car.is_in_beyond_intersec()) {
+						selected_car.speed_up();
+					}
 				}
 			}
 		}

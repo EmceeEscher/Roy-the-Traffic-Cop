@@ -465,11 +465,6 @@ bool Car::is_in_beyond_intersec() {
 	return m_in_beyond_intersection;
 }
 
-void Car::set_desired_direction(direction dir)
-{
-	m_desired_direction = dir;
-}
-
 void Car::set_turn_start(vec2 pos)
 {
 	m_turn_start_pos = pos;
