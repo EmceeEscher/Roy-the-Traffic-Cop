@@ -122,6 +122,7 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	return false;
 }
 void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
+	lane->update(ms);
 	std::deque<Car> &cars = lane->m_cars;
 	//Finding out which is currently front
 	bool occupied_front_boundary_box = false;
@@ -173,7 +174,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 							}
 						}
 					}
-					//If not within the stopping boundary 
+					//If not within the stopping boundary
 					else if (!cars[i].is_approaching_stop(lane_intersection)) {
 						//If negative movement, move
 						if (cars[i].get_acc().x < 0.f) {
@@ -215,7 +216,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 							}
 						}
 					}
-					//If not within the stopping boundary 
+					//If not within the stopping boundary
 					else if (!cars[i].is_approaching_stop(lane_intersection)) {
 						//If negative movement, move
 						if (cars[i].get_acc().y < 0.f) {

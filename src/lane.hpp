@@ -39,35 +39,34 @@ public:
 	// Get the lane label number
 	int get_lane_num()const;
 
-    // Returns the cars in the lane
-    std::deque<Car> get_cars() const;
+  // Returns the cars in the lane
+  std::deque<Car> get_cars() const;
 
-    // Moves the game ahead by ms milliseconds
-    bool update(float ms);
+  // Moves the game ahead by ms milliseconds
+  bool update(float ms);
 
-    // Adds the given car to the back of the lineup
-    void add_car(carType type);
+  // Adds the given car to the back of the lineup
+  void add_car(carType type);
 
-    // Removes the car at the front of the lane
-    void turn_car();
+  // Removes the car at the front of the lane
+  void turn_car();
 
-    // Returns true if the lane has MaxCarsPerLane cars in it
-    bool is_lane_full() const;
+  // Returns true if the lane has MaxCarsPerLane cars in it
+  bool is_lane_full() const;
 
-    // Returns true if the lane has at least 1 vehicle in it
-    bool is_lane_empty() const;
+  // Returns true if the lane has at least 1 vehicle in it
+  bool is_lane_empty() const;
 
-    // Erases the first car in the lane. (Call this after that car has finished turning)
-    void erase_first_car();
+  // Erases the first car in the lane. (Call this after that car has finished turning)
+  void erase_first_car();
 
 	std::deque<Car> m_cars; // Cars in the lane
 
 
 private:
 	float lanes_rot[4];
-    float const m_max_time_per_car = 20000; // Max time before a car will turn
-    float m_time_remaining; // Time remaining on timer of car at front of lane
-    direction m_dir;
+  float m_time_remaining; // Time remaining on timer of car at front of lane
+  direction m_dir;
 	float m_villain_spawn_probability; // Probability that a car spawned in this lane will be a villain
 
 	vec2 m_stop_sign_loc;
