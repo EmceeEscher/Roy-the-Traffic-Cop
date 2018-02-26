@@ -2,11 +2,10 @@
 #include "game_timer.hpp"
 
 Texture GameTimer::calendar_tex;
-TexturedVertex2 vertices[8];
+TexturedVertex vertices[4];
 
-float flip_rad;
+float inversion_offset;
 float flip_offset_actual;
-const float m_pi = 3.141592653589793;
 float old_offset;
 float new_offset;
 float num_offset;
@@ -33,15 +32,15 @@ bool GameTimer::init()
 	float wr = calendar_tex.width * 0.2f;
 	float hr = calendar_tex.height * 0.5f;
 
-	vertices[0].position = { -wr, +hr, 0.f };
-	vertices[1].position = { 0, +hr, 0.f };
-	vertices[2].position = { 0, -hr, 0.f };
-	vertices[3].position = { -wr, -hr, 0.f };
+	vertices[0].position = { -wr, +hr, 1.f };
+	vertices[1].position = { 0, +hr, 1.f };
+	vertices[2].position = { 0, -hr, 1.f };
+	vertices[3].position = { -wr, -hr, 1.f };
 
-	vertices[0].texcoord = { 0.0f, 0.5f, 0.0f };
-	vertices[1].texcoord = { 0.1f, 0.5f, 0.0f };
-	vertices[2].texcoord = { 0.1f, 0.0f, 0.0f };
-	vertices[3].texcoord = { 0.0f, 0.0f, 0.0f };
+	vertices[0].texcoord = { 0.0f, 0.5f};
+	vertices[1].texcoord = { 0.1f, 0.5f};
+	vertices[2].texcoord = { 0.1f, 0.0f};
+	vertices[3].texcoord = { 0.0f, 0.0f};
 
 	uint16_t indices[] = { 0,3,1,1,3,2 };
 
@@ -51,12 +50,12 @@ bool GameTimer::init()
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 8, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 12, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
@@ -67,8 +66,9 @@ bool GameTimer::init()
 	// Setting initial values, scale is negative to make it face the opposite way
 	m_scale.x = 0.25;
 	m_scale.y = 0.25;
-	m_position = { 500.f, 500.f };
-	flip_rad = 0.0f;
+	m_position = { 850.f, 100.f };
+
+	inversion_offset = 1.0f;
 	flip_offset_actual = 0.0f;
 	old_offset = 0.0f;
 	new_offset = 0.1f;
@@ -94,7 +94,7 @@ void GameTimer::SplitSetDateDigits(int date) {
 	if (new_offset != num_offset) {
 		old_offset = new_offset;
 		new_offset = num_offset;
-		flip_rad = 0;
+		inversion_offset = 1;
 	}
 }
 
@@ -108,11 +108,11 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday);
 	
 
-	flip_rad += 0.05;
-	if (flip_rad >= m_pi) {
-		flip_rad = m_pi;
+	inversion_offset -= 0.05;
+	if (inversion_offset <= -1) {
+		inversion_offset = -1;
 	}
-	if (flip_rad < m_pi / 2) {
+	if (inversion_offset >= 0) {
 		flip_offset_actual = old_offset;
 		invert_backside = 1;
 	}else{
@@ -124,7 +124,7 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 void GameTimer::draw(const mat3& projection) {
 	transform_begin();
 	transform_translate(m_position);
-	transform_rotate(flip_rad);
+	transform_translate_x(inversion_offset);
 	transform_scale(m_scale);
 	transform_end();
 
@@ -145,8 +145,8 @@ void GameTimer::draw(const mat3& projection) {
 	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_texcoord_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)0);
-	glVertexAttribPointer(in_texcoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)sizeof(vec3));
+	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);

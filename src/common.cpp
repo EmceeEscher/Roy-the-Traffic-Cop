@@ -235,8 +235,15 @@ void Renderable::transform_rotate(float radians)
 {
 	float c = cosf(radians);
 	float s = sinf(radians);
-	mat3 R = { { 1, 0.f, 0.f },{0 , c, -s },{ 0.f, s, c } };
+	mat3 R = { { c, s, 0.f },{ -s, c, 0.f },{ 0.f, 0.f, 1.f } };
+	//mat3 R = { { 1, 0.f, 0.f },{ 0.f, c, -s },{ 0.f, s, c } };
 	transform = mul(transform, R);
+}
+
+void Renderable::transform_translate_x(float offset)
+{
+	mat3 T = { { 1.f, 0.f, 0.f },{ 0.f, offset, 0.f },{ 0.f, 0.f, 1.f } };
+	transform = mul(transform, T);
 }
 
 void Renderable::transform_translate(vec2 offset)
