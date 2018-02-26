@@ -118,7 +118,8 @@ bool World::init(vec2 screen)
 	lanes[3] = { 600.f,450.f };
 
 	m_background.init();
-	m_lane_manager.init();
+	m_ai.init();
+	m_lane_manager.init(m_ai);
 	return m_traffic_cop.init();
 }
 
