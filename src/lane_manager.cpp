@@ -6,7 +6,7 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
-  lanes[0] = { 450.f,400.f };
+  lanes[0] = { 450.f,398.f };
   lanes[1] = { 400.f,540.f };
   lanes[2] = { 550.f,590.f };
   lanes[3] = { 610.f,450.f };

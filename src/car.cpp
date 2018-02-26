@@ -228,16 +228,15 @@ void Car::set_lane(direction dir)
 void Car::set_desired_direction(direction dir)
 {
 	m_desired_direction = dir;
+	m_turn_placard->change_turn_direction(dir);
 	m_is_villain = false;
 }
 
 void Car::generate_desired_direction()
 {
-	if (!m_is_villain) {
-		m_desired_direction = m_lane;
-		while (m_desired_direction == m_lane) {
-			m_desired_direction = direction(rand() % 4);
-		}
+	m_desired_direction = m_lane;
+	while (m_desired_direction == m_lane) {
+		m_desired_direction = direction(rand() % 4);
 	}
 }
 
