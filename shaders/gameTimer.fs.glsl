@@ -5,7 +5,6 @@ in vec2 texcoord;
 // Application data
 uniform sampler2D sampler0;
 uniform vec3 fcolor;
-uniform int invert_backside;
 
 // Output color
 layout(location = 0) out  vec4 gl_FragColor;

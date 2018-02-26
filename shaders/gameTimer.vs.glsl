@@ -1,7 +1,7 @@
 #version 330 
 // Input attributes
 in vec3 in_position;
-in vec2 in_texcoord;
+in vec3 in_texcoord;
 
 // Passed to fragment shader
 out vec2 texcoord;
@@ -9,15 +9,128 @@ out vec2 texcoord;
 // Application data
 uniform mat3 transform;
 uniform mat3 projection;
-uniform float flip_offset_actual;
-uniform int invert_backside;
+
+uniform vec3 date_digit_0;
+uniform vec3 date_digit_1;
+uniform vec3 month_digit_0;
+uniform vec3 month_digit_1;
 
 void main()
 {
-	vec2 tmp_txcoord = in_texcoord;
-	tmp_txcoord.x += flip_offset_actual;
+	vec3 mod_tc = in_texcoord;
+	vec3 mod_tf = in_position;
 
-	texcoord = vec2(tmp_txcoord);
-	vec3 pos = projection * transform * vec3(in_position.x,invert_backside*in_position.y, 1.0);
+	if (in_texcoord.z == 0.1){
+		mod_tc.x += date_digit_0.y;
+	}
+	if (in_texcoord.z == 0.11){
+		if (date_digit_0.z <= 0){
+			mod_tc.x += date_digit_0.y;
+		}else{
+			mod_tc.x += date_digit_0.x;
+		}
+	}
+	if (in_texcoord.z == 1){
+		if (date_digit_0.z <= 0){
+			mod_tc.x += date_digit_0.y;
+		}else{
+			mod_tc.x += date_digit_0.x;
+		}
+	}
+
+	if (in_texcoord.z == 0.2){
+		mod_tc.x += date_digit_1.y;
+	}
+	if (in_texcoord.z == 0.22){
+		if (date_digit_1.z <= 0.5){
+			mod_tc.x += date_digit_1.y;
+		}else{
+			mod_tc.x += date_digit_1.x;
+		}
+	}
+	if (in_texcoord.z == 2){
+		if (date_digit_1.z <= 1){
+			mod_tc.x += date_digit_1.y;
+		}else{
+			mod_tc.x += date_digit_1.x;
+		}
+	}
+
+	if (in_texcoord.z == 0.3){
+		mod_tc.x += month_digit_0.y;
+	}
+	if (in_texcoord.z == 0.33){
+		if (date_digit_1.z <= 0){
+			mod_tc.x += month_digit_0.y;
+		}else{
+			mod_tc.x += month_digit_0.x;
+		}
+	}
+	if (in_texcoord.z == 3){
+		if (date_digit_1.z <= 0){
+			mod_tc.x += month_digit_0.y;
+		}else{
+			mod_tc.x += month_digit_0.x;
+		}
+	}
+
+	if (in_texcoord.z == 0.4){
+		mod_tc.x += month_digit_1.y;
+	}
+	if (in_texcoord.z == 0.44){
+		if (date_digit_1.z <= 0){
+			mod_tc.x += month_digit_1.y;
+		}else{
+			mod_tc.x += month_digit_1.x;
+		}
+	}
+	if (in_texcoord.z == 4){
+		if (date_digit_1.z <= 1){
+			mod_tc.x += month_digit_1.y;
+		}else{
+			mod_tc.x += month_digit_1.x;
+		}
+	}
+
+
+
+
+
+
+
+
+
+
+	if (in_position.z == 1){
+		if (date_digit_0.z <= 0){
+			mod_tf.y = -1*mod_tf.y * date_digit_0.z;	
+		}else{
+			mod_tf.y = mod_tf.y * date_digit_0.z;	
+		}
+	}
+	if (in_position.z == 2){
+		if (date_digit_1.z <= 0){
+			mod_tf.y = -1*mod_tf.y * date_digit_1.z;	
+		}else{
+			mod_tf.y = mod_tf.y * date_digit_1.z;	
+		}
+	}
+	if (in_position.z == 3){
+		if (month_digit_0.z <= 0){
+			mod_tf.y = -1*mod_tf.y * month_digit_0.z;	
+		}else{
+			mod_tf.y = mod_tf.y * month_digit_0.z;	
+		}
+	}
+	if (in_position.z == 4){
+		if (month_digit_1.z <= 0){
+			mod_tf.y = -1*mod_tf.y * month_digit_1.z;	
+		}else{
+			mod_tf.y = mod_tf.y * month_digit_1.z;	
+		}
+	}
+
+	vec3 pos = projection * transform * vec3(mod_tf.xy, 1.0);
+	texcoord = vec2(mod_tc.xy);
 	gl_Position = vec4(pos.xy, in_position.z, 1.0);
 }
