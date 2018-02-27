@@ -526,6 +526,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else
 		{
+			//Change
 			m_turn_pivot = { 445.f, 445.f };
 			return 's';
 		}
@@ -543,6 +544,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else
 		{
+			//Change
 			m_turn_pivot = { 537.f, 537.f };
 			return 's';
 		}
@@ -560,6 +562,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else
 		{
+			//Change
 			m_turn_pivot = { 550.f, 470.f };
 			return 's';
 		}
@@ -572,20 +575,24 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else if (desired_dir == direction::EAST)
 		{
-			m_turn_pivot = { 470.f, 550.f };
+			//Change
+			m_turn_pivot = { 450.f, 540.f };
 			return 'l';
 		}
 		else
 		{
+			//Change
 			m_turn_pivot = { 450.f, 550.f };
 			return 's';
 		}
 		break;
 	default:
+		printf("hitting default\n");
 		return 's';
 		break;
 	}
 }
+
 
 // Rotate p1 around p2 by 90 degrees CCW if turning left
 // Rotate p1 around p2 by 90 degrees CW if turning right
