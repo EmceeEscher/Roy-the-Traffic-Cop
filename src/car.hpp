@@ -54,12 +54,16 @@ public:
 	// Set rotation in radians
 	void set_rotation(float radians);
 
+	// Set initial rotation
+	void set_original_rotation(float radians);
+
 	void set_position(vec2 position);
 
 	void set_at_intersection(bool boolean);
 
 	// get or set the lane associated with car
 	void set_lane(direction dir);
+
 	direction get_lane();
 
 	// car to slows down to stop sign or speeds away
@@ -92,6 +96,23 @@ public:
 
 	bool is_at_front();
 
+	// Turning function according to a given direction
+	void turn(float t);
+
+	// Helper for Bezier construction
+	int binomialCoefficient(int n, int k);
+
+	// Helper 2 for Bezier construction
+	vec2 find_end_point(vec2 p1, vec2 p2, float angle);
+
+	// Helper 3 for determing the turn direction
+	char calculate_turn_dir(direction lane_dir, direction desired_dir);
+
+	// Make the car rotate when turning
+	void update_rotation_on_turn(float t);
+
+	void set_turn_start(vec2 start_pos);
+
 	// get the car's turning direction
 	turn_direction get_turn_direction();
 
@@ -99,6 +120,7 @@ private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
+	float m_original_rot;
 	size_t m_num_indices; // passed to glDrawElements
 	vec2 m_velocity;
 	vec2 m_acceleration;
@@ -107,10 +129,14 @@ private:
 	vec2 m_displacement;
 	direction m_lane;
 	direction m_desired_direction;
+	vec2 m_turn_start_pos;
+	vec2 m_turn_pivot;
 	float m_max_speed;
 	float m_wr;
 	float m_hr;
+	float t;
 	bool m_in_beyond_intersection;
+	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 };
