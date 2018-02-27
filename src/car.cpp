@@ -171,7 +171,7 @@ void Car::update(float ms)
 		else {
 			// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
 			m_in_beyond_intersection = false;
-			m_turned = true; 
+			m_turned = true;
 			if (m_desired_direction == direction::EAST) {
 				m_velocity.y = 0.f;
 				m_acceleration.x = ACC;
@@ -193,7 +193,7 @@ void Car::update(float ms)
 
 void Car::draw(const mat3& projection)
 {
-	if (!m_in_beyond_intersection) {
+	if (!m_in_beyond_intersection && !m_turned) {
 		m_turn_placard->draw(projection);
 	}
 
@@ -293,53 +293,58 @@ void Car::set_desired_direction(direction turn_dir)
 
 turn_direction Car::get_turn_direction()
 {
-	switch (m_desired_direction) {
-	case direction::EAST:
-		switch (m_lane) {
-		case direction::NORTH:
-			return turn_direction::RIGHT;
-		case direction::SOUTH:
-			return turn_direction::LEFT;
-		case direction::WEST:
-			return turn_direction::STRAIGHT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::NORTH:
-		switch (m_lane) {
+	switch (m_lane) {
 		case direction::EAST:
-			return turn_direction::LEFT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::RIGHT;
+				case direction::WEST:
+					return turn_direction::STRAIGHT;
+				case direction::SOUTH:
+					return turn_direction::LEFT;
+				default:
+				  throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::SOUTH:
-			return turn_direction::STRAIGHT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::STRAIGHT;
+				case direction::WEST:
+					return turn_direction::LEFT;
+				case direction::EAST:
+					return turn_direction::RIGHT;
+				default:
+					throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::WEST:
-			return turn_direction::RIGHT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::SOUTH:
-		switch (m_lane) {
-		case direction::EAST:
-			return turn_direction::RIGHT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::LEFT;
+				case direction::EAST:
+					return turn_direction::STRAIGHT;
+				case direction::SOUTH:
+					return turn_direction::RIGHT;
+				default:
+					throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::NORTH:
-			return turn_direction::STRAIGHT;
-		case direction::WEST:
-			return turn_direction::LEFT;
+			switch (m_desired_direction) {
+				case direction::EAST:
+					return turn_direction::LEFT;
+				case direction::WEST:
+					return turn_direction::RIGHT;
+				case direction::SOUTH:
+					return turn_direction::STRAIGHT;
+				default:
+				  throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		default:
 			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::WEST:
-		switch (m_lane) {
-		case direction::EAST:
-			return turn_direction::STRAIGHT;
-		case direction::SOUTH:
-			return turn_direction::RIGHT;
-		case direction::NORTH:
-			return turn_direction::LEFT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	default:
-		throw std::invalid_argument("received invalid direction pairing");
+			break;
 	}
 }
 
@@ -645,4 +650,3 @@ void Car::start_timer(float max_time) {
 bool Car::is_at_front() {
 	return m_at_intersection;
 }
-
