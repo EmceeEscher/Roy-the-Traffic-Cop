@@ -579,7 +579,7 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {	
-	const int One_Day_Sec = 86400;
+	const int One_Day_Sec = 10000;
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += One_Day_Sec; //alter date speed here
 	m_current_time = mktime(adv_time);
