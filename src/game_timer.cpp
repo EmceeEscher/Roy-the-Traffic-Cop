@@ -105,64 +105,65 @@ bool GameTimer::init()
 	vertices[23].texcoord = { uv * 0, 0.0f, 2.0f };
 
 	//month digit 0 top -- new 
-	vertices[24].position = { s_p + 4 * i_w	, 0  , 0.f };
-	vertices[25].position = { s_p + 5 * i_w , 0  , 0.f };
-	vertices[26].position = { s_p + 5 * i_w	, -hr, 0.f };
-	vertices[27].position = { s_p + 4 * i_w	, -hr, 0.f };
+	vertices[24].position = { s_p + 3.5f * i_w	, 0  , 0.f };
+	vertices[25].position = { s_p + 4.5f * i_w , 0  , 0.f };
+	vertices[26].position = { s_p + 4.5f * i_w	, -hr, 0.f };
+	vertices[27].position = { s_p + 3.5f * i_w	, -hr, 0.f };
 	vertices[24].texcoord = { uv * 0.f, 0.5  , 0.3f };
 	vertices[25].texcoord = { uv * 1.f, 0.5  , 0.3f };
 	vertices[26].texcoord = { uv * 1.f, 0.0f , 0.3f };
 	vertices[27].texcoord = { uv * 0.f, 0.0f , 0.3f };
 
 	//month digit 0 bottom -- old
-	vertices[28].position = { s_p + 4 * i_w	, +hr, 0.f };
-	vertices[29].position = { s_p + 5 * i_w , +hr, 0.f };
-	vertices[30].position = { s_p + 5 * i_w	, 0, 0.f };
-	vertices[31].position = { s_p + 4 * i_w	, 0, 0.f };
+	vertices[28].position = { s_p + 3.5f * i_w	, +hr, 0.f };
+	vertices[29].position = { s_p + 4.5f * i_w , +hr, 0.f };
+	vertices[30].position = { s_p + 4.5f * i_w	, 0, 0.f };
+	vertices[31].position = { s_p + 3.5f * i_w	, 0, 0.f };
 	vertices[28].texcoord = { uv * 0.f, 1.0f,  0.33f };
 	vertices[29].texcoord = { uv * 1.f, 1.0f,  0.33f };
 	vertices[30].texcoord = { uv * 1.f, 0.5f,  0.33f };
 	vertices[31].texcoord = { uv * 0.f, 0.5f,  0.33f };
 
 	//month display for date digit 0 -- rotating
-	vertices[32].position = { s_p + 4 * i_w	, +hr, 0.3f };
-	vertices[33].position = { s_p + 5 * i_w , +hr, 0.3f };
-	vertices[34].position = { s_p + 5 * i_w	, -hr, 0.3f };
-	vertices[35].position = { s_p + 4 * i_w	, -hr, 0.3f };
+	vertices[32].position = { s_p + 3.5f * i_w	, +hr, 0.3f };
+	vertices[33].position = { s_p + 4.5f * i_w , +hr, 0.3f };
+	vertices[34].position = { s_p + 4.5f * i_w	, -hr, 0.3f };
+	vertices[35].position = { s_p + 3.5f * i_w	, -hr, 0.3f };
 	vertices[32].texcoord = { uv * 0, 1.0f, 3.0f };
 	vertices[33].texcoord = { uv * 1, 1.0f, 3.0f };
 	vertices[34].texcoord = { uv * 1, 0.0f, 3.0f };
 	vertices[35].texcoord = { uv * 0, 0.0f, 3.0f };
 
 	//month digit 1 top -- new 
-	vertices[36].position = { s_p + 3 * i_w, 0  , 0.f };
-	vertices[37].position = { s_p + 4 * i_w, 0  , 0.f };
-	vertices[38].position = { s_p + 4 * i_w, -hr, 0.f };
-	vertices[39].position = { s_p + 3 * i_w, -hr, 0.f };
+	vertices[36].position = { s_p + 2.5f * i_w, 0  , 0.f };
+	vertices[37].position = { s_p + 3.5f * i_w, 0  , 0.f };
+	vertices[38].position = { s_p + 3.5f * i_w, -hr, 0.f };
+	vertices[39].position = { s_p + 2.5f * i_w, -hr, 0.f };
 	vertices[36].texcoord = { uv  * 0.f, 0.5f, 0.4f };
 	vertices[37].texcoord = { uv  * 1.f, 0.5f, 0.4f };
 	vertices[38].texcoord = { uv  * 1.f, 0.0f, 0.4f };
 	vertices[39].texcoord = { uv  * 0.f, 0.0f, 0.4f };
 
 	//month digit 1 bottom -- old
-	vertices[40].position = { s_p + 3 * i_w, +hr , 0.f };
-	vertices[41].position = { s_p + 4 * i_w, +hr , 0.f };
-	vertices[42].position = { s_p + 4 * i_w, 0	 , 0.f };
-	vertices[43].position = { s_p + 3 * i_w, 0	 , 0.f };
+	vertices[40].position = { s_p + 2.5f * i_w, +hr , 0.f };
+	vertices[41].position = { s_p + 3.5f * i_w, +hr , 0.f };
+	vertices[42].position = { s_p + 3.5f * i_w, 0	 , 0.f };
+	vertices[43].position = { s_p + 2.5f * i_w, 0	 , 0.f };
 	vertices[40].texcoord = { uv  * 0.f, 1.0f, 0.44f };
 	vertices[41].texcoord = { uv  * 1.f, 1.0f, 0.44f };
 	vertices[42].texcoord = { uv  * 1.f, 0.5f, 0.44f };
 	vertices[43].texcoord = { uv  * 0.f, 0.5f, 0.44f };
 
 	//month display for date digit 1 -- rotating
-	vertices[44].position = { s_p + 3 * i_w, +hr, 0.4f };
-	vertices[45].position = { s_p + 4 * i_w, +hr, 0.4f };
-	vertices[46].position = { s_p + 4 * i_w, -hr, 0.4f };
-	vertices[47].position = { s_p + 3 * i_w, -hr, 0.4f };
+	vertices[44].position = { s_p + 2.5f * i_w, +hr, 0.4f };
+	vertices[45].position = { s_p + 3.5f * i_w, +hr, 0.4f };
+	vertices[46].position = { s_p + 3.5f * i_w, -hr, 0.4f };
+	vertices[47].position = { s_p + 2.5f * i_w, -hr, 0.4f };
 	vertices[44].texcoord = { uv * 0, 1.0f, 4.0f };
 	vertices[45].texcoord = { uv * 1, 1.0f, 4.0f };
 	vertices[46].texcoord = { uv * 1, 0.0f, 4.0f };
 	vertices[47].texcoord = { uv * 0, 0.0f, 4.0f };
+	
 
 	uint16_t indices[] = { 0,3,1,1,3,2,4,7,5,5,7,6,8,11,9,9,11,10,
 						   12,15,13,13,15,14,16,19,17,17,19,18,20,23,21,21,23,22,
@@ -191,7 +192,7 @@ bool GameTimer::init()
 	// Setting initial values, scale is negative to make it face the opposite way
 	m_scale.x = 0.5;
 	m_scale.y = 0.5;
-	m_position = { 500.f, 500.f };
+	m_position = { 900.f, 100.f };
 
 	gt_date.digit_0.old_offset = 0.0f;
 	gt_date.digit_0.new_offset = uv * 1;
@@ -337,7 +338,7 @@ void GameTimer::advance_time(float real_time_seconds_elapsed)
 {	
 	const int One_Day_Sec = 86400;
 	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += One_Day_Sec/50;
+	adv_time->tm_sec += One_Day_Sec/10; //alter date speed here
 	m_current_time = mktime(adv_time);
 
 	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date, gmtime(&m_current_time)->tm_mon + 1, &gt_month);

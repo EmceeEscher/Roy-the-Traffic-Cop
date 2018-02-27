@@ -49,7 +49,6 @@ void main()
 		mod_tc.x += date_digit_1.z;
 	}
 
-	/////////////////////////////////////////////////////
 	if (in_texcoord.z == 0.3){
 		mod_tc.x += month_digit_0.y;
 	}
@@ -63,7 +62,6 @@ void main()
 	if (in_texcoord.z == 3){
 		mod_tc.x += month_digit_0.z;
 	}
-	/////////////////////////////////////////////////////
 
 	if (in_texcoord.z == 0.4){
 		mod_tc.x += month_digit_1.y;
@@ -102,7 +100,6 @@ void main()
 			mod_tf.y = mod_tf.y * date_digit_1.w;	
 		}
 	}
-	//
 	if (in_position.z == 0.3){
 		if (month_digit_0.w < 0){
 			mod_tf.y = -1*mod_tf.y * month_digit_0.w;	
@@ -110,7 +107,6 @@ void main()
 			mod_tf.y = mod_tf.y * month_digit_0.w;	
 		}
 	}
-	//
 	if (in_position.z == 0.4){
 		if (month_digit_1.w < 0){
 			mod_tf.y = -1*mod_tf.y * month_digit_1.w;	
