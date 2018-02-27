@@ -134,24 +134,12 @@ void Car::update(float ms)
 			}
 		}
 		else if (m_turned == true) {
-			if (m_velocity.x < abs(m_max_speed)) {
+			if (abs(m_velocity.x) < m_max_speed) {
 				m_velocity.x += m_acceleration.x;
 			}
-			else if (m_velocity.x < -m_max_speed) {
-				m_velocity.x = -m_max_speed;
-			}
-			else if (m_velocity.x > m_max_speed) {
-				m_velocity.x = m_max_speed;
-			}
 
-			if (m_velocity.y < abs(m_max_speed)) {
+			if (abs(m_velocity.y) < m_max_speed) {
 				m_velocity.y += m_acceleration.y;
-			}
-			else if (m_velocity.x < -m_max_speed) {
-				m_velocity.x = -m_max_speed;
-			}
-			else if (m_velocity.x > m_max_speed) {
-				m_velocity.x = m_max_speed;
 			}
 		}
 		//printf("%f", m_velocity.x);
@@ -182,10 +170,14 @@ void Car::update(float ms)
 				m_acceleration.x = -ACC;
 				m_acceleration.y = 0.f;
 			}
-			else if (m_desired_direction == direction::NORTH || m_desired_direction == direction::SOUTH) {
+			else if (m_desired_direction == direction::NORTH) {
 				m_velocity.x = 0.f;
 				m_acceleration.x = 0.f;
 				m_acceleration.y = -ACC;
+			} else if (m_desired_direction == direction::SOUTH) {
+				m_velocity.x = 0.f;
+				m_acceleration.x = 0.f;
+				m_acceleration.y = ACC;
 			}
 		}
 	}
@@ -265,13 +257,18 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	if (m_lane == direction::WEST || m_lane == direction::NORTH) {
+	if (!m_turned) {
+		if (m_lane == direction::WEST || m_lane == direction::NORTH) {
+			m_position.x += off.x;
+			m_position.y += off.y;
+		}
+		if (m_lane == direction::EAST||m_lane==direction::SOUTH) {
+			m_position.x -= off.x;
+			m_position.y -= off.y;
+		}
+	} else {
 		m_position.x += off.x;
 		m_position.y += off.y;
-	}
-	if (m_lane == direction::EAST||m_lane==direction::SOUTH) {
-		m_position.x -= off.x;
-		m_position.y -= off.y;
 	}
 }
 
@@ -399,6 +396,7 @@ void Car::slow_down()
 
 void Car::speed_up() {
 	// TODO: y acceleration/velocity
+	if (!m_turned) {
 		if (m_lane == direction::WEST || m_lane == direction::EAST) {
 			m_acceleration.x *= -1.f;
 			m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
@@ -407,6 +405,10 @@ void Car::speed_up() {
 			m_acceleration.y *= -1.f;
 			m_velocity.y += m_acceleration.y;
 		}
+	} else {
+		m_velocity.x += m_acceleration.x;
+		m_velocity.y += m_acceleration.y;
+	}
 }
 
 
