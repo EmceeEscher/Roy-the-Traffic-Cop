@@ -11,10 +11,10 @@ uniform mat3 transform;
 uniform mat3 projection;
 
 // vec4.x = old_offset, vec4.y = new_offset, vec4.z = show_offset, vec4.w = flip
-uniform vec3 date_digit_0;
-uniform vec3 date_digit_1;
+uniform vec4 date_digit_0;
+uniform vec4 date_digit_1;
 uniform vec4 month_digit_0;
-uniform vec3 month_digit_1;
+uniform vec4 month_digit_1;
 
 void main()
 {
@@ -25,36 +25,28 @@ void main()
 		mod_tc.x += date_digit_0.y;
 	}
 	if (in_texcoord.z == 0.11  ){
-		if (date_digit_0.z == -1){
+		if (date_digit_0.w == -1){
 			mod_tc.x += date_digit_0.y;
 		}else{
 			mod_tc.x += date_digit_0.x;
 		}
 	}
 	if (in_texcoord.z == 1){
-		if (date_digit_0.z <0){
-			mod_tc.x += date_digit_0.y;
-		}else{
-			mod_tc.x += date_digit_0.x;
-		}
+		mod_tc.x += date_digit_0.z;
 	}
 
 	if (in_texcoord.z == 0.2){
 		mod_tc.x += date_digit_1.y;
 	}
 	if (in_texcoord.z == 0.22  ){
-		if (date_digit_1.z == -1){
+		if (date_digit_1.w == -1){
 			mod_tc.x += date_digit_1.y;
 		}else{
 			mod_tc.x += date_digit_1.x;
 		}
 	}
 	if (in_texcoord.z == 2){
-		if (date_digit_1.z <0){
-			mod_tc.x += date_digit_1.y;
-		}else{
-			mod_tc.x += date_digit_1.x;
-		}
+		mod_tc.x += date_digit_1.z;
 	}
 
 	/////////////////////////////////////////////////////
@@ -77,18 +69,14 @@ void main()
 		mod_tc.x += month_digit_1.y;
 	}
 	if (in_texcoord.z == 0.44){
-		if (month_digit_1.z == -1){
+		if (month_digit_1.w == -1){
 			mod_tc.x += month_digit_1.y;
 		}else{
 			mod_tc.x += month_digit_1.x;
 		}
 	}
 	if (in_texcoord.z == 4){
-		if (date_digit_1.z > 0){
-			mod_tc.x += month_digit_1.x;
-		}else{
-			mod_tc.x += month_digit_1.y;
-		}
+		mod_tc.x += month_digit_1.z;
 	}
 
 
@@ -101,17 +89,17 @@ void main()
 
 
 	if (in_position.z == 0.1){
-		if (date_digit_0.z < 0){
-			mod_tf.y = -1*mod_tf.y * date_digit_0.z;	
+		if (date_digit_0.w < 0){
+			mod_tf.y = -1*mod_tf.y * date_digit_0.w;	
 		}else{
-			mod_tf.y = mod_tf.y * date_digit_0.z;	
+			mod_tf.y = mod_tf.y * date_digit_0.w;	
 		}
 	}
 	if (in_position.z == 0.2){
-		if (date_digit_1.z < 0){
-			mod_tf.y = -1*mod_tf.y * date_digit_1.z;	
+		if (date_digit_1.w < 0){
+			mod_tf.y = -1*mod_tf.y * date_digit_1.w;	
 		}else{
-			mod_tf.y = mod_tf.y * date_digit_1.z;	
+			mod_tf.y = mod_tf.y * date_digit_1.w;	
 		}
 	}
 	//
@@ -124,10 +112,10 @@ void main()
 	}
 	//
 	if (in_position.z == 0.4){
-		if (month_digit_1.z < 0){
-			mod_tf.y = -1*mod_tf.y * month_digit_1.z;	
+		if (month_digit_1.w < 0){
+			mod_tf.y = -1*mod_tf.y * month_digit_1.w;	
 		}else{
-			mod_tf.y = mod_tf.y * month_digit_1.z;	
+			mod_tf.y = mod_tf.y * month_digit_1.w;	
 		}
 	}
 

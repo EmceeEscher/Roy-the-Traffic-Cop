@@ -16,6 +16,9 @@ int month_digit_0_flip = 0;
 int month_digit_1_flip = 0;
 
 float month_d0_shown_offset;
+float month_d1_shown_offset;
+float date_d0_shown_offset;
+float date_d1_shown_offset;
 
 bool GameTimer::init()
 {
@@ -101,7 +104,6 @@ bool GameTimer::init()
 	vertices[22].texcoord = { uv * 1, 0.0f, 2.0f };
 	vertices[23].texcoord = { uv * 0, 0.0f, 2.0f };
 
-	///////////////////////////////////////////////////////////////////////////
 	//month digit 0 top -- new 
 	vertices[24].position = { s_p + 4 * i_w	, 0  , 0.f };
 	vertices[25].position = { s_p + 5 * i_w , 0  , 0.f };
@@ -123,15 +125,14 @@ bool GameTimer::init()
 	vertices[31].texcoord = { uv * 0.f, 0.5f,  0.33f };
 
 	//month display for date digit 0 -- rotating
-	vertices[32].position = { s_p + 5 * i_w	, +hr, 0.3f };
-	vertices[33].position = { s_p + 6 * i_w , +hr, 0.3f };
-	vertices[34].position = { s_p + 6 * i_w	, -hr, 0.3f };
-	vertices[35].position = { s_p + 5 * i_w	, -hr, 0.3f };
+	vertices[32].position = { s_p + 4 * i_w	, +hr, 0.3f };
+	vertices[33].position = { s_p + 5 * i_w , +hr, 0.3f };
+	vertices[34].position = { s_p + 5 * i_w	, -hr, 0.3f };
+	vertices[35].position = { s_p + 4 * i_w	, -hr, 0.3f };
 	vertices[32].texcoord = { uv * 0, 1.0f, 3.0f };
 	vertices[33].texcoord = { uv * 1, 1.0f, 3.0f };
 	vertices[34].texcoord = { uv * 1, 0.0f, 3.0f };
 	vertices[35].texcoord = { uv * 0, 0.0f, 3.0f };
-	///////////////////////////////////////////////////////////////////////////
 
 	//month digit 1 top -- new 
 	vertices[36].position = { s_p + 3 * i_w, 0  , 0.f };
@@ -192,24 +193,25 @@ bool GameTimer::init()
 	m_scale.y = 0.5;
 	m_position = { 500.f, 500.f };
 
-	gt_date.digit_0.old_offset = uv * 1;
+	gt_date.digit_0.old_offset = 0.0f;
 	gt_date.digit_0.new_offset = uv * 1;
 	gt_date.digit_0.flip = -1;
+	date_d0_shown_offset = uv * 1;
 
 	gt_date.digit_1.old_offset = 0.0f;
 	gt_date.digit_1.new_offset = 0.0f;
 	gt_date.digit_1.flip = -1; 
+	date_d1_shown_offset = 0.f;
 
 	gt_month.digit_0.old_offset = 0.0f;
 	gt_month.digit_0.new_offset = uv * 1;
 	gt_month.digit_0.flip = -1;
-	/////////////////////////////////////////
 	month_d0_shown_offset = uv * 1;
-	/////////////////////////////////////////
 	
 	gt_month.digit_1.old_offset = 0.0f;
 	gt_month.digit_1.new_offset = 0.0f;
 	gt_month.digit_1.flip = -1;
+	month_d1_shown_offset = 0.f;
 	return true;
 }
 
@@ -232,34 +234,56 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	float month_offset_digit0 = std::fmodf(mon, 10) * uv;
 	float month_offset_digit1 = std::fmodf(mon / 10, 10) * uv;
 
-	if (gt_day->digit_0.new_offset != date_offset_digit0) {
-		gt_day->digit_0.old_offset = date_offset_digit0-uv;
+	if (gt_day->digit_0.new_offset != date_offset_digit0) { //need to flip
+															 //prepare flip
+		date_d0_shown_offset = gt_day->digit_0.old_offset;
 		gt_day->digit_0.new_offset = date_offset_digit0;
+		gt_day->digit_0.old_offset = date_offset_digit0 - uv;
+		//flip
+		date_digit_0_flip = 1;
 		gt_day->digit_0.flip = 1;
-		date_digit_0_flip = 1; 
+
 	}
-	else if (date_digit_0_flip == 1){
-		gt_day->digit_0.flip -= 0.05;
+	else if (date_digit_0_flip == 1) {//middle of flipping
+		gt_day->digit_0.flip -= 0.1;
+		if (gt_day->digit_0.flip <= 0) {
+			date_d0_shown_offset = gt_day->digit_0.new_offset; //show new_offset once flipped past halfway
+		}
 		if (gt_day->digit_0.flip <= -1) {
 			gt_day->digit_0.flip = -1;
-			date_digit_0_flip = 0;
+			date_digit_0_flip = 0; //indicate done flipping;
 		}
+
+	}
+	else if (date_digit_0_flip == 0) {//done flipping, waiting for new flip
+		gt_day->digit_0.old_offset = date_offset_digit0;
 	}
 
-	if (gt_day->digit_1.new_offset != date_offset_digit1) {
-		gt_day->digit_1.old_offset = date_offset_digit1-uv;
+	if (gt_day->digit_1.new_offset != date_offset_digit1) { //need to flip
+															 //prepare flip
+		date_d1_shown_offset = gt_day->digit_1.old_offset;
 		gt_day->digit_1.new_offset = date_offset_digit1;
-		gt_day->digit_1.flip = 1;
+		gt_day->digit_1.old_offset = date_offset_digit1 - uv;
+		//flip
 		date_digit_1_flip = 1;
+		gt_day->digit_1.flip = 1;
+
 	}
-	else  if (date_digit_1_flip == 1) {
-		gt_day->digit_1.flip -= 0.05;
+	else if (date_digit_1_flip == 1) {//middle of flipping
+		gt_day->digit_1.flip -= 0.1;
+		if (gt_day->digit_1.flip <= 0) {
+			date_d1_shown_offset = gt_day->digit_1.new_offset; //show new_offset once flipped past halfway
+		}
 		if (gt_day->digit_1.flip <= -1) {
 			gt_day->digit_1.flip = -1;
-			date_digit_1_flip = 0;
+			date_digit_1_flip = 0; //indicate done flipping;
 		}
+
 	}
-	///////////////////////////////////////////////////////////////////////////
+	else if (date_digit_1_flip == 0) {//done flipping, waiting for new flip
+		gt_day->digit_1.old_offset = date_offset_digit1;
+	}
+
 	if (gt_mon->digit_0.new_offset != month_offset_digit0) { //need to flip
 		//prepare flip
 		month_d0_shown_offset = gt_mon->digit_0.old_offset;
@@ -282,29 +306,38 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	}else if (month_digit_0_flip == 0) {//done flipping, waiting for new flip
 		gt_mon->digit_0.old_offset = month_offset_digit0;
 	}
-	///////////////////////////////////////////////////////////////////////////
 
-	if (gt_mon->digit_1.new_offset != month_offset_digit1) {
-		gt_mon->digit_1.old_offset = month_offset_digit1 - uv;
+	if (gt_mon->digit_1.new_offset != month_offset_digit1) { //need to flip
+															 //prepare flip
+		month_d1_shown_offset = gt_mon->digit_1.old_offset;
 		gt_mon->digit_1.new_offset = month_offset_digit1;
+		gt_mon->digit_1.old_offset = month_offset_digit1 - uv;
+		//flip
+		month_digit_1_flip = 1;
 		gt_mon->digit_1.flip = 1;
-		month_digit_0_flip = 1;
+
 	}
-	else if (month_digit_0_flip == 1) {
-		gt_mon->digit_1.flip -= 0.05;
+	else if (month_digit_1_flip == 1) {//middle of flipping
+		gt_mon->digit_1.flip -= 0.1;
+		if (gt_mon->digit_1.flip <= 0) {
+			month_d1_shown_offset = gt_mon->digit_1.new_offset; //show new_offset once flipped past halfway
+		}
 		if (gt_mon->digit_1.flip <= -1) {
 			gt_mon->digit_1.flip = -1;
-			month_digit_1_flip = 0;
+			month_digit_1_flip = 0; //indicate done flipping;
 		}
+
 	}
-	
+	else if (month_digit_1_flip == 0) {//done flipping, waiting for new flip
+		gt_mon->digit_1.old_offset = month_offset_digit1;
+	}
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {	
 	const int One_Day_Sec = 86400;
 	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += One_Day_Sec/10;
+	adv_time->tm_sec += One_Day_Sec/50;
 	m_current_time = mktime(adv_time);
 
 	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date, gmtime(&m_current_time)->tm_mon + 1, &gt_month);
@@ -354,12 +387,10 @@ void GameTimer::draw(const mat3& projection) {
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-	glUniform3f(date_digit_0_uloc, gt_date.digit_0.old_offset, gt_date.digit_0.new_offset, gt_date.digit_0.flip);
-	glUniform3f(date_digit_1_uloc, gt_date.digit_1.old_offset, gt_date.digit_1.new_offset, gt_date.digit_1.flip);
-
+	glUniform4f(date_digit_0_uloc, gt_date.digit_0.old_offset, gt_date.digit_0.new_offset, date_d0_shown_offset, gt_date.digit_0.flip);
+	glUniform4f(date_digit_1_uloc, gt_date.digit_1.old_offset, gt_date.digit_1.new_offset, date_d1_shown_offset, gt_date.digit_1.flip);
 	glUniform4f(month_digit_0_uloc, gt_month.digit_0.old_offset, gt_month.digit_0.new_offset, month_d0_shown_offset, gt_month.digit_0.flip);
-
-	glUniform3f(month_digit_1_uloc, gt_month.digit_1.old_offset, gt_month.digit_1.new_offset, gt_month.digit_1.flip);;
+	glUniform4f(month_digit_1_uloc, gt_month.digit_1.old_offset, gt_month.digit_1.new_offset, month_d1_shown_offset, gt_month.digit_1.flip);;
 
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
