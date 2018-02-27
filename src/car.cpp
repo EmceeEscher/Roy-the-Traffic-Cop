@@ -564,7 +564,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		}
 		else if (desired_dir == direction::WEST)
 		{
-			m_turn_pivot = { 540.f, 470.f };
+			m_turn_pivot = { 540.f, 435.f };
 			return 'l';
 		}
 		else

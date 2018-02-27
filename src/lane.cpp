@@ -110,7 +110,7 @@ void Lane::add_car(carType type)
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
-				new_car.set_desired_direction(direction::NORTH);
+				new_car.set_desired_direction(direction::WEST);
 			}
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
