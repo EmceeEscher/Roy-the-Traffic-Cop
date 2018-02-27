@@ -8,7 +8,7 @@
 #include <algorithm>
 
 #define PI 3.14159265
-
+#define ACC 4.0f
 
 Texture Car::car_texture;
 
@@ -72,12 +72,15 @@ bool Car::init(bool isVillain)
 	m_scale.y = 1;
 	m_position = { 5.f, 537.f };
 	m_velocity = { 15.0f, .0f };
-	m_acceleration = { 4.f, .0f };
+	m_acceleration = { ACC, .0f };
 	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+
+	m_turned = false;
+	t = 0.f;
 	m_at_intersection = false;
 	std::srand(std::time(nullptr));
 
@@ -106,35 +109,86 @@ void Car::update(float ms)
 	m_turn_placard->update(m_position, ms);
 
 	// TODO: Implement Update Car [Theo, Mason]
-	if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
-		m_velocity.x += m_acceleration.x;
-		m_velocity.y += m_acceleration.y;
-	}
-	else if (m_velocity.x < 0.f){
-		m_velocity.x = 0.f;
-	}
-	else if (m_velocity.x > m_max_speed) {
-		m_velocity.x = m_max_speed;
-	}
+	if (m_in_beyond_intersection == false)
+	{
+		if (m_turned == false) {
+			if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+				m_velocity.x += m_acceleration.x;
+				m_velocity.y += m_acceleration.y;
+			}
+			else if (m_velocity.x < 0.f) {
+				m_velocity.x = 0.f;
+			}
+			else if (m_velocity.x > m_max_speed) {
+				m_velocity.x = m_max_speed;
+			}
 
-	//For Y position in North Lane
-	if (m_velocity.y > 0 && m_velocity.y < m_max_speed) {
-		m_velocity.y += m_acceleration.y;
+			//For Y position in North Lane
+			if (m_velocity.y > 0.f && m_velocity.y < m_max_speed) {
+				m_velocity.y += m_acceleration.y;
+			}
+			else if (m_velocity.y < 0.f) {
+				m_velocity.y = 0.f;
+			}
+			else if (m_velocity.y > m_max_speed) {
+				m_velocity.y = m_max_speed;
+			}
+		}
+		//printf("%f", m_velocity.x);
+		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+		move(m_displacement);
 	}
-	else if (m_velocity.y < 0.f) {
-		m_velocity.y = 0.f;
+	else
+	{
+		//printf("in else\n");
+		if (t >= 0.f && t <= 1.f)
+		{
+			turn(t);
+			t += 0.005f;
+			update_rotation_on_turn(t);
+			//printf("%f", t);
+		}
+		else {
+			// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
+			if (t > 1.f) {
+				m_turned = true;
+				if (m_desired_direction == direction::EAST) {
+					m_velocity.y = 0.f;
+					m_acceleration.x = ACC;
+					m_acceleration.y = 0.f;
+				}
+				else if (m_desired_direction == direction::WEST) {
+					m_velocity.y = 0.f;
+					m_acceleration.x = -ACC;
+					m_acceleration.y = 0.f;
+				}
+				else if (m_desired_direction == direction::NORTH) {
+					m_velocity.x = 0.f;
+					m_acceleration.x = 0.f;
+					m_acceleration.y = -ACC;
+				}
+				else if (m_desired_direction == direction::SOUTH) {
+					m_velocity.x = 0.f;
+					m_acceleration.x = 0.f;
+					m_acceleration.y = ACC;
+				}
+				if (abs(m_velocity.x) < m_max_speed) {
+					m_velocity.x += m_acceleration.x;
+				}
+
+				if (abs(m_velocity.y) < m_max_speed) {
+					m_velocity.y += m_acceleration.y;
+				}
+				vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+				move(m_displacement);
+			}
+		}
 	}
-	else if (m_velocity.y > m_max_speed) {
-		m_velocity.y = m_max_speed;
-	}
-	//printf("%f", m_velocity.x);
-	vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
-	move(m_displacement);
 }
 
 void Car::draw(const mat3& projection)
 {
-	if (!m_in_beyond_intersection) {
+	if (!m_in_beyond_intersection && !m_turned) {
 		m_turn_placard->draw(projection);
 	}
 
@@ -206,13 +260,18 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	if (m_lane == direction::WEST || m_lane == direction::NORTH) {
+	if (!m_turned) {
+		if (m_lane == direction::WEST || m_lane == direction::NORTH) {
+			m_position.x += off.x;
+			m_position.y += off.y;
+		}
+		if (m_lane == direction::EAST||m_lane==direction::SOUTH) {
+			m_position.x -= off.x;
+			m_position.y -= off.y;
+		}
+	} else {
 		m_position.x += off.x;
 		m_position.y += off.y;
-	}
-	if (m_lane == direction::EAST||m_lane==direction::SOUTH) {
-		m_position.x -= off.x;
-		m_position.y -= off.y;
 	}
 }
 
@@ -221,7 +280,7 @@ void Car::set_lane(direction dir)
 	m_lane = dir;
 	if (dir == direction::NORTH || dir == direction::SOUTH) {
 		m_velocity = { .0f, 15.0f };
-		m_acceleration = { .0f, 4.0f };
+		m_acceleration = { .0f, ACC };
 	}
 }
 
@@ -234,53 +293,58 @@ void Car::set_desired_direction(direction turn_dir)
 
 turn_direction Car::get_turn_direction()
 {
-	switch (m_desired_direction) {
-	case direction::EAST:
-		switch (m_lane) {
-		case direction::NORTH:
-			return turn_direction::RIGHT;
-		case direction::SOUTH:
-			return turn_direction::LEFT;
-		case direction::WEST:
-			return turn_direction::STRAIGHT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::NORTH:
-		switch (m_lane) {
+	switch (m_lane) {
 		case direction::EAST:
-			return turn_direction::LEFT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::RIGHT;
+				case direction::WEST:
+					return turn_direction::STRAIGHT;
+				case direction::SOUTH:
+					return turn_direction::LEFT;
+				default:
+				  throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::SOUTH:
-			return turn_direction::STRAIGHT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::STRAIGHT;
+				case direction::WEST:
+					return turn_direction::LEFT;
+				case direction::EAST:
+					return turn_direction::RIGHT;
+				default:
+					throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::WEST:
-			return turn_direction::RIGHT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::SOUTH:
-		switch (m_lane) {
-		case direction::EAST:
-			return turn_direction::RIGHT;
+			switch (m_desired_direction) {
+				case direction::NORTH:
+					return turn_direction::LEFT;
+				case direction::EAST:
+					return turn_direction::STRAIGHT;
+				case direction::SOUTH:
+					return turn_direction::RIGHT;
+				default:
+					throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		case direction::NORTH:
-			return turn_direction::STRAIGHT;
-		case direction::WEST:
-			return turn_direction::LEFT;
+			switch (m_desired_direction) {
+				case direction::EAST:
+					return turn_direction::LEFT;
+				case direction::WEST:
+					return turn_direction::RIGHT;
+				case direction::SOUTH:
+					return turn_direction::STRAIGHT;
+				default:
+				  throw std::invalid_argument("received invalid direction pairing");
+			}
+			break;
 		default:
 			throw std::invalid_argument("received invalid direction pairing");
-		}
-	case direction::WEST:
-		switch (m_lane) {
-		case direction::EAST:
-			return turn_direction::STRAIGHT;
-		case direction::SOUTH:
-			return turn_direction::RIGHT;
-		case direction::NORTH:
-			return turn_direction::LEFT;
-		default:
-			throw std::invalid_argument("received invalid direction pairing");
-		}
-	default:
-		throw std::invalid_argument("received invalid direction pairing");
+			break;
 	}
 }
 
@@ -303,6 +367,12 @@ void Car::set_rotation(float radians)
 	m_rotation = radians;
 	m_turn_placard->set_rotation(m_rotation);
 }
+
+void Car::set_original_rotation(float radians)
+{
+	m_original_rot = radians;
+}
+
 void Car::set_position(vec2 position)
 {
 	m_position = position;
@@ -329,6 +399,7 @@ void Car::slow_down()
 
 void Car::speed_up() {
 	// TODO: y acceleration/velocity
+	if (!m_turned) {
 		if (m_lane == direction::WEST || m_lane == direction::EAST) {
 			m_acceleration.x *= -1.f;
 			m_velocity.x += m_acceleration.x; // gets the update loop running again, probably change to a smarter way within the update conditional
@@ -337,6 +408,10 @@ void Car::speed_up() {
 			m_acceleration.y *= -1.f;
 			m_velocity.y += m_acceleration.y;
 		}
+	} else {
+		m_velocity.x += m_acceleration.x;
+		m_velocity.y += m_acceleration.y;
+	}
 }
 
 
@@ -400,10 +475,183 @@ bool Car::is_in_beyond_intersec() {
 	return m_in_beyond_intersection;
 }
 
+void Car::set_turn_start(vec2 pos)
+{
+	m_turn_start_pos = pos;
+}
+
+void Car::turn(float t)
+{
+	//printf("turning\n");
+	vec2 p = { 0.f, 0.f };
+	std::vector<vec2> controlPoints;
+	if (calculate_turn_dir(m_lane, m_desired_direction) == 'l')
+	{
+		//printf("turning left\n");
+		controlPoints.push_back(m_turn_start_pos);
+		controlPoints.push_back(m_turn_pivot);
+		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, (0.5f * PI)));
+	}
+	else if (calculate_turn_dir(m_lane, m_desired_direction) == 'r')
+	{
+		controlPoints.push_back(m_turn_start_pos);
+		controlPoints.push_back(m_turn_pivot);
+		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, (-0.5f * PI)));
+	}
+	else
+	{
+		controlPoints.push_back(m_turn_start_pos);
+		controlPoints.push_back(m_turn_start_pos);
+		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, PI));
+	}
+	int m = controlPoints.size() - 1;
+	for (int i = 0; i <= m; i++) {
+		// m choose i
+		int coef = binomialCoefficient(m, i);
+		// Bernstein Polynomial
+		float bern = coef * pow(t, i) * pow((1 - t), (m - i));
+		vec2 cp = controlPoints[i];
+		p.x = p.x + (cp.x * bern);
+		p.y = p.y + (cp.y * bern);
+	}
+	//printf("endpoint.x: %f\n", controlPoints[2].x);
+	//printf("endpoint.y: %f\n", controlPoints[2].y);
+	set_position(p);
+}
+
+char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
+{
+	switch (lane_dir)
+	{
+	case direction::EAST:
+		if (desired_dir == direction::NORTH)
+		{
+			m_turn_pivot = { 550.f, 450.f };
+			return 'r';
+		}
+		else if (desired_dir == direction::SOUTH)
+		{
+			m_turn_pivot = { 450.f, 450.f };
+			return 'l';
+		}
+		else
+		{
+			//Change
+			m_turn_pivot = { 445.f, 445.f };
+			return 's';
+		}
+		break;
+	case direction::WEST:
+		if (desired_dir == direction::NORTH)
+		{
+			m_turn_pivot = { 540.f, 550.f };
+			return 'l';
+		}
+		else if (desired_dir == direction::SOUTH)
+		{
+			m_turn_pivot = { 470.f, 550.f };
+			return 'r';
+		}
+		else
+		{
+			//Change
+			m_turn_pivot = { 537.f, 537.f };
+			return 's';
+		}
+		break;
+	case direction::SOUTH:
+		if (desired_dir == direction::EAST)
+		{
+			m_turn_pivot = { 540.f, 550.f };
+			return 'r';
+		}
+		else if (desired_dir == direction::WEST)
+		{
+			m_turn_pivot = { 540.f, 435.f };
+			return 'l';
+		}
+		else
+		{
+			//Change
+			m_turn_pivot = { 550.f, 470.f };
+			return 's';
+		}
+		break;
+	case direction::NORTH:
+		if (desired_dir == direction::WEST)
+		{
+			m_turn_pivot = { 450.f, 450.f };
+			return 'r';
+		}
+		else if (desired_dir == direction::EAST)
+		{
+			//Change
+			m_turn_pivot = { 450.f, 540.f };
+			return 'l';
+		}
+		else
+		{
+			//Change
+			m_turn_pivot = { 450.f, 550.f };
+			return 's';
+		}
+		break;
+	default:
+		printf("hitting default\n");
+		return 's';
+		break;
+	}
+}
+
+
+// Rotate p1 around p2 by 90 degrees CCW if turning left
+// Rotate p1 around p2 by 90 degrees CW if turning right
+// Rotate p1 around p2 by 180 degrees CCW/CW if going straight
+vec2 Car::find_end_point(vec2 p1, vec2 p2, float angle)
+{
+	float s = sin(angle);
+	float c = cos(angle);
+	vec2 p3 = {0.f, 0.f};
+
+	p3.x = c * (p1.x - p2.x) - s * (p1.y - p2.y) + p2.x;
+	p3.y = s * (p1.x - p2.x) + c * (p1.y - p2.y) + p2.y;
+
+	return p3;
+}
+
+int Car::binomialCoefficient(int n, int k)
+{
+	int result = 1;
+	for (int i = 1; i <= k; ++i)
+	{
+		result *= n - (k - i);
+		result /= i;
+	}
+	return result;
+}
+
+void Car::update_rotation_on_turn(float t)
+{
+	//float current_rot = m_rotation;
+	char turn = calculate_turn_dir(m_lane, m_desired_direction);
+	float angle;
+	if (turn == 'l')
+	{
+		angle = -0.5f * PI;
+	}
+	else if (turn == 'r')
+	{
+		angle = 0.5 * PI;
+	}
+	else
+		angle = 0.f;
+	//printf("%f\n", m_rotation);
+	set_rotation(m_original_rot + t * angle);
+}
+
 void Car::start_timer(float max_time) {
 	m_turn_placard->start_timer(max_time);
 }
 bool Car::is_at_front() {
 	return m_at_intersection;
 }
-

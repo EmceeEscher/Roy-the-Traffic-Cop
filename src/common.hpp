@@ -3,6 +3,7 @@
 // stlib
 #include <fstream> // stdout, stderr..
 #include <cmath>
+#include <stdexcept>
 
 // glfw
 #define NOMINMAX
@@ -28,11 +29,23 @@ struct vec2 { float x, y; };
 struct vec3 { float x, y, z; };
 struct mat3 { vec3 c0, c1, c2; };
 
+struct digit_tracker {
+	float old_offset, new_offset, flip;
+};
+struct gt_tracker {
+	digit_tracker digit_0;
+	digit_tracker digit_1;
+	digit_tracker digit_2;
+	digit_tracker digit_3;
+};
+
+
 // Utility functions
 float dot(vec2 l, vec2 r);
 float dot(vec3 l, vec3 r);
 mat3  mul(const mat3& l, const mat3& r);
 vec2  normalize(vec2 v);
+char* get_month_from_index(int month_index);
 
 // OpenGL utilities
 // cleans error buffer
@@ -51,6 +64,13 @@ struct TexturedVertex
 {
 	vec3 position;
 	vec2 texcoord;
+};
+
+// Hack to access tex-elements Vertex Buffer element for textured sprites (textured.vs.glsl)
+struct TexturedVertex2
+{
+	vec3 position;
+	vec3 texcoord;
 };
 
 // Texture wrapper
@@ -107,6 +127,7 @@ struct Renderable
 	void transform_begin();
 	void transform_scale(vec2 scale);
 	void transform_rotate(float radians);
+	void transform_translate_x(float pos);
 	void transform_translate(vec2 pos);
 	void transform_end();
 };
