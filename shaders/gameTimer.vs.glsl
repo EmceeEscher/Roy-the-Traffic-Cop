@@ -16,6 +16,11 @@ uniform vec4 date_digit_1;
 uniform vec4 month_digit_0;
 uniform vec4 month_digit_1;
 
+uniform vec4 year_d0;
+uniform vec4 year_d1;
+uniform vec4 year_d2;
+uniform vec4 year_d3; 
+
 void main()
 {
 	vec3 mod_tc = in_texcoord;
@@ -77,11 +82,61 @@ void main()
 		mod_tc.x += month_digit_1.z;
 	}
 
+	if (in_texcoord.z == 0.5){
+		mod_tc.x += year_d0.y;
+	}
+	if (in_texcoord.z == 0.55){
+		if (year_d0.w == -1){
+			mod_tc.x += year_d0.y;
+		}else{
+			mod_tc.x += year_d0.x;
+		}
+	}
+	if (in_texcoord.z == 5){
+		mod_tc.x += year_d0.z;
+	}
 
+	if (in_texcoord.z == 0.6){
+		mod_tc.x += year_d1.y;
+	}
+	if (in_texcoord.z == 0.66){
+		if (year_d1.w == -1){
+			mod_tc.x += year_d1.y;
+		}else{
+			mod_tc.x += year_d1.x;
+		}
+	}
+	if (in_texcoord.z == 6){
+		mod_tc.x += year_d1.z;
+	}
 
+	if (in_texcoord.z == 0.7){
+		mod_tc.x += year_d2.y;
+	}
+	if (in_texcoord.z == 0.77){
+		if (year_d2.w == -1){
+			mod_tc.x += year_d2.y;
+		}else{
+			mod_tc.x += year_d2.x;
+		}
+	}
+	if (in_texcoord.z == 7){
+		mod_tc.x += year_d2.z;
+	}
 
-
-
+	if (in_texcoord.z == 0.8){
+		mod_tc.x += year_d3.y;
+	}
+	if (in_texcoord.z == 0.88){
+		if (year_d3.w == -1){
+			mod_tc.x += year_d3.y;
+		}else{
+			mod_tc.x += year_d3.x;
+		}
+	}
+	if (in_texcoord.z == 8){
+		mod_tc.x += year_d3.z;
+	}
 
 
 
@@ -112,6 +167,34 @@ void main()
 			mod_tf.y = -1*mod_tf.y * month_digit_1.w;	
 		}else{
 			mod_tf.y = mod_tf.y * month_digit_1.w;	
+		}
+	}
+	if (in_position.z == 0.5){
+		if (year_d0.w < 0){
+			mod_tf.y = -1*mod_tf.y * year_d0.w;	
+		}else{
+			mod_tf.y = mod_tf.y * year_d0.w;	
+		}
+	}
+	if (in_position.z == 0.6){
+		if (year_d1.w < 0){
+			mod_tf.y = -1*mod_tf.y * year_d1.w;	
+		}else{
+			mod_tf.y = mod_tf.y * year_d1.w;	
+		}
+	}
+	if (in_position.z == 0.7){
+		if (year_d2.w < 0){
+			mod_tf.y = -1*mod_tf.y * year_d2.w;	
+		}else{
+			mod_tf.y = mod_tf.y * year_d2.w;	
+		}
+	}
+	if (in_position.z == 0.8){
+		if (year_d3.w < 0){
+			mod_tf.y = -1*mod_tf.y * year_d3.w;	
+		}else{
+			mod_tf.y = mod_tf.y * year_d3.w;	
 		}
 	}
 
