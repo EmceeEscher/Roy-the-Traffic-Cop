@@ -78,6 +78,7 @@ bool Car::init(bool isVillain)
 	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
+
 	m_turned = false;
 	t = 0.f;
 	m_at_intersection = false;
@@ -133,15 +134,6 @@ void Car::update(float ms)
 				m_velocity.y = m_max_speed;
 			}
 		}
-		else if (m_turned == true) {
-			if (abs(m_velocity.x) < m_max_speed) {
-				m_velocity.x += m_acceleration.x;
-			}
-
-			if (abs(m_velocity.y) < m_max_speed) {
-				m_velocity.y += m_acceleration.y;
-			}
-		}
 		//printf("%f", m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
@@ -158,26 +150,37 @@ void Car::update(float ms)
 		}
 		else {
 			// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
-			m_in_beyond_intersection = false;
-			m_turned = true;
-			if (m_desired_direction == direction::EAST) {
-				m_velocity.y = 0.f;
-				m_acceleration.x = ACC;
-				m_acceleration.y = 0.f;
-			}
-			else if (m_desired_direction == direction::WEST) {
-				m_velocity.y = 0.f;
-				m_acceleration.x = -ACC;
-				m_acceleration.y = 0.f;
-			}
-			else if (m_desired_direction == direction::NORTH) {
-				m_velocity.x = 0.f;
-				m_acceleration.x = 0.f;
-				m_acceleration.y = -ACC;
-			} else if (m_desired_direction == direction::SOUTH) {
-				m_velocity.x = 0.f;
-				m_acceleration.x = 0.f;
-				m_acceleration.y = ACC;
+			if (t > 1.f) {
+				m_turned = true;
+				if (m_desired_direction == direction::EAST) {
+					m_velocity.y = 0.f;
+					m_acceleration.x = ACC;
+					m_acceleration.y = 0.f;
+				}
+				else if (m_desired_direction == direction::WEST) {
+					m_velocity.y = 0.f;
+					m_acceleration.x = -ACC;
+					m_acceleration.y = 0.f;
+				}
+				else if (m_desired_direction == direction::NORTH) {
+					m_velocity.x = 0.f;
+					m_acceleration.x = 0.f;
+					m_acceleration.y = -ACC;
+				}
+				else if (m_desired_direction == direction::SOUTH) {
+					m_velocity.x = 0.f;
+					m_acceleration.x = 0.f;
+					m_acceleration.y = ACC;
+				}
+				if (abs(m_velocity.x) < m_max_speed) {
+					m_velocity.x += m_acceleration.x;
+				}
+
+				if (abs(m_velocity.y) < m_max_speed) {
+					m_velocity.y += m_acceleration.y;
+				}
+				vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+				move(m_displacement);
 			}
 		}
 	}
