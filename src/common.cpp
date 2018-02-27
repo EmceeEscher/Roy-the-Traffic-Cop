@@ -239,6 +239,12 @@ void Renderable::transform_rotate(float radians)
 	transform = mul(transform, R);
 }
 
+void Renderable::transform_translate_x(float offset)
+{
+	mat3 T = { { 1.f, 0.f, 0.f },{ 0.f, offset, 0.f },{ 0.f, 0.f, 1.f } };
+	transform = mul(transform, T);
+}
+
 void Renderable::transform_translate(vec2 offset)
 {
 	mat3 T = { { 1.f, 0.f, 0.f },{ 0.f, 1.f, 0.f },{ offset.x, offset.y, 1.f } };
@@ -248,4 +254,36 @@ void Renderable::transform_translate(vec2 offset)
 void Renderable::transform_end()
 {
 	//
+}
+
+char* get_month_from_index(int month_index)
+{
+	switch (month_index) {
+	case 0:
+		return "January";
+	case 1:
+		return "February";
+	case 2:
+		return "March";
+	case 3:
+		return "April";
+	case 4:
+		return "May";
+	case 5:
+		return "June";
+	case 6:
+		return "July";
+	case 7:
+		return "August";
+	case 8:
+		return "September";
+	case 9:
+		return "October";
+	case 10:
+		return "November";
+	case 11:
+		return "December";
+	default:
+		throw std::invalid_argument("received invalid month index");
+	}
 }
