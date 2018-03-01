@@ -87,21 +87,30 @@ void Lane::add_car(carType type)
 			if (m_dir == direction::NORTH) {
 				new_car.set_position({ 450.f,-100.f });
 				new_car.set_rotation(PI / 2);
+				new_car.set_original_rotation(PI / 2);
 				new_car.set_lane(direction::NORTH);
+				//new_car.set_desired_direction(direction::EAST);
 			}
 			else if (m_dir == direction::WEST) {
 				new_car.set_position({ -130.f,537.f });
 				new_car.set_lane(direction::WEST);
+				new_car.set_rotation(0);
+				new_car.set_original_rotation(0);
+				new_car.set_desired_direction(direction::EAST);
 			}
 			else if (m_dir == direction::EAST) {
 				new_car.set_position({ 1100.f,445.f });
 				new_car.set_rotation(PI);
+				new_car.set_original_rotation(PI);
 				new_car.set_lane(direction::EAST);
+				new_car.set_desired_direction(direction::WEST);
 			}
 			else if (m_dir == direction::SOUTH) {
 				new_car.set_position({ 550,1100.f });
 				new_car.set_rotation(3.0*PI / 2.0);
+				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
+				new_car.set_desired_direction(direction::WEST);
 			}
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
@@ -129,6 +138,7 @@ void Lane::turn_car()
 			Car& selected_car = m_cars.at(index);
 			if (m_dir == direction::WEST || m_dir == direction::EAST) {
 				if (selected_car.get_vel().x <= 0.f) {
+					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
 					if (selected_car.is_in_beyond_intersec()) {
 						selected_car.speed_up();
@@ -138,8 +148,11 @@ void Lane::turn_car()
 
 			if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
 				if (selected_car.get_vel().y <= 0.f) {
+					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
-					selected_car.speed_up();
+					if (selected_car.is_in_beyond_intersec()) {
+						selected_car.speed_up();
+					}
 				}
 			}
 		}

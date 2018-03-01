@@ -73,7 +73,9 @@ bool World::init(vec2 screen)
 	auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) { ((World*)glfwGetWindowUserPointer(wnd))->on_mouse_move(wnd, _0, _1); };
 	glfwSetKeyCallback(m_window, key_redirect);
 	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
-
+	
+	//seed random
+	srand(time(0));
 	//-------------------------------------------------------------------------
 	// Loading music and sounds
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
@@ -119,6 +121,7 @@ bool World::init(vec2 screen)
 
 	m_background.init();
 	m_ai.init();
+	m_game_timer.init();
 	m_lane_manager.init(m_ai);
 	return m_traffic_cop.init();
 }
@@ -145,6 +148,9 @@ bool World::update(float elapsed_ms)
 	int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
+
+	m_game_timer.advance_time(elapsed_ms / 10000);
+	m_game_timer.get_current_time();
 
 	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 	m_lane_manager.update(elapsed_ms);
@@ -208,8 +214,8 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
-	//m_car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
+	m_game_timer.draw(projection_2D);
 
 
 
