@@ -74,8 +74,6 @@ bool World::init(vec2 screen)
 	glfwSetKeyCallback(m_window, key_redirect);
 	glfwSetCursorPosCallback(m_window, cursor_pos_redirect);
 	
-	//seed random
-	srand(time(0));
 	//-------------------------------------------------------------------------
 	// Loading music and sounds
 	if (SDL_Init(SDL_INIT_AUDIO) < 0)
