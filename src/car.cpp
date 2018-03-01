@@ -17,29 +17,37 @@ bool Car::init(bool isVillain)
 	// Load shared texture
 	if (!car_texture.is_valid())
 	{
-		if (!car_texture.load_from_file(textures_path("RedCar.png")))
+		if (!car_texture.load_from_file(textures_path("CarSheet.png")))
 		{
 			fprintf(stderr, "Failed to load car texture!");
 			return false;
 		}
 	}
 
-
+	//uncomment below if you want villain to be red cars;
+	car_tex_x0 = rand() % 8;  //and comment this line. 
+	/*if (isVillain) {
+		car_tex_x0 = 0;
+	}
+	else {
+		car_tex_x0 = rand() % 7 + 1;
+	}*/
+	
 
 	// The position (0,0) corresponds to the center of the texture
-
-	m_wr = car_texture.width * 0.5;
+	float car_width_uv = 100.f / car_texture.width;
+	m_wr = car_texture.width * 0.5 / 8; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -m_wr, +m_hr, 0.f };
-	vertices[0].texcoord = { 0.f, 1.f };//top left
+	vertices[0].texcoord = { car_width_uv*car_tex_x0, 1.f };//top left
 	vertices[1].position = { +m_wr, +m_hr, 0.f };
-	vertices[1].texcoord = { 1.f, 1.f };//top right
+	vertices[1].texcoord = { car_width_uv*(car_tex_x0+1), 1.f };//top right
 	vertices[2].position = { +m_wr, -m_hr, 0.f };
-	vertices[2].texcoord = { 1.f, 0.f };//bottom right
+	vertices[2].texcoord = { car_width_uv*(car_tex_x0+1), 0.f };//bottom right
 	vertices[3].position = { -m_wr, -m_hr, 0.f };
-	vertices[3].texcoord = { 0.f, 0.f };//bottom left
+	vertices[3].texcoord = { car_width_uv*car_tex_x0, 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
