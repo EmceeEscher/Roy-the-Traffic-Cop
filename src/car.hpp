@@ -139,5 +139,6 @@ private:
 	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
-	int car_tex_x0; //specifies offset of the indicated car texture
+	int car_tex_x0; //specifies near x offset of the indicated car texture
+	int car_tex_x1; //specifies far x offset of the indicated car texture 
 };

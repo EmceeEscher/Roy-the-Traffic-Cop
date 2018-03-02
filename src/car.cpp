@@ -2,6 +2,7 @@
 #include "car.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
+#include <time.h> 
 
 // stlib
 #include <vector>
@@ -25,6 +26,7 @@ bool Car::init(bool isVillain)
 	}
 
 	//uncomment below if you want villain to be red cars;
+	srand(time(NULL));
 	car_tex_x0 = rand() % 8;  //and comment this line. 
 	/*if (isVillain) {
 		car_tex_x0 = 0;
@@ -32,25 +34,44 @@ bool Car::init(bool isVillain)
 	else {
 		car_tex_x0 = rand() % 7 + 1;
 	}*/
-	
-
+	car_tex_x1 = car_tex_x0 + 1;
 	// The position (0,0) corresponds to the center of the texture
 	float car_width_uv = 100.f / car_texture.width;
 	m_wr = car_texture.width * 0.5 / 8; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
 
-	TexturedVertex vertices[4];
-	vertices[0].position = { -m_wr, +m_hr, 0.f };
-	vertices[0].texcoord = { car_width_uv*car_tex_x0, 1.f };//top left
-	vertices[1].position = { +m_wr, +m_hr, 0.f };
-	vertices[1].texcoord = { car_width_uv*(car_tex_x0+1), 1.f };//top right
-	vertices[2].position = { +m_wr, -m_hr, 0.f };
-	vertices[2].texcoord = { car_width_uv*(car_tex_x0+1), 0.f };//bottom right
-	vertices[3].position = { -m_wr, -m_hr, 0.f };
-	vertices[3].texcoord = { car_width_uv*car_tex_x0, 0.f };//bottom left
+	TexturedVertex vertices[14];
+	vertices[0].position = { -m_wr, m_hr,0.f };
+	vertices[0].texcoord = { car_width_uv*car_tex_x0, 1.00000f };
+	vertices[1].position = { -m_wr,-m_hr,0.000f };
+	vertices[1].texcoord = { car_width_uv*car_tex_x0, 0.000f };
+	vertices[2].position = { -m_wr/2,-m_hr,0.000f };
+	vertices[2].texcoord = { 0.031705f + car_width_uv * car_tex_x0, 0.000f };
+	vertices[3].position = { -m_wr * 0,-m_hr,0.000f };
+	vertices[3].texcoord = { 0.063375f + car_width_uv * car_tex_x0, 0.000f };
+	vertices[4].position = { m_wr/2,-m_hr,0.000f };
+	vertices[4].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 0.000f };
+	vertices[5].position = { m_wr,-m_hr,0.000f };
+	vertices[5].texcoord = { car_width_uv*car_tex_x1, 0.000f };
+	vertices[6].position = { -m_wr * 0,-m_hr,0.000f };
+	vertices[6].texcoord = { 0.063375f + car_width_uv * car_tex_x0, 0.000f };
+	vertices[7].position = { m_wr/2,  m_hr,0.000f };
+	vertices[7].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 1.00000f };
+	vertices[8].position = { -m_wr * 0,  m_hr,0.000f };
+	vertices[8].texcoord = { 0.063375f + car_width_uv * car_tex_x0, 1.00000f };
+	vertices[9].position = { -m_wr/2,  m_hr,0.000f };
+	vertices[9].texcoord = { 0.031705f + car_width_uv * car_tex_x0, 1.00000f };
+	vertices[10].position = { -m_wr/2,  m_hr,0.000f };
+	vertices[10].texcoord = { 0.031705f + car_width_uv * car_tex_x0, 1.00000f };
+	vertices[11].position = { m_wr,-m_hr,0.000f };
+	vertices[11].texcoord = { car_width_uv*car_tex_x1, 0.000f };
+	vertices[12].position = { m_wr,  m_hr,0.000f };
+	vertices[12].texcoord = { car_width_uv*car_tex_x1, 1.00000f };
+	vertices[13].position = { m_wr/2,  m_hr,0.000f };
+	vertices[13].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 1.00000f };
 
-	// counterclockwise as it's the default opengl front winding direction
-	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+	uint16_t indices[] = {0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13};
+
 
 	// Clearing errors
 	gl_flush_errors();
@@ -58,12 +79,12 @@ bool Car::init(bool isVillain)
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 14, vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 24, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
@@ -242,7 +263,7 @@ void Car::draw(const mat3& projection)
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	// Drawing!
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, nullptr);
 }
 // returns the local bounding coordinates scaled by the current size of the car
 vec2 Car::get_bounding_box()const
