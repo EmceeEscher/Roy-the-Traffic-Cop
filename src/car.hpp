@@ -84,7 +84,7 @@ public:
 	bool is_approaching_stop(vec2 lane_pos);
 
 	bool is_at_stop(vec2 lane_pos);
-	
+
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
@@ -132,13 +132,13 @@ private:
 	vec2 m_turn_start_pos;
 	vec2 m_turn_pivot;
 	float m_max_speed;
-	float m_wr;
-	float m_hr;
+	float m_wr; //half width of car texture
+	float m_hr; //half height of car texture
 	float t;
 	bool m_in_beyond_intersection;
 	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 	int car_tex_x0; //specifies near x offset of the indicated car texture
-	int car_tex_x1; //specifies far x offset of the indicated car texture 
+	int car_tex_x1; //specifies far x offset of the indicated car texture
 };

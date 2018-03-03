@@ -6,10 +6,10 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
-  lanes[0] = { 450.f,398.f };
-  lanes[1] = { 400.f,540.f };
-  lanes[2] = { 550.f,590.f };
-  lanes[3] = { 610.f,450.f };
+	m_lane_coords[direction::NORTH] = { 450.f,398.f };
+	m_lane_coords[direction::EAST] = { 400.f,540.f };
+	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
+	m_lane_coords[direction::WEST] = { 610.f,450.f };
 
   m_time_remaining = m_time_per_action;
 
@@ -28,10 +28,10 @@ bool LaneManager::update(float ms)
 
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars
 
-	lane_queue(m_lanes[direction::NORTH], lanes[0], ms);
-	lane_queue(m_lanes[direction::WEST], lanes[1], ms);
-	lane_queue(m_lanes[direction::SOUTH], lanes[2], ms);
-	lane_queue(m_lanes[direction::EAST], lanes[3], ms);
+	lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms);
+	lane_queue(m_lanes[direction::WEST], m_lane_coords[direction::EAST], ms);
+	lane_queue(m_lanes[direction::SOUTH], m_lane_coords[direction::SOUTH], ms);
+	lane_queue(m_lanes[direction::EAST], m_lane_coords[direction::WEST], ms);
 	return true;
 }
 
