@@ -703,6 +703,21 @@ rect_bounding_box Car::get_bounding_box() {
 	return bounding_box;
 }
 
-// bool Car::check_collision(vec2 vertex) {
-//
-// }
+bool Car::check_collision(vec2 test_vertex) {
+	rect_bounding_box bounding_box = get_bounding_box();
+
+	bool implicitBottom = check_implicit(bounding_box.bottom_right, bounding_box.bottom_left, test_vertex);
+	bool implicitRight = check_implicit(bounding_box.top_right, bounding_box.bottom_right, test_vertex);
+	bool implicitTop = check_implicit(bounding_box.top_left, bounding_box.top_right, test_vertex);
+	bool implicitLeft = check_implicit(bounding_box.bottom_left, bounding_box.top_left, test_vertex);
+
+	return (implicitBottom && implicitRight && implicitTop && implicitLeft);
+}
+
+bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
+	float A = P2.y - P1.y;
+	float B = P1.x - P2.x;
+	float C = P1.y * P2.x - P2.y * P1.x;
+	float result = A * Ptest.x + B * Ptest.y + C;
+	return result >= 0.f;
+}
