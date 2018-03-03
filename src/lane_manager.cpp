@@ -53,9 +53,30 @@ bool LaneManager::intersection_collision_check() {
 
 	for (int i = 0; i < cars_in_intersec.size(); i++) {
 		Car* first_car = cars_in_intersec[i];
-		
+		rect_bounding_box first_bb = first_car->get_bounding_box();
+		// printf("first bb: bl.x: %f, bl.y: %f\n", first_bb.bottom_left.x, first_bb.bottom_left.y);
+		// printf("first bb: br.x: %f, br.y: %f\n", first_bb.bottom_right.x, first_bb.bottom_right.y);
+		// printf("first bb: tr.x: %f, tr.y: %f\n", first_bb.top_right.x, first_bb.top_right.y);
+		// printf("first bb: tl.x: %f, tl.y: %f\n", first_bb.top_left.x, first_bb.top_left.y);
 		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
 			Car* second_car = cars_in_intersec[j];
+			rect_bounding_box second_bb = second_car->get_bounding_box();
+			printf("second bb: bl.x: %f, bl.y: %f\n", second_bb.bottom_left.x, second_bb.bottom_left.y);
+			if (first_car->check_collision(second_bb.bottom_left)
+				|| first_car->check_collision(second_bb.bottom_right)
+				|| first_car->check_collision(second_bb.top_right)
+				|| first_car->check_collision(second_bb.top_left)) {
+					collision_occurring = true;
+					printf("first_car getting hit!\n");
+				}
+			if (second_car->check_collision(first_bb.bottom_left)
+				|| second_car->check_collision(first_bb.bottom_right)
+				|| second_car->check_collision(first_bb.top_right)
+				|| second_car->check_collision(first_bb.top_left)) {
+					collision_occurring = true;
+					printf("second_car getting hit!\n");
+				}
+
 		}
 	}
 
