@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <stdexcept>
 
 using std::string;
@@ -47,9 +48,6 @@ public:
 
 	// Moves the position by the specified offset
 	void move(vec2 off);
-
-	// Returns the turtle' bounding box for collision detection, called by collides_with()
-	vec2 get_bounding_box()const;
 
 	// Set rotation in radians
 	void set_rotation(float radians);
@@ -115,6 +113,11 @@ public:
 
 	// get the car's turning direction
 	turn_direction get_turn_direction();
+
+	// returns a struct containing the four corners of the cars boundary box
+	// directions (e.g. bottom_left) are relative to car's original coordinates,
+	// NOT after rotation (so if you rotate by PI, "bottom_left" will be on top right)
+	rect_bounding_box get_bounding_box();
 
 private:
 	vec2 m_position; // Window coordinates

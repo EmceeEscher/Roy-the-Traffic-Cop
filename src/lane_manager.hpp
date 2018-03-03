@@ -40,6 +40,9 @@ public:
 
 		void lane_queue(Lane* lane, vec2 lane_intersection,float ms);
 
+		// Will return true if any cars in the process of turning are colliding
+		bool intersection_collision_check();
+
 
 private:
     std::map<direction, Lane*> m_lanes;

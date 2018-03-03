@@ -32,7 +32,34 @@ bool LaneManager::update(float ms)
 	lane_queue(m_lanes[direction::WEST], m_lane_coords[direction::EAST], ms);
 	lane_queue(m_lanes[direction::SOUTH], m_lane_coords[direction::SOUTH], ms);
 	lane_queue(m_lanes[direction::EAST], m_lane_coords[direction::WEST], ms);
+
+	intersection_collision_check();
 	return true;
+}
+
+bool LaneManager::intersection_collision_check() {
+	std::vector<Car*> cars_in_intersec;
+	bool collision_occurring = false; // TODO: remove/change this placeholder
+
+	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		std::deque<Car> curr_cars = this->get_cars_in_lane(it->first);
+		if (curr_cars.size() > 0) {
+			Car* first_car = &(curr_cars[0]);
+			if (first_car->is_in_beyond_intersec()) {
+				cars_in_intersec.push_back(first_car);
+			}
+		}
+	}
+
+	for (int i = 0; i < cars_in_intersec.size(); i++) {
+		Car* first_car = cars_in_intersec[i];
+		
+		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
+			Car* second_car = cars_in_intersec[j];
+		}
+	}
+
+	return collision_occurring;
 }
 
 void LaneManager::add_car()
@@ -87,23 +114,24 @@ void LaneManager::input_create_cars(direction dir) {
 
 bool LaneManager::car_delete(vec2 pos) {
 	if (pos.x > 1100 && 518 < pos.y && pos.y < 590) {
-		printf("destroy east");
+		printf("destroy east\n");
 		return true;
 	}
 	if (pos.x < -100 && 400 < pos.y && pos.y < 478) {
-		printf("destroy west");
+		printf("destroy west\n");
 		return true;
 	}
 	if (pos.y < -100 && 518 < pos.x && pos.x < 591) {
-		printf("destroy north");
+		printf("destroy north\n");
 		return true;
 	}
 	if (pos.y > 1100 && 407 < pos.x && pos.x < 485) {
-		printf("destroy south");
+		printf("destroy south\n");
 		return true;
 	}
 	return false;
 }
+
 bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	//104 x margin distance away min
 	//210 x margin start to slow
@@ -121,6 +149,7 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 
 	return false;
 }
+
 void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	lane->update(ms);
 	if (lane->get_time_remaining() <= 0)
@@ -142,12 +171,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 			occupied_front_boundary_box = false;
 		}
 	}
-	//if (occupied_front_boundary_box) {
-	//	printf("true");
-	//}
-	//else {
-	//	printf("false");
-	//}
+
 	for (int i = 0; i < cars.size(); i++) {
 		//car being updated
 		cars[i].update(ms);
