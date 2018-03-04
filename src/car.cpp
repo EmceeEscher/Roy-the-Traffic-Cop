@@ -679,24 +679,27 @@ bool Car::is_at_front() {
 	return m_at_intersection;
 }
 
-//bounding box coord.s go bottom left, bottom right, top right, top left
+//bounding box inputs go in order: bottom left, bottom right, top right, top left
 rect_bounding_box Car::get_bounding_box() {
-	printf("m_rotation: %f\n", -m_rotation);
+	// I use negative rotation because I did the math assuming
+	// counterclockwise was positive but instead clockwise is positive.
+	// Also need to remember that positive y is downward
+
 	vec2 bottom_left = {
 		(m_position.x - m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
+		(m_position.y + m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
 	};
 	vec2 bottom_right = {
 		(m_position.x + m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
+		(m_position.y - m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
 	};
 	vec2 top_right = {
 		(m_position.x + m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
+		(m_position.y - m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
 	};
 	vec2 top_left = {
 		(m_position.x - m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
+		(m_position.y + m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
 	};
 
 	rect_bounding_box bounding_box = {bottom_left, bottom_right, top_right, top_left};
@@ -707,14 +710,10 @@ rect_bounding_box Car::get_bounding_box() {
 bool Car::check_collision(vec2 test_vertex) {
 	rect_bounding_box bounding_box = this->get_bounding_box();
 
-	printf("bottom\n");
-	bool implicitBottom = check_implicit(bounding_box.bottom_right, bounding_box.bottom_left, test_vertex);
-	printf("right\n");
-	bool implicitRight = check_implicit(bounding_box.top_right, bounding_box.bottom_right, test_vertex);
-	printf("top\n");
-	bool implicitTop = check_implicit(bounding_box.top_left, bounding_box.top_right, test_vertex);
-	printf("left\n");
-	bool implicitLeft = check_implicit(bounding_box.bottom_left, bounding_box.top_left, test_vertex);
+	bool implicitBottom = check_implicit(bounding_box.bottom_left, bounding_box.bottom_right, test_vertex);
+	bool implicitRight = check_implicit(bounding_box.bottom_right, bounding_box.top_right, test_vertex);
+	bool implicitTop = check_implicit(bounding_box.top_right, bounding_box.top_left, test_vertex);
+	bool implicitLeft = check_implicit(bounding_box.top_left, bounding_box.bottom_left, test_vertex);
 
 	return (implicitBottom && implicitRight && implicitTop && implicitLeft);
 }
@@ -724,9 +723,5 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 	float B = P1.x - P2.x;
 	float C = P1.y * P2.x - P2.y * P1.x;
 	float result = A * Ptest.x + B * Ptest.y + C;
-	// printf("P1 x: %f, y: %f\n", P1.x, P1.y);
-	// printf("P2 x: %f, y: %f\n", P2.x, P2.y);
-	// printf("Ptest x: %f, y: %f\n", Ptest.x, Ptest.y);
-	// printf("result: %f\n", result);
 	return result >= 0.f;
 }

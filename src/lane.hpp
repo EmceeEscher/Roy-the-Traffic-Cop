@@ -17,9 +17,9 @@ public:
 	const int MaxCarsPerLane = 4;
 	float const MaxTimePerCar = 10000; // Max time before a car will turn
 
-    // constructor/destructor
-    Lane(direction dir, float villainSpawnProbability);
-    ~Lane();
+  // constructor/destructor
+  Lane(direction dir, float villainSpawnProbability);
+  ~Lane();
 
 	// Creates instance
 	bool init(direction dir, float villainSpawnProbability);

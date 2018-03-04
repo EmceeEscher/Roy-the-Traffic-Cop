@@ -39,10 +39,10 @@ bool LaneManager::update(float ms)
 
 bool LaneManager::intersection_collision_check() {
 	std::vector<Car*> cars_in_intersec;
-	bool collision_occurring = false; // TODO: remove/change this placeholder
+	bool collision_occurring = false;
 
 	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
-		std::deque<Car> curr_cars = this->get_cars_in_lane(it->first);
+		std::deque<Car> &curr_cars = it->second->m_cars;
 		if (curr_cars.size() > 0) {
 			Car* first_car = &(curr_cars[0]);
 			if (first_car->is_in_beyond_intersec()) {
@@ -54,27 +54,26 @@ bool LaneManager::intersection_collision_check() {
 	for (int i = 0; i < cars_in_intersec.size(); i++) {
 		Car* first_car = cars_in_intersec[i];
 		rect_bounding_box first_bb = first_car->get_bounding_box();
-		// printf("first bb: bl.x: %f, bl.y: %f\n", first_bb.bottom_left.x, first_bb.bottom_left.y);
-		// printf("first bb: br.x: %f, br.y: %f\n", first_bb.bottom_right.x, first_bb.bottom_right.y);
-		// printf("first bb: tr.x: %f, tr.y: %f\n", first_bb.top_right.x, first_bb.top_right.y);
-		// printf("first bb: tl.x: %f, tl.y: %f\n", first_bb.top_left.x, first_bb.top_left.y);
+
 		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
 			Car* second_car = cars_in_intersec[j];
 			rect_bounding_box second_bb = second_car->get_bounding_box();
-			printf("second bb: bl.x: %f, bl.y: %f\n", second_bb.bottom_left.x, second_bb.bottom_left.y);
+
 			if (first_car->check_collision(second_bb.bottom_left)
 				|| first_car->check_collision(second_bb.bottom_right)
 				|| first_car->check_collision(second_bb.top_right)
 				|| first_car->check_collision(second_bb.top_left)) {
 					collision_occurring = true;
 					printf("first_car getting hit!\n");
+					// TODO: if this happens, check triangles in mesh, then give car new velocity
 				}
-			if (second_car->check_collision(first_bb.bottom_left)
+			else if (second_car->check_collision(first_bb.bottom_left)
 				|| second_car->check_collision(first_bb.bottom_right)
 				|| second_car->check_collision(first_bb.top_right)
 				|| second_car->check_collision(first_bb.top_left)) {
 					collision_occurring = true;
 					printf("second_car getting hit!\n");
+					// TODO: if this happens, check triangles in mesh, then give car new velocity
 				}
 
 		}
