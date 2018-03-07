@@ -125,6 +125,10 @@ public:
 	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
 
+	void collided();
+
+	void spinout();
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -146,6 +150,7 @@ private:
 	float t;
 	bool m_in_beyond_intersection;
 	bool m_turned;
+	bool m_hit; //car collided or not
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 	int car_tex_x0; //specifies near x offset of the indicated car texture

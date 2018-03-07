@@ -64,7 +64,8 @@ bool LaneManager::intersection_collision_check() {
 				|| first_car->check_collision(second_bb.top_right)
 				|| first_car->check_collision(second_bb.top_left)) {
 					collision_occurring = true;
-					printf("first_car getting hit!\n");
+					//printf("first_car getting hit!\n");
+					first_car->collided();
 					// TODO: if this happens, check triangles in mesh, then give car new velocity
 				}
 			else if (second_car->check_collision(first_bb.bottom_left)
@@ -72,7 +73,8 @@ bool LaneManager::intersection_collision_check() {
 				|| second_car->check_collision(first_bb.top_right)
 				|| second_car->check_collision(first_bb.top_left)) {
 					collision_occurring = true;
-					printf("second_car getting hit!\n");
+					//printf("second_car getting hit!\n");
+					second_car->collided();
 					// TODO: if this happens, check triangles in mesh, then give car new velocity
 				}
 
