@@ -28,6 +28,9 @@
 struct vec2 { float x, y; };
 struct vec3 { float x, y, z; };
 struct mat3 { vec3 c0, c1, c2; };
+//order of vertex goes bottom left, bottom right, top right, top left (counterclockwise)
+//this relative to the original texture, not after rotations
+struct rect_bounding_box {vec2 bottom_left, bottom_right, top_right, top_left; };
 
 struct digit_tracker {
 	float old_offset, new_offset, flip;

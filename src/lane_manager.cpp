@@ -6,10 +6,10 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
-  lanes[0] = { 450.f,398.f };
-  lanes[1] = { 400.f,540.f };
-  lanes[2] = { 550.f,590.f };
-  lanes[3] = { 610.f,450.f };
+	m_lane_coords[direction::NORTH] = { 450.f,398.f };
+	m_lane_coords[direction::EAST] = { 400.f,540.f };
+	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
+	m_lane_coords[direction::WEST] = { 610.f,450.f };
 
   m_time_remaining = m_time_per_action;
 
@@ -28,11 +28,58 @@ bool LaneManager::update(float ms)
 
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars
 
-	lane_queue(m_lanes[direction::NORTH], lanes[0], ms);
-	lane_queue(m_lanes[direction::WEST], lanes[1], ms);
-	lane_queue(m_lanes[direction::SOUTH], lanes[2], ms);
-	lane_queue(m_lanes[direction::EAST], lanes[3], ms);
+	lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms);
+	lane_queue(m_lanes[direction::WEST], m_lane_coords[direction::EAST], ms);
+	lane_queue(m_lanes[direction::SOUTH], m_lane_coords[direction::SOUTH], ms);
+	lane_queue(m_lanes[direction::EAST], m_lane_coords[direction::WEST], ms);
+
+	intersection_collision_check();
 	return true;
+}
+
+bool LaneManager::intersection_collision_check() {
+	std::vector<Car*> cars_in_intersec;
+	bool collision_occurring = false;
+
+	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		std::deque<Car> &curr_cars = it->second->m_cars;
+		if (curr_cars.size() > 0) {
+			Car* first_car = &(curr_cars[0]);
+			if (first_car->is_in_beyond_intersec()) {
+				cars_in_intersec.push_back(first_car);
+			}
+		}
+	}
+
+	for (int i = 0; i < cars_in_intersec.size(); i++) {
+		Car* first_car = cars_in_intersec[i];
+		rect_bounding_box first_bb = first_car->get_bounding_box();
+
+		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
+			Car* second_car = cars_in_intersec[j];
+			rect_bounding_box second_bb = second_car->get_bounding_box();
+
+			if (first_car->check_collision(second_bb.bottom_left)
+				|| first_car->check_collision(second_bb.bottom_right)
+				|| first_car->check_collision(second_bb.top_right)
+				|| first_car->check_collision(second_bb.top_left)) {
+					collision_occurring = true;
+					printf("first_car getting hit!\n");
+					// TODO: if this happens, check triangles in mesh, then give car new velocity
+				}
+			else if (second_car->check_collision(first_bb.bottom_left)
+				|| second_car->check_collision(first_bb.bottom_right)
+				|| second_car->check_collision(first_bb.top_right)
+				|| second_car->check_collision(first_bb.top_left)) {
+					collision_occurring = true;
+					printf("second_car getting hit!\n");
+					// TODO: if this happens, check triangles in mesh, then give car new velocity
+				}
+
+		}
+	}
+
+	return collision_occurring;
 }
 
 void LaneManager::add_car()
@@ -87,23 +134,24 @@ void LaneManager::input_create_cars(direction dir) {
 
 bool LaneManager::car_delete(vec2 pos) {
 	if (pos.x > 1100 && 518 < pos.y && pos.y < 590) {
-		printf("destroy east");
+		printf("destroy east\n");
 		return true;
 	}
 	if (pos.x < -100 && 400 < pos.y && pos.y < 478) {
-		printf("destroy west");
+		printf("destroy west\n");
 		return true;
 	}
 	if (pos.y < -100 && 518 < pos.x && pos.x < 591) {
-		printf("destroy north");
+		printf("destroy north\n");
 		return true;
 	}
 	if (pos.y > 1100 && 407 < pos.x && pos.x < 485) {
-		printf("destroy south");
+		printf("destroy south\n");
 		return true;
 	}
 	return false;
 }
+
 bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	//104 x margin distance away min
 	//210 x margin start to slow
@@ -121,6 +169,7 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 
 	return false;
 }
+
 void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	lane->update(ms);
 	if (lane->get_time_remaining() <= 0)
@@ -142,12 +191,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 			occupied_front_boundary_box = false;
 		}
 	}
-	//if (occupied_front_boundary_box) {
-	//	printf("true");
-	//}
-	//else {
-	//	printf("false");
-	//}
+
 	for (int i = 0; i < cars.size(); i++) {
 		//car being updated
 		cars[i].update(ms);

@@ -17,9 +17,9 @@ public:
 	const int MaxCarsPerLane = 4;
 	float const MaxTimePerCar = 10000; // Max time before a car will turn
 
-    // constructor/destructor
-    Lane(direction dir, float villainSpawnProbability);
-    ~Lane();
+  // constructor/destructor
+  Lane(direction dir, float villainSpawnProbability);
+  ~Lane();
 
 	// Creates instance
 	bool init(direction dir, float villainSpawnProbability);
@@ -68,7 +68,7 @@ private:
   float m_time_remaining; // Time remaining on timer of car at front of lane
   direction m_dir;
 	float m_villain_spawn_probability; // Probability that a car spawned in this lane will be a villain
-
+	std::map<direction, vec2> m_lane_coords;
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
 };

@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <cmath>
 #include <stdexcept>
 
 using std::string;
@@ -48,9 +49,6 @@ public:
 	// Moves the position by the specified offset
 	void move(vec2 off);
 
-	// Returns the turtle' bounding box for collision detection, called by collides_with()
-	vec2 get_bounding_box()const;
-
 	// Set rotation in radians
 	void set_rotation(float radians);
 
@@ -84,7 +82,7 @@ public:
 	bool is_approaching_stop(vec2 lane_pos);
 
 	bool is_at_stop(vec2 lane_pos);
-	
+
 	// Calculation for safe stopping distance
 	float compute_stopping_dis(float velocity, float acc);
 
@@ -116,6 +114,17 @@ public:
 	// get the car's turning direction
 	turn_direction get_turn_direction();
 
+	// returns a struct containing the four corners of the cars boundary box
+	// directions (e.g. bottom_left) are relative to car's original coordinates,
+	// NOT after rotation (so if you rotate by PI, "bottom_left" will be on top right)
+	rect_bounding_box get_bounding_box();
+
+	// returns true if the given test_vertex is inside the car's bounding box
+	bool check_collision(vec2 test_vertex);
+
+	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
+	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
@@ -132,13 +141,13 @@ private:
 	vec2 m_turn_start_pos;
 	vec2 m_turn_pivot;
 	float m_max_speed;
-	float m_wr;
-	float m_hr;
+	float m_wr; //half width of car texture
+	float m_hr; //half height of car texture
 	float t;
 	bool m_in_beyond_intersection;
 	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 	int car_tex_x0; //specifies near x offset of the indicated car texture
-	int car_tex_x1; //specifies far x offset of the indicated car texture 
+	int car_tex_x1; //specifies far x offset of the indicated car texture
 };

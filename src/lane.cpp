@@ -9,6 +9,10 @@ Lane::Lane(direction dir, float villainSpawnProbability)
 	m_time_remaining = MaxTimePerCar;
 	m_villain_spawn_probability = villainSpawnProbability;
 	std::srand(std::time(nullptr));
+	m_lane_coords[direction::NORTH] = { 450.f,398.f };
+	m_lane_coords[direction::WEST] = { 400.f,540.f };
+	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
+	m_lane_coords[direction::EAST] = { 610.f,450.f };
 }
 
 bool Lane::init(direction dir, float villainSpawnProbability)
@@ -137,7 +141,7 @@ void Lane::turn_car()
 			//printf("Array Size: %d\n", m_cars.size());
 			Car& selected_car = m_cars.at(index);
 			if (m_dir == direction::WEST || m_dir == direction::EAST) {
-				if (selected_car.get_vel().x <= 0.f) {
+				if (selected_car.get_vel().x <= 0.f && selected_car.is_at_stop(m_lane_coords[m_dir])) {
 					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
 					if (selected_car.is_in_beyond_intersec()) {
@@ -147,7 +151,7 @@ void Lane::turn_car()
 			}
 
 			if (m_dir == direction::NORTH || m_dir == direction::SOUTH) {
-				if (selected_car.get_vel().y <= 0.f) {
+				if (selected_car.get_vel().y <= 0.f && selected_car.is_at_stop(m_lane_coords[m_dir])) {
 					selected_car.set_turn_start(selected_car.get_position());
 					selected_car.signal_to_move();
 					if (selected_car.is_in_beyond_intersec()) {
