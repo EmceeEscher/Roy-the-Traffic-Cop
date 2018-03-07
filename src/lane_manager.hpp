@@ -36,6 +36,8 @@ public:
 
 		void input_create_cars(direction dir);
 
+		int points();
+
 		bool lane_collision_check(Car& current_car, Car& front_car);
 
 		void lane_queue(Lane* lane, vec2 lane_intersection,float ms);
@@ -50,4 +52,6 @@ private:
     float m_time_remaining;
 		AI* m_ai;
 		std::map<direction, vec2> m_lane_coords;
+		unsigned int m_points;
+
 };

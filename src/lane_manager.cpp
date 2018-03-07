@@ -12,7 +12,7 @@ bool LaneManager::init(AI ai)
 	m_lane_coords[direction::WEST] = { 610.f,450.f };
 
   m_time_remaining = m_time_per_action;
-
+  m_points = 0; 
   m_ai = &ai;
 
   return true;
@@ -151,7 +151,10 @@ bool LaneManager::car_delete(vec2 pos) {
 	}
 	return false;
 }
-
+ 
+int LaneManager::points() {
+	return m_points;
+}
 bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	//104 x margin distance away min
 	//210 x margin start to slow
@@ -293,6 +296,7 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 		}
 		if (car_delete(cars[i].get_position())) {
 			lane->m_cars.pop_front();
+			++m_points;
 		}
 	}
 }
