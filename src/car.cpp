@@ -13,6 +13,10 @@
 
 Texture Car::car_texture;
 
+TexturedVertex vertices[16];
+
+uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
+
 bool Car::init(bool isVillain)
 {
 	// Load shared texture
@@ -40,8 +44,7 @@ bool Car::init(bool isVillain)
 	m_wr = car_texture.width * 0.5 / 8; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
 
-	TexturedVertex vertices[14];
-	vertices[0].position = { -m_wr, m_hr,0.f };
+	vertices[0].position = { -m_wr, m_hr,0.f }; 
 	vertices[0].texcoord = { car_width_uv*car_tex_x0, 1.00000f };
 	vertices[1].position = { -m_wr,-m_hr,0.000f };
 	vertices[1].texcoord = { car_width_uv*car_tex_x0, 0.000f };
@@ -53,7 +56,7 @@ bool Car::init(bool isVillain)
 	vertices[4].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 0.000f };
 	vertices[5].position = { m_wr,-m_hr,0.000f };
 	vertices[5].texcoord = { car_width_uv*car_tex_x1, 0.000f };
-	vertices[6].position = { -m_wr * 0,-m_hr,0.000f };
+	vertices[6].position = { -m_wr * 0,-m_hr,0.000f }; // same as vertex 3?
 	vertices[6].texcoord = { 0.063375f + car_width_uv * car_tex_x0, 0.000f };
 	vertices[7].position = { m_wr/2,  m_hr,0.000f };
 	vertices[7].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 1.00000f };
@@ -61,16 +64,19 @@ bool Car::init(bool isVillain)
 	vertices[8].texcoord = { 0.063375f + car_width_uv * car_tex_x0, 1.00000f };
 	vertices[9].position = { -m_wr/2,  m_hr,0.000f };
 	vertices[9].texcoord = { 0.031705f + car_width_uv * car_tex_x0, 1.00000f };
-	vertices[10].position = { -m_wr/2,  m_hr,0.000f };
+	vertices[10].position = { -m_wr/2,  m_hr,0.000f }; // same as vertex 9?
 	vertices[10].texcoord = { 0.031705f + car_width_uv * car_tex_x0, 1.00000f };
-	vertices[11].position = { m_wr,-m_hr,0.000f };
+	vertices[11].position = { m_wr,-m_hr,0.000f }; // same as vertex 5?
 	vertices[11].texcoord = { car_width_uv*car_tex_x1, 0.000f };
 	vertices[12].position = { m_wr,  m_hr,0.000f };
 	vertices[12].texcoord = { car_width_uv*car_tex_x1, 1.00000f };
-	vertices[13].position = { m_wr/2,  m_hr,0.000f };
+	vertices[13].position = { m_wr/2,  m_hr,0.000f }; // same as vertex 7?
 	vertices[13].texcoord = { 0.095044f + car_width_uv * car_tex_x0, 1.00000f };
+	vertices[14].position = { -m_wr / 2, m_hr * 0, 0.000f };
+	vertices[15].position = { m_wr / 2, m_hr * 0, 0.000f };
 
-	uint16_t indices[] = {0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13};
+
+	//uint16_t indices[] = {0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13};
 
 
 	// Clearing errors
@@ -457,6 +463,10 @@ vec2 Car::get_scale()
 	return m_scale;
 }
 
+uint16_t Car::get_index(int index) {
+	return indices[index];
+}
+
 
 void Car::signal_to_move()
 {
@@ -705,6 +715,21 @@ rect_bounding_box Car::get_bounding_box() {
 	rect_bounding_box bounding_box = {bottom_left, bottom_right, top_right, top_left};
 
 	return bounding_box;
+}
+
+float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
+	float tArea = ((p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y)) / 2.0f;
+	return tArea;
+}
+
+vec2 Car::get_vertex_pos(int index) {
+
+	vec2 vertex = {
+		(m_position.x + vertices[index].position.x),
+		(m_position.y + vertices[index].position.y)
+	};
+
+	return vertex;
 }
 
 bool Car::check_collision(vec2 test_vertex) {

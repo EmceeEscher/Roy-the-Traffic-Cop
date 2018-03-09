@@ -15,7 +15,13 @@ using std::string;
 class Car : public Renderable
 {
 	static Texture car_texture;
+	TexturedVertex vertices[14]; //Vertices of triangles in Car mesh
+	struct Triangle {
+		vec2 a, b, c;
+		int meshNum;
+	};
 public:
+
 
 	// Creates all the associated render resources and default transform
 	bool init(bool isVillain);
@@ -35,6 +41,12 @@ public:
 
 	// Returns whether the car is a villain
 	bool is_villain()const;
+
+	uint16_t get_index(int index);
+
+	float Car::get_triangle_area(vec2 p1, vec2 p2, vec2 p3);
+
+	vec2 get_vertex_pos(int index);
 
 	// Returns the desired direction of car
 	direction get_desired_direction()const;
