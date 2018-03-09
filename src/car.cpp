@@ -13,7 +13,7 @@
 
 Texture Car::car_texture;
 
-TexturedVertex vertices[16];
+TexturedVertex vertices[12];
 
 uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
 
@@ -47,7 +47,6 @@ bool Car::init(bool isVillain)
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
 
-	TexturedVertex vertices[12];
 	//bottom left
 	vertices[0].position = { -m_wr, -m_hr,0.f };
 	vertices[0].texcoord = { full_car_offset, 0.f };
@@ -86,6 +85,7 @@ bool Car::init(bool isVillain)
 	vertices[11].texcoord = { 0.125000f + full_car_offset, 0.f };
 
 	uint16_t indices[] = {0,1,2,3,2,1,4,1,0,5,3,4,3,5,6,5,7,6,6,7,8,8,9,10,10,9,11,11,9,7};
+
 
 
 	// Clearing errors
@@ -227,6 +227,57 @@ void Car::update(float ms)
 				move(m_displacement);
 			}
 		}
+		/*Car::Triangle triangles[10];
+
+		triangles[0].a = get_vertex_pos(0);
+		triangles[0].b = get_vertex_pos(1);
+		triangles[0].c = get_vertex_pos(2);
+		triangles[0].meshNum = 0;
+
+		triangles[1].a = get_vertex_pos(1);
+		triangles[1].b = get_vertex_pos(2);
+		triangles[1].c = get_vertex_pos(3);
+		triangles[1].meshNum = 1;
+
+		triangles[2].a = get_vertex_pos(0);
+		triangles[2].b = get_vertex_pos(1);
+		triangles[2].c = get_vertex_pos(4);
+
+		triangles[3].a = get_vertex_pos(3);
+		triangles[3].b = get_vertex_pos(4);
+		triangles[3].c = get_vertex_pos(6);
+		triangles[0].meshNum = 0;
+
+		triangles[4].a = get_vertex_pos(4);
+		triangles[4].b = get_vertex_pos(5);
+		triangles[4].c = get_vertex_pos(6);
+		triangles[0].meshNum = 0;
+
+		triangles[5].a = get_vertex_pos(5);
+		triangles[5].b = get_vertex_pos(6);
+		triangles[5].c = get_vertex_pos(8);
+		triangles[0].meshNum = 0;
+
+		triangles[6].a = get_vertex_pos(5);
+		triangles[6].b = get_vertex_pos(7);
+		triangles[6].c = get_vertex_pos(8);
+		triangles[0].meshNum = 0;
+
+		triangles[7].a = get_vertex_pos(8);
+		triangles[7].b = get_vertex_pos(9);
+		triangles[7].c = get_vertex_pos(10);
+		triangles[0].meshNum = 0;
+
+		triangles[8].a = get_vertex_pos(7);
+		triangles[8].b = get_vertex_pos(9);
+		triangles[8].c = get_vertex_pos(11);
+		triangles[0].meshNum = 0;
+
+		triangles[9].a = get_vertex_pos(9);
+		triangles[9].b = get_vertex_pos(10);
+		triangles[9].c = get_vertex_pos(11);
+		triangles[0].meshNum = 0;*/
+
 	}
 }
 
@@ -727,7 +778,8 @@ rect_bounding_box Car::get_bounding_box() {
 }
 
 float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
-	float tArea = ((p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y)) / 2.0f;
+	float tArea = (abs((p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y))) / 2.0f;
+	//float tArea = abs(p0.x*p1.y + p1.x*p2.y + p2.x*p0.y - p0.x*p2.y - p2.x*p1.y - p1.x*p0.y) / 2.0f;
 	return tArea;
 }
 
@@ -750,6 +802,47 @@ bool Car::check_collision(vec2 test_vertex) {
 	bool implicitLeft = check_implicit(bounding_box.top_left, bounding_box.bottom_left, test_vertex);
 
 	return (implicitBottom && implicitRight && implicitTop && implicitLeft);
+}
+
+bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
+	/*bool implicitBottom = check_implicit(t.a, t.b, test_vertex);
+	bool implicitRight = check_implicit(t.b, t.c, test_vertex);
+	bool implicitLeft = check_implicit(t.a, t.c, test_vertex);
+
+	return (implicitBottom && implicitRight && implicitLeft);*/
+
+	//since second car got crashed into, check its triangles first
+	//p is the point which we are testing against. IE the tip of first_car's colliding triangle
+	/*float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
+
+	float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
+	printf("collisionArea1 %f ", collisionArea1);
+	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
+	printf("collisionArea2 %f ", collisionArea2);
+	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
+	printf("collisionArea3 %f\n", collisionArea3);
+	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
+	printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
+	return (abs(collisionSum - tArea) <= 0.1f);*/
+	//if ((test_vertex.x > t.a.x && test_vertex.x > t.b.x && test_vertex.x > t.b.x) || (test_vertex.x < t.a.x && test_vertex.x < t.b.x && test_vertex.x < t.b.x)) {
+	//	return false;
+	//}
+	//else if ((test_vertex.y > t.a.y && test_vertex.y > t.a.y && test_vertex.y > t.a.y) || (test_vertex.y < t.a.y && test_vertex.y < t.a.y && test_vertex.y < t.a.y)) {
+	//	return false;
+	//}
+	//else {
+		float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
+
+		float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
+		printf("collisionArea1 %f ", collisionArea1);
+		float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
+		printf("collisionArea2 %f ", collisionArea2);
+		float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
+		printf("collisionArea3 %f\n", collisionArea3);
+		float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
+		printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
+		return (abs(collisionSum - tArea) <= 0.1f);
+	//}
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {

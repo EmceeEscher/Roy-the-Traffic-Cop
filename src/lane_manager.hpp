@@ -13,10 +13,7 @@ class LaneManager
 {
 public:
 	const float VillainSpawnProbability = 1; // We may want to make this level dependent in the future. Revise when levels are added.
-	struct Triangle {
-		vec2 a, b, c;
-		int meshNum;
-	};
+
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
     bool init(AI ai);
