@@ -73,7 +73,18 @@ bool LaneManager::intersection_collision_check() {
 					//printf("first_car getting hit! indices: %u vertex pos: (%f,%f) m_position: (%f, %f)\n", first_car->get_index(4), first_car->get_vertex_pos(5).x, first_car->get_vertex_pos(0).y, first_car->get_position().x, first_car->get_position().y);
 					// TODO: if this happens, check triangles in mesh, then give car new velocity
 					// should this return the triangles which connected?
-					mesh_collision_check(first_car, second_car, second_car->get_position());
+					if (first_car->check_collision(second_bb.bottom_left)) {
+						mesh_collision_check(second_car, first_car, second_bb.bottom_left);
+					}
+					if (first_car->check_collision(second_bb.bottom_right)) {
+						mesh_collision_check(second_car, first_car, second_bb.bottom_right);
+					}
+					if (first_car->check_collision(second_bb.top_left)) {
+						mesh_collision_check(second_car, first_car, second_bb.top_left);
+					}
+					if (first_car->check_collision(second_bb.top_right)) {
+						mesh_collision_check(second_car, first_car, second_bb.top_right);
+					}
 				}
 			else if (second_car->check_collision(first_bb.bottom_left)
 				|| second_car->check_collision(first_bb.bottom_right)
@@ -90,7 +101,7 @@ bool LaneManager::intersection_collision_check() {
 	return collision_occurring;
 }
 
-void LaneManager::mesh_collision_check(Car* first_car, Car* second_car, vec2 impact_vertex) {
+void LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
 	// ??? DOES this need the intersection point from second_car as input? 
 	// for each triangle in first_Car
 	//		calculate area1 (points a,b,c)
@@ -99,55 +110,59 @@ void LaneManager::mesh_collision_check(Car* first_car, Car* second_car, vec2 imp
 	// BEST way to find out which part of first_car hit?
 	Car::Triangle triangles[10];
 
-	triangles[0].a = second_car->get_vertex_pos(0);
-	triangles[0].b = second_car->get_vertex_pos(1);
-	triangles[0].c = second_car->get_vertex_pos(2);
+	triangles[0].a = victim_car->get_vertex_pos(0);
+	triangles[0].b = victim_car->get_vertex_pos(1);
+	triangles[0].c = victim_car->get_vertex_pos(2);
 
-	triangles[1].a = second_car->get_vertex_pos(1);
-	triangles[1].b = second_car->get_vertex_pos(2);
-	triangles[1].c = second_car->get_vertex_pos(3);
+	triangles[1].a = victim_car->get_vertex_pos(1);
+	triangles[1].b = victim_car->get_vertex_pos(2);
+	triangles[1].c = victim_car->get_vertex_pos(3);
 
-	triangles[2].a = second_car->get_vertex_pos(0);
-	triangles[2].b = second_car->get_vertex_pos(1);
-	triangles[2].c = second_car->get_vertex_pos(4);
+	triangles[2].a = victim_car->get_vertex_pos(0);
+	triangles[2].b = victim_car->get_vertex_pos(1);
+	triangles[2].c = victim_car->get_vertex_pos(4);
 
-	triangles[3].a = second_car->get_vertex_pos(3);
-	triangles[3].b = second_car->get_vertex_pos(4);
-	triangles[3].c = second_car->get_vertex_pos(6);
+	triangles[3].a = victim_car->get_vertex_pos(3);
+	triangles[3].b = victim_car->get_vertex_pos(4);
+	triangles[3].c = victim_car->get_vertex_pos(6);
 
-	triangles[4].a = second_car->get_vertex_pos(4);
-	triangles[4].b = second_car->get_vertex_pos(5);
-	triangles[4].c = second_car->get_vertex_pos(6);
+	triangles[4].a = victim_car->get_vertex_pos(4);
+	triangles[4].b = victim_car->get_vertex_pos(5);
+	triangles[4].c = victim_car->get_vertex_pos(6);
 
-	triangles[5].a = second_car->get_vertex_pos(5);
-	triangles[5].b = second_car->get_vertex_pos(6);
-	triangles[5].c = second_car->get_vertex_pos(8);
+	triangles[5].a = victim_car->get_vertex_pos(5);
+	triangles[5].b = victim_car->get_vertex_pos(6);
+	triangles[5].c = victim_car->get_vertex_pos(8);
 
-	triangles[6].a = second_car->get_vertex_pos(5);
-	triangles[6].b = second_car->get_vertex_pos(7);
-	triangles[6].c = second_car->get_vertex_pos(8);
+	triangles[6].a = victim_car->get_vertex_pos(5);
+	triangles[6].b = victim_car->get_vertex_pos(7);
+	triangles[6].c = victim_car->get_vertex_pos(8);
 
-	triangles[7].a = second_car->get_vertex_pos(8);
-	triangles[7].b = second_car->get_vertex_pos(9);
-	triangles[7].c = second_car->get_vertex_pos(10);
+	triangles[7].a = victim_car->get_vertex_pos(8);
+	triangles[7].b = victim_car->get_vertex_pos(9);
+	triangles[7].c = victim_car->get_vertex_pos(10);
 
-	triangles[8].a = second_car->get_vertex_pos(7);
-	triangles[8].b = second_car->get_vertex_pos(9);
-	triangles[8].c = second_car->get_vertex_pos(11);
+	triangles[8].a = victim_car->get_vertex_pos(7);
+	triangles[8].b = victim_car->get_vertex_pos(9);
+	triangles[8].c = victim_car->get_vertex_pos(11);
 
-	triangles[9].a = second_car->get_vertex_pos(9);
-	triangles[9].b = second_car->get_vertex_pos(10);
-	triangles[9].c = second_car->get_vertex_pos(11);
+	triangles[9].a = victim_car->get_vertex_pos(9);
+	triangles[9].b = victim_car->get_vertex_pos(10);
+	triangles[9].c = victim_car->get_vertex_pos(11);
 
-	
+	// Determine second cars triangles
+	// Determine which corner of first_car bounding box hit second car bounding box
+	// For each triangle, check if impact corner is inside
+	//		Depending on triangle, call different collision responses
+
 	int counter = 0;
 	for (Car::Triangle t : triangles) {
-		printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
-		if (second_car->check_mesh_collision(impact_vertex, t)) {
+		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
+		if (victim_car->check_mesh_collision(impact_vertex, t)) {
 			printf("triangle %i hit\n", counter);
 			// NOTES: Check how we're computing triangle area
 			// Should triangles be firs_car or second_car? Call to check mesh collision first or second?
-			Sleep(500);
+			Sleep(2500);
 		}
 		counter++;
 	}
