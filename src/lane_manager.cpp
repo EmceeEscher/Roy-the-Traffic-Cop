@@ -19,8 +19,6 @@ bool LaneManager::init(AI ai)
 
   m_ai = &ai;
 
-
-
   return true;
 }
 
@@ -64,44 +62,66 @@ bool LaneManager::intersection_collision_check() {
 		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
 			Car* second_car = cars_in_intersec[j];
 			rect_bounding_box second_bb = second_car->get_bounding_box();
+			//printf("first_car getting hit! indices: %u vertex pos: (%f,%f) m_position: (%f, %f)\n", first_car->get_index(4), first_car->get_vertex_pos(5).x, first_car->get_vertex_pos(0).y, first_car->get_position().x, first_car->get_position().y);
+			// TODO: if this happens, check triangles in mesh, then give car new velocity
+			// should this return the triangles which connected?
+			if (first_car->check_collision(second_bb.bottom_left)) {
+				printf("first car getting hit by second bottom left\n");
+				collision_occurring = true;
+				mesh_collision_check(second_car, first_car, second_bb.bottom_left);
+				first_car->change_color();
+			}
+			if (first_car->check_collision(second_bb.bottom_right)) {
+				printf("first car getting hit by second bottom right\n");
+				collision_occurring = true;
+				mesh_collision_check(second_car, first_car, second_bb.bottom_right);
+				first_car->change_color();
+			}
+			if (first_car->check_collision(second_bb.top_left)) {
+				printf("first car getting hit by second top left\n");
+				collision_occurring = true;
+				mesh_collision_check(second_car, first_car, second_bb.top_left);
+				first_car->change_color();
+			}
+			if (first_car->check_collision(second_bb.top_right)) {
+				printf("first car getting hit by second top right\n");
+				collision_occurring = true;
+				mesh_collision_check(second_car, first_car, second_bb.top_right);
+				first_car->change_color();
+			}
 
-			if (first_car->check_collision(second_bb.bottom_left)
-				|| first_car->check_collision(second_bb.bottom_right)
-				|| first_car->check_collision(second_bb.top_right)
-				|| first_car->check_collision(second_bb.top_left)) {
-					collision_occurring = true;
-					//printf("first_car getting hit! indices: %u vertex pos: (%f,%f) m_position: (%f, %f)\n", first_car->get_index(4), first_car->get_vertex_pos(5).x, first_car->get_vertex_pos(0).y, first_car->get_position().x, first_car->get_position().y);
-					// TODO: if this happens, check triangles in mesh, then give car new velocity
-					// should this return the triangles which connected?
-					if (first_car->check_collision(second_bb.bottom_left)) {
-						mesh_collision_check(second_car, first_car, second_bb.bottom_left);
-					}
-					if (first_car->check_collision(second_bb.bottom_right)) {
-						mesh_collision_check(second_car, first_car, second_bb.bottom_right);
-					}
-					if (first_car->check_collision(second_bb.top_left)) {
-						mesh_collision_check(second_car, first_car, second_bb.top_left);
-					}
-					if (first_car->check_collision(second_bb.top_right)) {
-						mesh_collision_check(second_car, first_car, second_bb.top_right);
-					}
-				}
-			else if (second_car->check_collision(first_bb.bottom_left)
-				|| second_car->check_collision(first_bb.bottom_right)
-				|| second_car->check_collision(first_bb.top_right)
-				|| second_car->check_collision(first_bb.top_left)) {
-					collision_occurring = true;
-					printf("second_car getting hit!\n");
-					// TODO: if this happens, check triangles in mesh, then give car new velocity
-				}
-
+			if (second_car->check_collision(first_bb.bottom_left)) {
+				printf("second car getting hit by first bottom left\n");
+				collision_occurring = true;
+				mesh_collision_check(first_car, second_car, first_bb.bottom_left);
+				first_car->change_color();
+			}
+			if (second_car->check_collision(first_bb.bottom_right)) {
+				printf("second car getting hit by first bottom right\n");
+				collision_occurring = true;
+				mesh_collision_check(first_car, second_car, first_bb.bottom_right);
+				first_car->change_color();
+			}
+			if (second_car->check_collision(first_bb.top_right)) {
+				printf("second car getting hit by first top right\n");
+				collision_occurring = true;
+				mesh_collision_check(first_car, second_car, first_bb.top_right);
+				first_car->change_color();
+			}
+			if (second_car->check_collision(first_bb.top_left)) {
+				printf("second car getting hit by first top left\n");
+				collision_occurring = true;
+				mesh_collision_check(first_car, second_car, first_bb.top_left);
+				first_car->change_color();
+				// TODO: if mesh_collision happens, then give car new velocity
+			}
 		}
 	}
 
 	return collision_occurring;
 }
 
-void LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
+int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
 	// ??? DOES this need the intersection point from second_car as input? 
 	// for each triangle in first_Car
 	//		calculate area1 (points a,b,c)
@@ -124,17 +144,17 @@ void LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 
 
 	triangles[3].a = victim_car->get_vertex_pos(3);
 	triangles[3].b = victim_car->get_vertex_pos(4);
-	triangles[3].c = victim_car->get_vertex_pos(6);
+	triangles[3].c = victim_car->get_vertex_pos(5);
 
-	triangles[4].a = victim_car->get_vertex_pos(4);
+	triangles[4].a = victim_car->get_vertex_pos(3);
 	triangles[4].b = victim_car->get_vertex_pos(5);
 	triangles[4].c = victim_car->get_vertex_pos(6);
 
 	triangles[5].a = victim_car->get_vertex_pos(5);
 	triangles[5].b = victim_car->get_vertex_pos(6);
-	triangles[5].c = victim_car->get_vertex_pos(8);
+	triangles[5].c = victim_car->get_vertex_pos(7);
 
-	triangles[6].a = victim_car->get_vertex_pos(5);
+	triangles[6].a = victim_car->get_vertex_pos(6);
 	triangles[6].b = victim_car->get_vertex_pos(7);
 	triangles[6].c = victim_car->get_vertex_pos(8);
 
@@ -150,22 +170,22 @@ void LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 
 	triangles[9].b = victim_car->get_vertex_pos(10);
 	triangles[9].c = victim_car->get_vertex_pos(11);
 
-	// Determine second cars triangles
-	// Determine which corner of first_car bounding box hit second car bounding box
+	// Determine victim_car's triangle coordinates
+	// Determine which corner of first_car bounding box hit second_car bounding box
 	// For each triangle, check if impact corner is inside
-	//		Depending on triangle, call different collision responses
+	// TODO: Depending on which triangle gets hit first, call different collision responses on victim_car
 
 	int counter = 0;
 	for (Car::Triangle t : triangles) {
 		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
 		if (victim_car->check_mesh_collision(impact_vertex, t)) {
 			printf("triangle %i hit\n", counter);
-			// NOTES: Check how we're computing triangle area
-			// Should triangles be firs_car or second_car? Call to check mesh collision first or second?
 			Sleep(2500);
+			return counter;
 		}
 		counter++;
 	}
+	return -1;
 }
 
 void LaneManager::add_car()

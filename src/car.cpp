@@ -17,6 +17,8 @@ TexturedVertex vertices[12];
 
 uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
 
+float attacker_color[] = { 0.f, 0.f, 0.f };
+
 bool Car::init(bool isVillain)
 {
 	// Load shared texture
@@ -48,40 +50,40 @@ bool Car::init(bool isVillain)
 	m_hr = car_texture.height * 0.5;
 
 	//bottom left
-	vertices[0].position = { -m_wr, -m_hr,0.f };
+	vertices[0].position = { -m_wr, m_hr,0.f };
 	vertices[0].texcoord = { full_car_offset, 0.f };
 	//left middle 
 	vertices[1].position = { -m_wr/2,0.00f,0.f };
 	vertices[1].texcoord = { 0.031250f + full_car_offset, 0.500000f };
 	//top left
-	vertices[2].position = { -m_wr,m_hr,0.f };
+	vertices[2].position = { -m_wr,-m_hr,0.f };
 	vertices[2].texcoord = { full_car_offset, 1.f };
 	//left top middle
-	vertices[3].position = { -m_wr/2,m_hr,0.f };
+	vertices[3].position = { -m_wr/2,-m_hr,0.f };
 	vertices[3].texcoord = { 0.031250f + full_car_offset , 1.f };
 	//left bottom middle
-	vertices[4].position = { -m_wr/2,-m_hr,0.f };
+	vertices[4].position = { -m_wr/2, m_hr,0.f };
 	vertices[4].texcoord = { 0.031250f + full_car_offset, 0.f };
 	//direct bottom
-	vertices[5].position = { 0.f,-m_hr,0.f };
+	vertices[5].position = { 0.f, m_hr,0.f };
 	vertices[5].texcoord = { 0.062500f + full_car_offset, 0.f };
 	//direct top
-	vertices[6].position = { 0.f,m_hr,0.f };
+	vertices[6].position = { 0.f, -m_hr,0.f };
 	vertices[6].texcoord = { 0.062500f + full_car_offset, 1.f };
 	//right bottom middle
-	vertices[7].position = { m_wr/2,  -m_hr,0.f };
+	vertices[7].position = { m_wr/2,  m_hr,0.f };
 	vertices[7].texcoord = { 0.093750f + full_car_offset, 0.f };
 	//right top middle
-	vertices[8].position = { m_wr/2,  m_hr,0.f };
+	vertices[8].position = { m_wr/2,  -m_hr,0.f };
 	vertices[8].texcoord = { 0.093750f + full_car_offset, 1.f };
 	//right middle
 	vertices[9].position = { m_wr/2, 0.00f,0.f };
 	vertices[9].texcoord = { 0.093750f + full_car_offset, 0.500000f };
 	//top right
-	vertices[10].position = { m_wr,  m_hr,0.f };
+	vertices[10].position = { m_wr, -m_hr,0.f };
 	vertices[10].texcoord = { 0.125000f + full_car_offset, 1.f };
 	//bottom right
-	vertices[11].position = { m_wr,-m_hr,0.f };
+	vertices[11].position = { m_wr, m_hr,0.f };
 	vertices[11].texcoord = { 0.125000f + full_car_offset, 0.f };
 
 	uint16_t indices[] = {0,1,2,3,2,1,4,1,0,5,3,4,3,5,6,5,7,6,6,7,8,8,9,10,10,9,11,11,9,7};
@@ -227,57 +229,6 @@ void Car::update(float ms)
 				move(m_displacement);
 			}
 		}
-		/*Car::Triangle triangles[10];
-
-		triangles[0].a = get_vertex_pos(0);
-		triangles[0].b = get_vertex_pos(1);
-		triangles[0].c = get_vertex_pos(2);
-		triangles[0].meshNum = 0;
-
-		triangles[1].a = get_vertex_pos(1);
-		triangles[1].b = get_vertex_pos(2);
-		triangles[1].c = get_vertex_pos(3);
-		triangles[1].meshNum = 1;
-
-		triangles[2].a = get_vertex_pos(0);
-		triangles[2].b = get_vertex_pos(1);
-		triangles[2].c = get_vertex_pos(4);
-
-		triangles[3].a = get_vertex_pos(3);
-		triangles[3].b = get_vertex_pos(4);
-		triangles[3].c = get_vertex_pos(6);
-		triangles[0].meshNum = 0;
-
-		triangles[4].a = get_vertex_pos(4);
-		triangles[4].b = get_vertex_pos(5);
-		triangles[4].c = get_vertex_pos(6);
-		triangles[0].meshNum = 0;
-
-		triangles[5].a = get_vertex_pos(5);
-		triangles[5].b = get_vertex_pos(6);
-		triangles[5].c = get_vertex_pos(8);
-		triangles[0].meshNum = 0;
-
-		triangles[6].a = get_vertex_pos(5);
-		triangles[6].b = get_vertex_pos(7);
-		triangles[6].c = get_vertex_pos(8);
-		triangles[0].meshNum = 0;
-
-		triangles[7].a = get_vertex_pos(8);
-		triangles[7].b = get_vertex_pos(9);
-		triangles[7].c = get_vertex_pos(10);
-		triangles[0].meshNum = 0;
-
-		triangles[8].a = get_vertex_pos(7);
-		triangles[8].b = get_vertex_pos(9);
-		triangles[8].c = get_vertex_pos(11);
-		triangles[0].meshNum = 0;
-
-		triangles[9].a = get_vertex_pos(9);
-		triangles[9].b = get_vertex_pos(10);
-		triangles[9].c = get_vertex_pos(11);
-		triangles[0].meshNum = 0;*/
-
 	}
 }
 
@@ -324,7 +275,7 @@ void Car::draw(const mat3& projection)
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	float color[] = { 1.f, 1.f, 1.f };
+	float color[3] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
@@ -786,8 +737,8 @@ float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
 vec2 Car::get_vertex_pos(int index) {
 
 	vec2 vertex = {
-		(m_position.x + vertices[index].position.x),
-		(m_position.y + vertices[index].position.y)
+		(m_position.x + vertices[index].position.x * cos(m_rotation) - vertices[index].position.y * sin(m_rotation)),
+		(m_position.y + vertices[index].position.y * sin(m_rotation) + vertices[index].position.y * cos(m_rotation))
 	};
 
 	return vertex;
@@ -813,36 +764,18 @@ bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 
 	//since second car got crashed into, check its triangles first
 	//p is the point which we are testing against. IE the tip of first_car's colliding triangle
-	/*float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
+
+	float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
 
 	float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
-	printf("collisionArea1 %f ", collisionArea1);
+	//printf("collisionArea1 %f ", collisionArea1);
 	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
-	printf("collisionArea2 %f ", collisionArea2);
+	//printf("collisionArea2 %f ", collisionArea2);
 	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
-	printf("collisionArea3 %f\n", collisionArea3);
+	//printf("collisionArea3 %f\n", collisionArea3);
 	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
-	printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
-	return (abs(collisionSum - tArea) <= 0.1f);*/
-	//if ((test_vertex.x > t.a.x && test_vertex.x > t.b.x && test_vertex.x > t.b.x) || (test_vertex.x < t.a.x && test_vertex.x < t.b.x && test_vertex.x < t.b.x)) {
-	//	return false;
-	//}
-	//else if ((test_vertex.y > t.a.y && test_vertex.y > t.a.y && test_vertex.y > t.a.y) || (test_vertex.y < t.a.y && test_vertex.y < t.a.y && test_vertex.y < t.a.y)) {
-	//	return false;
-	//}
-	//else {
-		float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
-
-		float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
-		printf("collisionArea1 %f ", collisionArea1);
-		float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
-		printf("collisionArea2 %f ", collisionArea2);
-		float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
-		printf("collisionArea3 %f\n", collisionArea3);
-		float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
-		printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
-		return (abs(collisionSum - tArea) <= 0.1f);
-	//}
+	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
+	return (abs(collisionSum - tArea) <= 0.1f);
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
@@ -851,4 +784,10 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 	float C = P1.y * P2.x - P2.y * P1.x;
 	float result = A * Ptest.x + B * Ptest.y + C;
 	return result >= 0.f;
+}
+
+void Car::change_color() {
+	printf("change color\n");
+	vertices[0].position.x = 15.f;
+	vertices[0].texcoord.x = 15.f;
 }

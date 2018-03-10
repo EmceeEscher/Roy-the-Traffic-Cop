@@ -44,7 +44,7 @@ public:
 		bool intersection_collision_check();
 
 		// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
-		void LaneManager::mesh_collision_check(Car* first_car, Car* second_car, vec2 first_car_bb);
+		int mesh_collision_check(Car* first_car, Car* second_car, vec2 first_car_bb);
 
 
 private:

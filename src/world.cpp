@@ -98,7 +98,7 @@ bool World::init(vec2 screen)
 	}
 
 	// Playing background music undefinitely
-	Mix_PlayMusic(m_background_music, -1);
+	// Mix_PlayMusic(m_background_music, -1);
 
 	fprintf(stderr, "Loaded music");
 
