@@ -1,6 +1,6 @@
 #include "lane_manager.hpp"
 #include "car.hpp"
-#include <windows.h>
+//#include <windows.h>
 
 
 
@@ -122,7 +122,7 @@ bool LaneManager::intersection_collision_check() {
 }
 
 int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
-	// ??? DOES this need the intersection point from second_car as input? 
+	// ??? DOES this need the intersection point from second_car as input?
 	// for each triangle in first_Car
 	//		calculate area1 (points a,b,c)
 	//		calculate area2, sum of 3 triangles with intersection point (abd, adc, bdc)
@@ -180,7 +180,7 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
 		if (victim_car->check_mesh_collision(impact_vertex, t)) {
 			printf("triangle %i hit\n", counter);
-			Sleep(2500);
+			//Sleep(2500);
 			return counter;
 		}
 		counter++;

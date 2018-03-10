@@ -45,7 +45,7 @@ public:
 
 	uint16_t get_index(int index);
 
-	float Car::get_triangle_area(vec2 p1, vec2 p2, vec2 p3);
+	float get_triangle_area(vec2 p1, vec2 p2, vec2 p3);
 
 	vec2 get_vertex_pos(int index);
 
@@ -135,7 +135,7 @@ public:
 	// returns true if the given test_vertex is inside the car's bounding box
 	bool check_collision(vec2 test_vertex);
 
-	bool Car::check_mesh_collision(vec2 test_vertex, Triangle t);
+	bool check_mesh_collision(vec2 test_vertex, Triangle t);
 
 	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
@@ -143,6 +143,7 @@ public:
 	void change_color();
 
 private:
+	float m_color[3];
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians

@@ -52,7 +52,7 @@ bool Car::init(bool isVillain)
 	//bottom left
 	vertices[0].position = { -m_wr, m_hr,0.f };
 	vertices[0].texcoord = { full_car_offset, 0.f };
-	//left middle 
+	//left middle
 	vertices[1].position = { -m_wr/2,0.00f,0.f };
 	vertices[1].texcoord = { 0.031250f + full_car_offset, 0.500000f };
 	//top left
@@ -131,6 +131,10 @@ bool Car::init(bool isVillain)
 	std::srand(std::time(nullptr));
 
 	m_turn_placard = new Placard(m_position, m_rotation);
+
+	m_color[0] = 1.f;
+	m_color[1] = 1.f;
+	m_color[2] = 1.f;
 
 	return true;
 }
@@ -275,8 +279,8 @@ void Car::draw(const mat3& projection)
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	float color[3] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, color);
+	//float color[3] = { 1.f, 1.f, 1.f };
+	glUniform3fv(color_uloc, 1, m_color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	// Drawing!
@@ -788,6 +792,7 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 
 void Car::change_color() {
 	printf("change color\n");
-	vertices[0].position.x = 15.f;
-	vertices[0].texcoord.x = 15.f;
+	m_color[0] = 0.f;
+	m_color[1] = 0.f;
+	m_color[2] = 0.f;
 }
