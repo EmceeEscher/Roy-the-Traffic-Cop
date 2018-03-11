@@ -17,8 +17,6 @@ TexturedVertex vertices[12];
 
 uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
 
-float attacker_color[] = { 0.f, 0.f, 0.f };
-
 bool Car::init(bool isVillain)
 {
 	// Load shared texture
@@ -734,7 +732,6 @@ rect_bounding_box Car::get_bounding_box() {
 
 float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
 	float tArea = (abs((p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y))) / 2.0f;
-	//float tArea = abs(p0.x*p1.y + p1.x*p2.y + p2.x*p0.y - p0.x*p2.y - p2.x*p1.y - p1.x*p0.y) / 2.0f;
 	return tArea;
 }
 
@@ -760,23 +757,12 @@ bool Car::check_collision(vec2 test_vertex) {
 }
 
 bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
-	/*bool implicitBottom = check_implicit(t.a, t.b, test_vertex);
-	bool implicitRight = check_implicit(t.b, t.c, test_vertex);
-	bool implicitLeft = check_implicit(t.a, t.c, test_vertex);
-
-	return (implicitBottom && implicitRight && implicitLeft);*/
-
-	//since second car got crashed into, check its triangles first
-	//p is the point which we are testing against. IE the tip of first_car's colliding triangle
 
 	float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
 
 	float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
-	//printf("collisionArea1 %f ", collisionArea1);
 	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
-	//printf("collisionArea2 %f ", collisionArea2);
 	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
-	//printf("collisionArea3 %f\n", collisionArea3);
 	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
 	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
 	return (abs(collisionSum - tArea) <= 0.1f);

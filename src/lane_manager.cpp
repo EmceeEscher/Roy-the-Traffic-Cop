@@ -183,7 +183,7 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
 		if (victim_car->check_mesh_collision(impact_vertex, t)) {
 			printf("triangle %i hit\n", counter);
-		//	DEBUG
+		//	DEBUG to use Sleep, you need to include <windows.h> 
 		//	Sleep(1000);
 			return counter;
 		}
