@@ -2,7 +2,7 @@
 #include "car.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
-#include <time.h>
+#include <random>
 
 // stlib
 #include <vector>
@@ -29,13 +29,16 @@ bool Car::init(bool isVillain)
 	srand(time(NULL));
 	//car_tex_x0 = 2;
 
-	car_tex_x0 = rand() % 8;  //and comment this line.
-	/*if (isVillain) {
-		car_tex_x0 = 0;
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_int_distribution<> dis(1, 7);
+
+	if (isVillain) {
+		car_tex_x0 = 0; //villains are red
 	}
 	else {
-		car_tex_x0 = rand() % 7 + 1;
-	}*/
+		car_tex_x0 = dis(gen); //other cars are a random texture.
+	}
 
 	// The position (0,0) corresponds to the center of the texture
 	float car_width_uv = 99.9 / car_texture.width; //0.125 = width of a full car
