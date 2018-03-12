@@ -23,7 +23,8 @@ namespace
 	}
 }
 
-World::World()
+World::World() :
+	m_points(0)
 {
 	// Seeding rng with random device
 	m_rng = std::default_random_engine(std::random_device()());
@@ -149,20 +150,8 @@ bool World::update(float elapsed_ms)
 
 	m_game_timer.advance_time(elapsed_ms / 10000);
 	m_game_timer.get_current_time();
-
-	// TODO: Maybe have to update traffic cop here? OR potentially we just have to set the rotation.
 	m_lane_manager.update(elapsed_ms);
-	//TODO: make this work for other cars.
-	 //With init_vel=15.f, acc=3.f, call slow down 160.f away from target
-	//if ( m_car.is_approaching_stop(lanes[1]) && m_car.get_acc().x > 0.f)
-	//{
-	//	m_car.slow_down();
-	//}
-	//m_car.update(elapsed_ms);
-	if (m_car.get_position().x > OFF_SCREEN) {
-		// TODO: why does this make the car huge?
-		//m_car.destroy();
-	}
+	m_points = m_lane_manager.points();
 	return true;
 }
 
