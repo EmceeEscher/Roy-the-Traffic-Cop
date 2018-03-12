@@ -41,7 +41,6 @@ bool Car::init(bool isVillain)
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
 	float full_car_offset = 0.125 * car_tex_x0;
-	printf("%f", full_car_offset);
 
 	TexturedVertex vertices[13];
 	vertices[0].position = { -m_wr, - 18.00000f,0.f };
