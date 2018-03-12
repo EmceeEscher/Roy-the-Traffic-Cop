@@ -244,7 +244,17 @@ void Car::update(float ms)
 		//TODO WHAT HAPPENS WHEN THE CAR HAS BEEN IN A COLLISION
 		//The car has been in a collision
 		else {
-			spinout();
+			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
+				m_velocity.x += m_acceleration.x;
+				m_velocity.y += m_acceleration.y;
+			} else {
+				m_velocity.x = 0.f;
+				m_velocity.y = 0.f;
+			}
+
+			vec2 m_displacement = {m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+			move(m_displacement);
+			//spinout();
 		}
 	}
 }
@@ -790,9 +800,66 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 	float result = A * Ptest.x + B * Ptest.y + C;
 	return result >= 0.f;
 }
-void Car::collided() {
-	m_hit = true;
+
+void Car::collided(int hit_triangle) {
+	if (!m_hit) {
+		m_hit = true;
+		float speed_scale = -m_max_speed;
+		float acc_scale = ACC;
+		vec2 new_dir = get_collision_direction(hit_triangle);
+		m_velocity = {new_dir.x * speed_scale, new_dir.y * speed_scale};
+		m_acceleration = {new_dir.x * -acc_scale, new_dir.y * acc_scale};
+		printf("car class gets: %d triangle\n", hit_triangle);
+	}
 }
+
+vec2 Car::get_collision_direction(int hit_triangle) {
+	vec2 velocity_dir;
+	// 0.866f roughly equals sqrt(3) / 2, can't use sqrt cuz it's a double, not float
+	switch(hit_triangle) {
+		case 0:
+			velocity_dir = {1.f, 0.f}; // to the right
+			break;
+		case 1:
+			velocity_dir = {0.866f, 0.5f}; //bottom right
+			break;
+		case 2:
+			velocity_dir = {0.866f, -0.5f}; //top right
+			break;
+		case 3:
+			velocity_dir = {0.5f, -0.866f}; //slightly top right
+			break;
+		case 4:
+			velocity_dir = {0.5f, 0.866f}; //slightly bottom right
+			break;
+		case 5:
+			velocity_dir = {-0.5f, -0.866f}; //slightly top left
+			break;
+		case 6:
+			velocity_dir = {-0.5f, 0.866f}; //slightly bottom left
+			break;
+		case 7:
+			velocity_dir = {-0.866f, 0.5f}; //bottom left
+			break;
+		case 8:
+			velocity_dir = {-0.866f, -0.5f}; //top left
+			break;
+		case 9:
+			velocity_dir = {-1.f, 0.f}; //to the left
+			break;
+		default:
+			velocity_dir = {0.f, 0.f}; //attacker car, don't move
+			break;
+	}
+
+	vec2 rotated_vel = {
+		(velocity_dir.x * cos(m_rotation) + velocity_dir.y * -sin(m_rotation)),
+		(velocity_dir.x * sin(m_rotation) + velocity_dir.y * cos(m_rotation))
+	};
+
+	return rotated_vel;
+}
+
 void Car::spinout() {
 	if (m_velocity.x > 0) {
 		m_velocity.x -= 0.5f;

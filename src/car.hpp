@@ -140,7 +140,13 @@ public:
 	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
 
-	void collided();
+	// gets called when a car gets in a collision in the intersection. The parameter
+	// is which triangle in the mesh got hit if the car is the victim, -1 if this car is the attacker
+	void collided(int hit_triangle);
+
+	// returns the direction that the car should move after getting in a collision
+	// based on which triangle in the mesh got hit
+	vec2 get_collision_direction(int hit_triangle);
 
 	void spinout();
 
