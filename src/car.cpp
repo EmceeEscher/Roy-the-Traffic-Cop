@@ -186,7 +186,7 @@ void Car::update(float ms)
 			if (t >= 0.f && t <= 1.f)
 			{
 				turn(t);
-				t += 0.005f;
+				t += 0.01f;
 				update_rotation_on_turn(t);
 				//printf("%f", t);
 			}
@@ -196,21 +196,25 @@ void Car::update(float ms)
 					m_turned = true;
 					if (m_desired_direction == direction::EAST) {
 						m_velocity.y = 0.f;
+						m_velocity.x = 0.8f * m_max_speed;
 						m_acceleration.x = ACC;
 						m_acceleration.y = 0.f;
 					}
 					else if (m_desired_direction == direction::WEST) {
 						m_velocity.y = 0.f;
+						m_velocity.x = -0.8f * m_max_speed;
 						m_acceleration.x = -ACC;
 						m_acceleration.y = 0.f;
 					}
 					else if (m_desired_direction == direction::NORTH) {
 						m_velocity.x = 0.f;
+						m_velocity.y = -0.8f * m_max_speed;
 						m_acceleration.x = 0.f;
 						m_acceleration.y = -ACC;
 					}
 					else if (m_desired_direction == direction::SOUTH) {
 						m_velocity.x = 0.f;
+						m_velocity.y = 0.8f * m_max_speed;
 						m_acceleration.x = 0.f;
 						m_acceleration.y = ACC;
 					}
@@ -749,8 +753,8 @@ void Car::collided() {
 }
 void Car::spinout() {
 	if (m_velocity.x > 0) {
-		m_velocity.x -= 0.1;
-		t += m_velocity.x * 0.02;
+		m_velocity.x -= 0.5f;
+		t += m_velocity.x * 0.01f;
 		update_rotation_on_turn(t);
 	}
 }
