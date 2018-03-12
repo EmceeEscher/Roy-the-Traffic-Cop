@@ -12,7 +12,7 @@
 class LaneManager
 {
 public:
-		const float VillainSpawnProbability = 0.5; // We may want to make this level dependent in the future. Revise when levels are added.
+		const float VillainSpawnProbability = 0.25; // We may want to make this level dependent in the future. Revise when levels are added.
 
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
