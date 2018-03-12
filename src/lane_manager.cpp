@@ -66,6 +66,8 @@ bool LaneManager::intersection_collision_check() {
 			if (first_car->check_collision(second_bb.bottom_left)) {
 				collision_occurring = true;
 				if (mesh_collision_check(second_car, first_car, second_bb.bottom_left) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("first car getting hit by second bottom left\n");
 				}
 				//DEBUG
@@ -76,6 +78,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (first_car->check_collision(second_bb.bottom_right)) {
 				collision_occurring = true;
 				if (mesh_collision_check(second_car, first_car, second_bb.bottom_right) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("first car getting hit by second bottom right\n");
 				}
 				//first_car->change_color();
@@ -83,6 +87,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (first_car->check_collision(second_bb.top_left)) {
 				collision_occurring = true;
 				if (mesh_collision_check(second_car, first_car, second_bb.top_left) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("first car getting hit by second top left\n");
 				}
 				//first_car->change_color();
@@ -90,6 +96,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (first_car->check_collision(second_bb.top_right)) {
 				collision_occurring = true;
 				if (mesh_collision_check(second_car, first_car, second_bb.top_right) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("first car getting hit by second top right\n");
 				}
 				//first_car->change_color();
@@ -98,6 +106,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (second_car->check_collision(first_bb.bottom_left)) {
 				collision_occurring = true;
 				if (mesh_collision_check(first_car, second_car, first_bb.bottom_left) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("second car getting hit by first bottom left\n");
 				}
 				//first_car->change_color();
@@ -105,6 +115,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (second_car->check_collision(first_bb.bottom_right)) {
 				collision_occurring = true;
 				if (mesh_collision_check(first_car, second_car, first_bb.bottom_right) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("second car getting hit by first bottom right\n");
 				}
 				//first_car->change_color();
@@ -112,6 +124,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (second_car->check_collision(first_bb.top_right)) {
 				collision_occurring = true;
 				if (mesh_collision_check(first_car, second_car, first_bb.top_right)) {
+					first_car->collided();
+					second_car->collided();
 					printf("second car getting hit by first top right\n");
 				}
 				//first_car->change_color();
@@ -119,6 +133,8 @@ bool LaneManager::intersection_collision_check() {
 			else if (second_car->check_collision(first_bb.top_left)) {
 				collision_occurring = true;
 				if (mesh_collision_check(first_car, second_car, first_bb.top_left) != -1) {
+					first_car->collided();
+					second_car->collided();
 					printf("second car getting hit by first top left\n");
 				}
 				//first_car->change_color();
