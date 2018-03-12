@@ -155,47 +155,63 @@ bool LaneManager::intersection_collision_check() {
 
 int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
 
-	Car::Triangle triangles[10];
+	Car::Triangle triangles[14];
 
 	triangles[0].a = victim_car->get_vertex_pos(0);
 	triangles[0].b = victim_car->get_vertex_pos(1);
 	triangles[0].c = victim_car->get_vertex_pos(2);
 
 	triangles[1].a = victim_car->get_vertex_pos(1);
-	triangles[1].b = victim_car->get_vertex_pos(2);
-	triangles[1].c = victim_car->get_vertex_pos(3);
+	triangles[1].b = victim_car->get_vertex_pos(3);
+	triangles[1].c = victim_car->get_vertex_pos(2);
 
 	triangles[2].a = victim_car->get_vertex_pos(0);
-	triangles[2].b = victim_car->get_vertex_pos(1);
-	triangles[2].c = victim_car->get_vertex_pos(4);
+	triangles[2].b = victim_car->get_vertex_pos(4);
+	triangles[2].c = victim_car->get_vertex_pos(1);
 
-	triangles[3].a = victim_car->get_vertex_pos(3);
-	triangles[3].b = victim_car->get_vertex_pos(4);
-	triangles[3].c = victim_car->get_vertex_pos(5);
+	triangles[3].a = victim_car->get_vertex_pos(1);
+	triangles[3].b = victim_car->get_vertex_pos(10);
+	triangles[3].c = victim_car->get_vertex_pos(3);
 
 	triangles[4].a = victim_car->get_vertex_pos(3);
-	triangles[4].b = victim_car->get_vertex_pos(5);
-	triangles[4].c = victim_car->get_vertex_pos(6);
+	triangles[4].b = victim_car->get_vertex_pos(10);
+	triangles[4].c = victim_car->get_vertex_pos(12);
 
-	triangles[5].a = victim_car->get_vertex_pos(5);
-	triangles[5].b = victim_car->get_vertex_pos(6);
-	triangles[5].c = victim_car->get_vertex_pos(7);
+	triangles[5].a = victim_car->get_vertex_pos(1);
+	triangles[5].b = victim_car->get_vertex_pos(4);
+	triangles[5].c = victim_car->get_vertex_pos(10);
 
-	triangles[6].a = victim_car->get_vertex_pos(6);
-	triangles[6].b = victim_car->get_vertex_pos(7);
-	triangles[6].c = victim_car->get_vertex_pos(8);
+	triangles[6].a = victim_car->get_vertex_pos(4);
+	triangles[6].b = victim_car->get_vertex_pos(11);
+	triangles[6].c = victim_car->get_vertex_pos(10);
 
-	triangles[7].a = victim_car->get_vertex_pos(8);
-	triangles[7].b = victim_car->get_vertex_pos(9);
+	triangles[7].a = victim_car->get_vertex_pos(5);
+	triangles[7].b = victim_car->get_vertex_pos(12);
 	triangles[7].c = victim_car->get_vertex_pos(10);
 
-	triangles[8].a = victim_car->get_vertex_pos(7);
-	triangles[8].b = victim_car->get_vertex_pos(9);
-	triangles[8].c = victim_car->get_vertex_pos(11);
+	triangles[8].a = victim_car->get_vertex_pos(10);
+	triangles[8].b = victim_car->get_vertex_pos(6);
+	triangles[8].c = victim_car->get_vertex_pos(5);
 
-	triangles[9].a = victim_car->get_vertex_pos(9);
-	triangles[9].b = victim_car->get_vertex_pos(10);
-	triangles[9].c = victim_car->get_vertex_pos(11);
+	triangles[9].a = victim_car->get_vertex_pos(11);
+	triangles[9].b = victim_car->get_vertex_pos(9);
+	triangles[9].c = victim_car->get_vertex_pos(10);
+
+	triangles[10].a = victim_car->get_vertex_pos(10);
+	triangles[10].b = victim_car->get_vertex_pos(9);
+	triangles[10].c = victim_car->get_vertex_pos(6);
+
+	triangles[11].a = victim_car->get_vertex_pos(5);
+	triangles[11].b = victim_car->get_vertex_pos(6);
+	triangles[11].c = victim_car->get_vertex_pos(7);
+
+	triangles[12].a = victim_car->get_vertex_pos(6);
+	triangles[12].b = victim_car->get_vertex_pos(8);
+	triangles[12].c = victim_car->get_vertex_pos(7);
+
+	triangles[13].a = victim_car->get_vertex_pos(6);
+	triangles[13].b = victim_car->get_vertex_pos(9);
+	triangles[13].c = victim_car->get_vertex_pos(8);
 
 	// Determine victim_car's triangle coordinates
 	// Determine which corner of first_car bounding box hit second_car bounding box

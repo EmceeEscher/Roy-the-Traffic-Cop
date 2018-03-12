@@ -13,7 +13,7 @@
 
 Texture Car::car_texture;
 
-TexturedVertex car_vertices[12];
+TexturedVertex car_vertices[13];
 
 uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
 
@@ -31,8 +31,6 @@ bool Car::init(bool isVillain)
 
 	//uncomment below if you want villain to be red cars;
 	srand(time(NULL));
-	//car_tex_x0 = 2;
-
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> dis(1, 7);
@@ -43,53 +41,66 @@ bool Car::init(bool isVillain)
 	else {
 		car_tex_x0 = dis(gen); //other cars are a random texture.
 	}
-
 	// The position (0,0) corresponds to the center of the texture
-	float car_width_uv = 99.9 / car_texture.width; //0.125 = width of a full car
-	float full_car_offset = car_width_uv * car_tex_x0;
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
 	m_hr = car_texture.height * 0.5;
+	float full_car_offset = 0.125 * car_tex_x0;
 
-	//bottom left
-	car_vertices[0].position = { -m_wr, m_hr,0.f };
-	car_vertices[0].texcoord = { full_car_offset, 0.f };
-	//left middle
-	car_vertices[1].position = { -m_wr/2,0.00f,0.f };
-	car_vertices[1].texcoord = { 0.031250f + full_car_offset, 0.500000f };
-	//top left
-	car_vertices[2].position = { -m_wr,-m_hr,0.f };
-	car_vertices[2].texcoord = { full_car_offset, 1.f };
-	//left top middle
-	car_vertices[3].position = { -m_wr/2,-m_hr,0.f };
-	car_vertices[3].texcoord = { 0.031250f + full_car_offset , 1.f };
-	//left bottom middle
-	car_vertices[4].position = { -m_wr/2, m_hr,0.f };
-	car_vertices[4].texcoord = { 0.031250f + full_car_offset, 0.f };
-	//direct bottom
-	car_vertices[5].position = { 0.f, m_hr,0.f };
-	car_vertices[5].texcoord = { 0.062500f + full_car_offset, 0.f };
-	//direct top
-	car_vertices[6].position = { 0.f, -m_hr,0.f };
-	car_vertices[6].texcoord = { 0.062500f + full_car_offset, 1.f };
-	//right bottom middle
-	car_vertices[7].position = { m_wr/2,  m_hr,0.f };
-	car_vertices[7].texcoord = { 0.093750f + full_car_offset, 0.f };
-	//right top middle
-	car_vertices[8].position = { m_wr/2,  -m_hr,0.f };
-	car_vertices[8].texcoord = { 0.093750f + full_car_offset, 1.f };
-	//right middle
-	car_vertices[9].position = { m_wr/2, 0.00f,0.f };
-	car_vertices[9].texcoord = { 0.093750f + full_car_offset, 0.500000f };
-	//top right
-	car_vertices[10].position = { m_wr, -m_hr,0.f };
-	car_vertices[10].texcoord = { 0.125000f + full_car_offset, 1.f };
-	//bottom right
-	car_vertices[11].position = { m_wr, m_hr,0.f };
-	car_vertices[11].texcoord = { 0.125000f + full_car_offset, 0.f };
+	//TexturedVertex vertices[13];
+	car_vertices[0].position = { -m_wr, - 18.00000f,0.f };
+	car_vertices[0].texcoord = { 0.000112f + full_car_offset, 0.140812f };
 
-	uint16_t indices[] = {0,1,2,3,2,1,4,1,0,5,3,4,3,5,6,5,7,6,6,7,8,8,9,10,10,9,11,11,9,7};
+	car_vertices[1].position = { -0.6f*m_wr, 0.000000f ,0.f };
+	car_vertices[1].texcoord = { 0.025310f + full_car_offset, 0.499466f };
 
+	car_vertices[2].position = { -m_wr, 18.00000f ,0.f };
+	car_vertices[2].texcoord = { 0.000112f + full_car_offset, 0.858120f };
 
+	car_vertices[3].position = { -0.6f*m_wr, 22.00000f ,0.f };
+	car_vertices[3].texcoord = { 0.025310f + full_car_offset, 0.942415f};
+
+	car_vertices[4].position = { -0.6f*m_wr, - 22.00000f ,0.f };
+	car_vertices[4].texcoord = { 0.025310f + full_car_offset, 0.056517f };
+
+	car_vertices[5].position = { 0.76f*m_wr, 22.00000f ,0.f };
+	car_vertices[5].texcoord = { 0.109941f + full_car_offset, 0.928707f };
+
+	car_vertices[6].position = { 0.76f*m_wr, 0.000000f ,0.f };
+	car_vertices[6].texcoord = { 0.110067f + full_car_offset, 0.499466f };
+
+	car_vertices[7].position = { m_wr, 12.50000f ,0.f };
+	car_vertices[7].texcoord = { 0.124801f + full_car_offset, 0.751568f };
+
+	car_vertices[8].position = { m_wr, - 12.50000f ,0.f };
+	car_vertices[8].texcoord = { 0.124801f + full_car_offset, 0.247364f };
+
+	car_vertices[9].position = { 0.76f*m_wr, - 22.00000f,0.f };
+	car_vertices[9].texcoord = { 0.109941f + full_car_offset, 0.070225f };
+
+	car_vertices[10].position = { 0.000000f, 0.000000f,0.f };
+	car_vertices[10].texcoord = { 0.062549f + full_car_offset, 0.499466f };
+
+	car_vertices[11].position = { 0.000000f, - 21.00000f,0.f };
+	car_vertices[11].texcoord = { 0.062418f + full_car_offset, 0.080462f };
+
+	car_vertices[12].position = { 0.000000f, 21.00000f,0.f };
+	car_vertices[12].texcoord = { 0.062418f + full_car_offset, 0.918470f };
+
+	uint16_t indices[] = {
+		0,1,2,
+		3,2,1,
+		4,1,0,
+		5,6,7,
+		7,6,8,
+		8,6,9,
+		3,1,10,
+		1,4,10,
+		9,10, 11,
+		10, 4, 11,
+		12, 10, 5,
+		6, 5, 10,
+		6, 10, 9,
+		3, 10, 12 };
 
 	// Clearing errors
 	gl_flush_errors();
@@ -102,7 +113,7 @@ bool Car::init(bool isVillain)
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 30, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 42, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
@@ -307,7 +318,7 @@ void Car::draw(const mat3& projection)
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	// Drawing!
-	glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, 42, GL_UNSIGNED_SHORT, nullptr);
 }
 
 vec2 Car::get_position()const
@@ -827,25 +838,29 @@ vec2 Car::get_collision_direction(int hit_triangle) {
 			velocity_dir = {0.866f, -0.5f}; //top right
 			break;
 		case 3:
-			velocity_dir = {0.5f, -0.866f}; //slightly top right
-			break;
 		case 4:
 			velocity_dir = {0.5f, 0.866f}; //slightly bottom right
 			break;
 		case 5:
-			velocity_dir = {-0.5f, -0.866f}; //slightly top left
-			break;
 		case 6:
-			velocity_dir = {-0.5f, 0.866f}; //slightly bottom left
+			velocity_dir = {0.5f, -0.866f}; //slightly top right
 			break;
 		case 7:
-			velocity_dir = {-0.866f, 0.5f}; //bottom left
-			break;
 		case 8:
-			velocity_dir = {-0.866f, -0.5f}; //top left
+			velocity_dir = {-0.5f, 0.866f}; //slightly bottom left
 			break;
 		case 9:
+		case 10:
+			velocity_dir = {-0.5f, -0.866f}; //slightly top left
+			break;
+		case 11:
+			velocity_dir = {-0.866f, 0.5f}; //bottom left
+			break;
+		case 12:
 			velocity_dir = {-1.f, 0.f}; //to the left
+			break;
+		case 13:
+			velocity_dir = {-0.866f, -0.5f}; //top left
 			break;
 		default:
 			velocity_dir = {0.f, 0.f}; //attacker car, don't move
