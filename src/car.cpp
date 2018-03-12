@@ -754,7 +754,7 @@ void Car::collided() {
 void Car::spinout() {
 	if (m_velocity.x > 0) {
 		m_velocity.x -= 0.5f;
-		t += m_velocity.x * 0.01f;
+		t += m_velocity.x * 0.1f;
 		update_rotation_on_turn(t);
 	}
 }
