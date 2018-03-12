@@ -1,4 +1,9 @@
 #include "lane_manager.hpp"
+#include "car.hpp"
+//DEBUG
+//#include <windows.h>
+
+
 
 bool LaneManager::init(AI ai)
 {
@@ -58,28 +63,133 @@ bool LaneManager::intersection_collision_check() {
 		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
 			Car* second_car = cars_in_intersec[j];
 			rect_bounding_box second_bb = second_car->get_bounding_box();
-
-			if (first_car->check_collision(second_bb.bottom_left)
-				|| first_car->check_collision(second_bb.bottom_right)
-				|| first_car->check_collision(second_bb.top_right)
-				|| first_car->check_collision(second_bb.top_left)) {
-					collision_occurring = true;
-					printf("first_car getting hit!\n");
-					// TODO: if this happens, check triangles in mesh, then give car new velocity
+			if (first_car->check_collision(second_bb.bottom_left)) {
+				collision_occurring = true;
+				if (mesh_collision_check(second_car, first_car, second_bb.bottom_left) != -1) {
+					printf("first car getting hit by second bottom left\n");
 				}
-			else if (second_car->check_collision(first_bb.bottom_left)
-				|| second_car->check_collision(first_bb.bottom_right)
-				|| second_car->check_collision(first_bb.top_right)
-				|| second_car->check_collision(first_bb.top_left)) {
-					collision_occurring = true;
-					printf("second_car getting hit!\n");
-					// TODO: if this happens, check triangles in mesh, then give car new velocity
+				//DEBUG
+				//first_car->change_color();
+				
+				//TODO: If mesh_collision_check != -1, apply collision depending on triangle returned
+			}
+			else if (first_car->check_collision(second_bb.bottom_right)) {
+				collision_occurring = true;
+				if (mesh_collision_check(second_car, first_car, second_bb.bottom_right) != -1) {
+					printf("first car getting hit by second bottom right\n");
 				}
+				//first_car->change_color();
+			}
+			else if (first_car->check_collision(second_bb.top_left)) {
+				collision_occurring = true;
+				if (mesh_collision_check(second_car, first_car, second_bb.top_left) != -1) {
+					printf("first car getting hit by second top left\n");
+				}
+				//first_car->change_color();
+			}
+			else if (first_car->check_collision(second_bb.top_right)) {
+				collision_occurring = true;
+				if (mesh_collision_check(second_car, first_car, second_bb.top_right) != -1) {
+					printf("first car getting hit by second top right\n");
+				}
+				//first_car->change_color();
+			}
 
+			else if (second_car->check_collision(first_bb.bottom_left)) {
+				collision_occurring = true;
+				if (mesh_collision_check(first_car, second_car, first_bb.bottom_left) != -1) {
+					printf("second car getting hit by first bottom left\n");
+				}
+				//first_car->change_color();
+			}
+			else if (second_car->check_collision(first_bb.bottom_right)) {
+				collision_occurring = true;
+				if (mesh_collision_check(first_car, second_car, first_bb.bottom_right) != -1) {
+					printf("second car getting hit by first bottom right\n");
+				}
+				//first_car->change_color();
+			}
+			else if (second_car->check_collision(first_bb.top_right)) {
+				collision_occurring = true;
+				if (mesh_collision_check(first_car, second_car, first_bb.top_right)) {
+					printf("second car getting hit by first top right\n");
+				}
+				//first_car->change_color();
+			}
+			else if (second_car->check_collision(first_bb.top_left)) {
+				collision_occurring = true;
+				if (mesh_collision_check(first_car, second_car, first_bb.top_left) != -1) {
+					printf("second car getting hit by first top left\n");
+				}
+				//first_car->change_color();
+			}
 		}
 	}
 
 	return collision_occurring;
+}
+
+int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
+
+	Car::Triangle triangles[10];
+
+	triangles[0].a = victim_car->get_vertex_pos(0);
+	triangles[0].b = victim_car->get_vertex_pos(1);
+	triangles[0].c = victim_car->get_vertex_pos(2);
+
+	triangles[1].a = victim_car->get_vertex_pos(1);
+	triangles[1].b = victim_car->get_vertex_pos(2);
+	triangles[1].c = victim_car->get_vertex_pos(3);
+
+	triangles[2].a = victim_car->get_vertex_pos(0);
+	triangles[2].b = victim_car->get_vertex_pos(1);
+	triangles[2].c = victim_car->get_vertex_pos(4);
+
+	triangles[3].a = victim_car->get_vertex_pos(3);
+	triangles[3].b = victim_car->get_vertex_pos(4);
+	triangles[3].c = victim_car->get_vertex_pos(5);
+
+	triangles[4].a = victim_car->get_vertex_pos(3);
+	triangles[4].b = victim_car->get_vertex_pos(5);
+	triangles[4].c = victim_car->get_vertex_pos(6);
+
+	triangles[5].a = victim_car->get_vertex_pos(5);
+	triangles[5].b = victim_car->get_vertex_pos(6);
+	triangles[5].c = victim_car->get_vertex_pos(7);
+
+	triangles[6].a = victim_car->get_vertex_pos(6);
+	triangles[6].b = victim_car->get_vertex_pos(7);
+	triangles[6].c = victim_car->get_vertex_pos(8);
+
+	triangles[7].a = victim_car->get_vertex_pos(8);
+	triangles[7].b = victim_car->get_vertex_pos(9);
+	triangles[7].c = victim_car->get_vertex_pos(10);
+
+	triangles[8].a = victim_car->get_vertex_pos(7);
+	triangles[8].b = victim_car->get_vertex_pos(9);
+	triangles[8].c = victim_car->get_vertex_pos(11);
+
+	triangles[9].a = victim_car->get_vertex_pos(9);
+	triangles[9].b = victim_car->get_vertex_pos(10);
+	triangles[9].c = victim_car->get_vertex_pos(11);
+
+	// Determine victim_car's triangle coordinates
+	// Determine which corner of first_car bounding box hit second_car bounding box
+	// For each triangle, check if impact corner is inside
+	// TODO: Depending on which triangle gets hit first, call different collision responses on victim_car
+
+	int counter = 0;
+	for (Car::Triangle t : triangles) {
+		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(triangles[3].a, triangles[3].b, triangles[3].c), impact_vertex.x, impact_vertex.y);
+		if (victim_car->check_mesh_collision(impact_vertex, t)) {
+			printf("triangle %i hit\n", counter);
+		//	DEBUG to use Sleep, you need to include <windows.h> 
+		//	Sleep(1000);
+			return counter;
+		}
+		counter++;
+	}
+	return -1;
 }
 
 void LaneManager::add_car()

@@ -15,7 +15,14 @@ using std::string;
 class Car : public Renderable
 {
 	static Texture car_texture;
+
 public:
+
+	TexturedVertex vertices[12]; //Vertices of triangles in Car mesh
+	struct Triangle {
+		vec2 a, b, c;
+	};
+
 
 	// Creates all the associated render resources and default transform
 	bool init(bool isVillain);
@@ -35,6 +42,12 @@ public:
 
 	// Returns whether the car is a villain
 	bool is_villain()const;
+
+	uint16_t get_index(int index);
+
+	float get_triangle_area(vec2 p1, vec2 p2, vec2 p3);
+
+	vec2 get_vertex_pos(int index);
 
 	// Returns the desired direction of car
 	direction get_desired_direction()const;
@@ -122,10 +135,15 @@ public:
 	// returns true if the given test_vertex is inside the car's bounding box
 	bool check_collision(vec2 test_vertex);
 
+	bool check_mesh_collision(vec2 test_vertex, Triangle t);
+
 	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
 
+	void change_color();
+
 private:
+	float m_color[3];
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians

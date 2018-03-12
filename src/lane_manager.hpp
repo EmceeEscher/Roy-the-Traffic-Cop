@@ -14,6 +14,7 @@ class LaneManager
 public:
 		const float VillainSpawnProbability = 0.5; // We may want to make this level dependent in the future. Revise when levels are added.
 
+
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
     bool init(AI ai);
@@ -44,6 +45,9 @@ public:
 
 		// Will return true if any cars in the process of turning are colliding
 		bool intersection_collision_check();
+
+		// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
+		int mesh_collision_check(Car* first_car, Car* second_car, vec2 first_car_bb);
 
 
 private:
