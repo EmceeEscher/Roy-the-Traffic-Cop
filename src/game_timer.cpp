@@ -2,7 +2,7 @@
 #include "game_timer.hpp"
 
 Texture GameTimer::calendar_tex;
-TexturedVertex2 vertices[96];
+TexturedVertex2 timer_vertices[96];
 
 float uv;
 float i_w;
@@ -50,247 +50,247 @@ bool GameTimer::init()
 	i_w = calendar_tex.width / 10.f; //individual number width
 	s_p = -600.f; //starting position
 	float hr = calendar_tex.height * 0.5 ;
-	
-	//date digit 0 top -- new 
-	vertices[0].position = { s_p + i_w	    , 0  , 0.f };
-	vertices[1].position = { s_p + 2 * i_w  , 0  , 0.f };
-	vertices[2].position = { s_p + 2 * i_w	, -hr, 0.f };
-	vertices[3].position = { s_p + i_w		, -hr, 0.f };
-	vertices[0].texcoord = { uv * 0.f, 0.5  , 0.1f };
-	vertices[1].texcoord = { uv * 1.f, 0.5  , 0.1f };
-	vertices[2].texcoord = { uv * 1.f, 0.0f , 0.1f };
-	vertices[3].texcoord = { uv * 0.f, 0.0f , 0.1f };
+
+	//date digit 0 top -- new
+	timer_vertices[0].position = { s_p + i_w	    , 0  , 0.f };
+	timer_vertices[1].position = { s_p + 2 * i_w  , 0  , 0.f };
+	timer_vertices[2].position = { s_p + 2 * i_w	, -hr, 0.f };
+	timer_vertices[3].position = { s_p + i_w		, -hr, 0.f };
+	timer_vertices[0].texcoord = { uv * 0.f, 0.5  , 0.1f };
+	timer_vertices[1].texcoord = { uv * 1.f, 0.5  , 0.1f };
+	timer_vertices[2].texcoord = { uv * 1.f, 0.0f , 0.1f };
+	timer_vertices[3].texcoord = { uv * 0.f, 0.0f , 0.1f };
 
 	//date digit 0 bottom -- old
-	vertices[4].position = {s_p + i_w		, +hr, 0.f };
-	vertices[5].position = {s_p + 2 * i_w   , +hr, 0.f };
-	vertices[6].position = {s_p + 2 * i_w	, 0, 0.f };
-	vertices[7].position = {s_p + i_w		, 0, 0.f };
-	vertices[4].texcoord = { uv * 0.f, 1.0f,  0.11f };
-	vertices[5].texcoord = { uv * 1.f, 1.0f,  0.11f };
-	vertices[6].texcoord = { uv * 1.f, 0.5f, 0.11f };
-	vertices[7].texcoord = { uv * 0.f, 0.5f,  0.11f };
+	timer_vertices[4].position = {s_p + i_w		, +hr, 0.f };
+	timer_vertices[5].position = {s_p + 2 * i_w   , +hr, 0.f };
+	timer_vertices[6].position = {s_p + 2 * i_w	, 0, 0.f };
+	timer_vertices[7].position = {s_p + i_w		, 0, 0.f };
+	timer_vertices[4].texcoord = { uv * 0.f, 1.0f,  0.11f };
+	timer_vertices[5].texcoord = { uv * 1.f, 1.0f,  0.11f };
+	timer_vertices[6].texcoord = { uv * 1.f, 0.5f, 0.11f };
+	timer_vertices[7].texcoord = { uv * 0.f, 0.5f,  0.11f };
 
 	//date display for date digit 0 -- rotating
-	vertices[8 ].position = { s_p + i_w		 , +hr, 0.1f };
-	vertices[9 ].position = { s_p + 2 * i_w  , +hr, 0.1f };
-	vertices[10].position = { s_p + 2 * i_w	 , -hr, 0.1f };
-	vertices[11].position = { s_p + i_w		 , -hr, 0.1f };
-	vertices[8 ].texcoord = { uv * 0, 1.0f, 1.0f };
-	vertices[9 ].texcoord = { uv * 1, 1.0f, 1.0f };
-	vertices[10].texcoord = { uv * 1, 0.0f, 1.0f };
-	vertices[11].texcoord = { uv * 0, 0.0f, 1.0f };
+	timer_vertices[8 ].position = { s_p + i_w		 , +hr, 0.1f };
+	timer_vertices[9 ].position = { s_p + 2 * i_w  , +hr, 0.1f };
+	timer_vertices[10].position = { s_p + 2 * i_w	 , -hr, 0.1f };
+	timer_vertices[11].position = { s_p + i_w		 , -hr, 0.1f };
+	timer_vertices[8 ].texcoord = { uv * 0, 1.0f, 1.0f };
+	timer_vertices[9 ].texcoord = { uv * 1, 1.0f, 1.0f };
+	timer_vertices[10].texcoord = { uv * 1, 0.0f, 1.0f };
+	timer_vertices[11].texcoord = { uv * 0, 0.0f, 1.0f };
 
 
-	//date digit 1 top -- new 
-	vertices[12].position = { s_p      , 0  , 0.f };
-	vertices[13].position = { s_p + i_w, 0  , 0.f };
-	vertices[14].position = { s_p + i_w, -hr, 0.f };
-	vertices[15].position = { s_p      , -hr, 0.f };
-	vertices[12].texcoord = { uv  * 0.f, 0.5f, 0.2f };
-	vertices[13].texcoord = { uv  * 1.f, 0.5f, 0.2f };
-	vertices[14].texcoord = { uv  * 1.f, 0.0f, 0.2f };
-	vertices[15].texcoord = { uv  * 0.f, 0.0f, 0.2f };
+	//date digit 1 top -- new
+	timer_vertices[12].position = { s_p      , 0  , 0.f };
+	timer_vertices[13].position = { s_p + i_w, 0  , 0.f };
+	timer_vertices[14].position = { s_p + i_w, -hr, 0.f };
+	timer_vertices[15].position = { s_p      , -hr, 0.f };
+	timer_vertices[12].texcoord = { uv  * 0.f, 0.5f, 0.2f };
+	timer_vertices[13].texcoord = { uv  * 1.f, 0.5f, 0.2f };
+	timer_vertices[14].texcoord = { uv  * 1.f, 0.0f, 0.2f };
+	timer_vertices[15].texcoord = { uv  * 0.f, 0.0f, 0.2f };
 
 	//date digit 1 bottom -- old
-	vertices[16].position = { s_p      , +hr , 0.f };
-	vertices[17].position = { s_p + i_w, +hr , 0.f };
-	vertices[18].position = { s_p + i_w, 0	 , 0.f };
-	vertices[19].position = { s_p      , 0	 , 0.f };
-	vertices[16].texcoord = { uv  * 0.f, 1.0f, 0.22f };
-	vertices[17].texcoord = { uv  * 1.f, 1.0f, 0.22f };
-	vertices[18].texcoord = { uv  * 1.f, 0.5f, 0.22f };
-	vertices[19].texcoord = { uv  * 0.f, 0.5f, 0.22f };
+	timer_vertices[16].position = { s_p      , +hr , 0.f };
+	timer_vertices[17].position = { s_p + i_w, +hr , 0.f };
+	timer_vertices[18].position = { s_p + i_w, 0	 , 0.f };
+	timer_vertices[19].position = { s_p      , 0	 , 0.f };
+	timer_vertices[16].texcoord = { uv  * 0.f, 1.0f, 0.22f };
+	timer_vertices[17].texcoord = { uv  * 1.f, 1.0f, 0.22f };
+	timer_vertices[18].texcoord = { uv  * 1.f, 0.5f, 0.22f };
+	timer_vertices[19].texcoord = { uv  * 0.f, 0.5f, 0.22f };
 
 	//date display for date digit 1 -- rotating
-	vertices[20].position = {s_p 	, +hr, 0.2f };
-	vertices[21].position = {s_p + i_w , +hr, 0.2f };
-	vertices[22].position = {s_p + i_w	, -hr, 0.2f };
-	vertices[23].position = {s_p	, -hr, 0.2f };
-	vertices[20].texcoord = { uv * 0, 1.0f, 2.0f };
-	vertices[21].texcoord = { uv * 1, 1.0f, 2.0f };
-	vertices[22].texcoord = { uv * 1, 0.0f, 2.0f };
-	vertices[23].texcoord = { uv * 0, 0.0f, 2.0f };
+	timer_vertices[20].position = {s_p 	, +hr, 0.2f };
+	timer_vertices[21].position = {s_p + i_w , +hr, 0.2f };
+	timer_vertices[22].position = {s_p + i_w	, -hr, 0.2f };
+	timer_vertices[23].position = {s_p	, -hr, 0.2f };
+	timer_vertices[20].texcoord = { uv * 0, 1.0f, 2.0f };
+	timer_vertices[21].texcoord = { uv * 1, 1.0f, 2.0f };
+	timer_vertices[22].texcoord = { uv * 1, 0.0f, 2.0f };
+	timer_vertices[23].texcoord = { uv * 0, 0.0f, 2.0f };
 
-	//month digit 0 top -- new 
-	vertices[24].position = { s_p + 3.5f * i_w	, 0  , 0.f };
-	vertices[25].position = { s_p + 4.5f * i_w , 0  , 0.f };
-	vertices[26].position = { s_p + 4.5f * i_w	, -hr, 0.f };
-	vertices[27].position = { s_p + 3.5f * i_w	, -hr, 0.f };
-	vertices[24].texcoord = { uv * 0.f, 0.5  , 0.3f };
-	vertices[25].texcoord = { uv * 1.f, 0.5  , 0.3f };
-	vertices[26].texcoord = { uv * 1.f, 0.0f , 0.3f };
-	vertices[27].texcoord = { uv * 0.f, 0.0f , 0.3f };
+	//month digit 0 top -- new
+	timer_vertices[24].position = { s_p + 3.5f * i_w	, 0  , 0.f };
+	timer_vertices[25].position = { s_p + 4.5f * i_w , 0  , 0.f };
+	timer_vertices[26].position = { s_p + 4.5f * i_w	, -hr, 0.f };
+	timer_vertices[27].position = { s_p + 3.5f * i_w	, -hr, 0.f };
+	timer_vertices[24].texcoord = { uv * 0.f, 0.5  , 0.3f };
+	timer_vertices[25].texcoord = { uv * 1.f, 0.5  , 0.3f };
+	timer_vertices[26].texcoord = { uv * 1.f, 0.0f , 0.3f };
+	timer_vertices[27].texcoord = { uv * 0.f, 0.0f , 0.3f };
 
 	//month digit 0 bottom -- old
-	vertices[28].position = { s_p + 3.5f * i_w	, +hr, 0.f };
-	vertices[29].position = { s_p + 4.5f * i_w , +hr, 0.f };
-	vertices[30].position = { s_p + 4.5f * i_w	, 0, 0.f };
-	vertices[31].position = { s_p + 3.5f * i_w	, 0, 0.f };
-	vertices[28].texcoord = { uv * 0.f, 1.0f,  0.33f };
-	vertices[29].texcoord = { uv * 1.f, 1.0f,  0.33f };
-	vertices[30].texcoord = { uv * 1.f, 0.5f,  0.33f };
-	vertices[31].texcoord = { uv * 0.f, 0.5f,  0.33f };
+	timer_vertices[28].position = { s_p + 3.5f * i_w	, +hr, 0.f };
+	timer_vertices[29].position = { s_p + 4.5f * i_w , +hr, 0.f };
+	timer_vertices[30].position = { s_p + 4.5f * i_w	, 0, 0.f };
+	timer_vertices[31].position = { s_p + 3.5f * i_w	, 0, 0.f };
+	timer_vertices[28].texcoord = { uv * 0.f, 1.0f,  0.33f };
+	timer_vertices[29].texcoord = { uv * 1.f, 1.0f,  0.33f };
+	timer_vertices[30].texcoord = { uv * 1.f, 0.5f,  0.33f };
+	timer_vertices[31].texcoord = { uv * 0.f, 0.5f,  0.33f };
 
 	//month display for date digit 0 -- rotating
-	vertices[32].position = { s_p + 3.5f * i_w	, +hr, 0.3f };
-	vertices[33].position = { s_p + 4.5f * i_w , +hr, 0.3f };
-	vertices[34].position = { s_p + 4.5f * i_w	, -hr, 0.3f };
-	vertices[35].position = { s_p + 3.5f * i_w	, -hr, 0.3f };
-	vertices[32].texcoord = { uv * 0, 1.0f, 3.0f };
-	vertices[33].texcoord = { uv * 1, 1.0f, 3.0f };
-	vertices[34].texcoord = { uv * 1, 0.0f, 3.0f };
-	vertices[35].texcoord = { uv * 0, 0.0f, 3.0f };
+	timer_vertices[32].position = { s_p + 3.5f * i_w	, +hr, 0.3f };
+	timer_vertices[33].position = { s_p + 4.5f * i_w , +hr, 0.3f };
+	timer_vertices[34].position = { s_p + 4.5f * i_w	, -hr, 0.3f };
+	timer_vertices[35].position = { s_p + 3.5f * i_w	, -hr, 0.3f };
+	timer_vertices[32].texcoord = { uv * 0, 1.0f, 3.0f };
+	timer_vertices[33].texcoord = { uv * 1, 1.0f, 3.0f };
+	timer_vertices[34].texcoord = { uv * 1, 0.0f, 3.0f };
+	timer_vertices[35].texcoord = { uv * 0, 0.0f, 3.0f };
 
-	//month digit 1 top -- new 
-	vertices[36].position = { s_p + 2.5f * i_w, 0  , 0.f };
-	vertices[37].position = { s_p + 3.5f * i_w, 0  , 0.f };
-	vertices[38].position = { s_p + 3.5f * i_w, -hr, 0.f };
-	vertices[39].position = { s_p + 2.5f * i_w, -hr, 0.f };
-	vertices[36].texcoord = { uv  * 0.f, 0.5f, 0.4f };
-	vertices[37].texcoord = { uv  * 1.f, 0.5f, 0.4f };
-	vertices[38].texcoord = { uv  * 1.f, 0.0f, 0.4f };
-	vertices[39].texcoord = { uv  * 0.f, 0.0f, 0.4f };
+	//month digit 1 top -- new
+	timer_vertices[36].position = { s_p + 2.5f * i_w, 0  , 0.f };
+	timer_vertices[37].position = { s_p + 3.5f * i_w, 0  , 0.f };
+	timer_vertices[38].position = { s_p + 3.5f * i_w, -hr, 0.f };
+	timer_vertices[39].position = { s_p + 2.5f * i_w, -hr, 0.f };
+	timer_vertices[36].texcoord = { uv  * 0.f, 0.5f, 0.4f };
+	timer_vertices[37].texcoord = { uv  * 1.f, 0.5f, 0.4f };
+	timer_vertices[38].texcoord = { uv  * 1.f, 0.0f, 0.4f };
+	timer_vertices[39].texcoord = { uv  * 0.f, 0.0f, 0.4f };
 
 	//month digit 1 bottom -- old
-	vertices[40].position = { s_p + 2.5f * i_w, +hr , 0.f };
-	vertices[41].position = { s_p + 3.5f * i_w, +hr , 0.f };
-	vertices[42].position = { s_p + 3.5f * i_w, 0	 , 0.f };
-	vertices[43].position = { s_p + 2.5f * i_w, 0	 , 0.f };
-	vertices[40].texcoord = { uv  * 0.f, 1.0f, 0.44f };
-	vertices[41].texcoord = { uv  * 1.f, 1.0f, 0.44f };
-	vertices[42].texcoord = { uv  * 1.f, 0.5f, 0.44f };
-	vertices[43].texcoord = { uv  * 0.f, 0.5f, 0.44f };
+	timer_vertices[40].position = { s_p + 2.5f * i_w, +hr , 0.f };
+	timer_vertices[41].position = { s_p + 3.5f * i_w, +hr , 0.f };
+	timer_vertices[42].position = { s_p + 3.5f * i_w, 0	 , 0.f };
+	timer_vertices[43].position = { s_p + 2.5f * i_w, 0	 , 0.f };
+	timer_vertices[40].texcoord = { uv  * 0.f, 1.0f, 0.44f };
+	timer_vertices[41].texcoord = { uv  * 1.f, 1.0f, 0.44f };
+	timer_vertices[42].texcoord = { uv  * 1.f, 0.5f, 0.44f };
+	timer_vertices[43].texcoord = { uv  * 0.f, 0.5f, 0.44f };
 
 	//month display for date digit 1 -- rotating
-	vertices[44].position = { s_p + 2.5f * i_w, +hr, 0.4f };
-	vertices[45].position = { s_p + 3.5f * i_w, +hr, 0.4f };
-	vertices[46].position = { s_p + 3.5f * i_w, -hr, 0.4f };
-	vertices[47].position = { s_p + 2.5f * i_w, -hr, 0.4f };
-	vertices[44].texcoord = { uv * 0, 1.0f, 4.0f };
-	vertices[45].texcoord = { uv * 1, 1.0f, 4.0f };
-	vertices[46].texcoord = { uv * 1, 0.0f, 4.0f };
-	vertices[47].texcoord = { uv * 0, 0.0f, 4.0f };
+	timer_vertices[44].position = { s_p + 2.5f * i_w, +hr, 0.4f };
+	timer_vertices[45].position = { s_p + 3.5f * i_w, +hr, 0.4f };
+	timer_vertices[46].position = { s_p + 3.5f * i_w, -hr, 0.4f };
+	timer_vertices[47].position = { s_p + 2.5f * i_w, -hr, 0.4f };
+	timer_vertices[44].texcoord = { uv * 0, 1.0f, 4.0f };
+	timer_vertices[45].texcoord = { uv * 1, 1.0f, 4.0f };
+	timer_vertices[46].texcoord = { uv * 1, 0.0f, 4.0f };
+	timer_vertices[47].texcoord = { uv * 0, 0.0f, 4.0f };
 
-	//year d0 top -- new 
-	vertices[48].position = { s_p + 8.f * i_w, 0  , 0.f };
-	vertices[49].position = { s_p + 9.f * i_w, 0  , 0.f };
-	vertices[50].position = { s_p + 9.f * i_w, -hr, 0.f };
-	vertices[51].position = { s_p + 8.f * i_w, -hr, 0.f };
-	vertices[48].texcoord = { uv  * 0.f, 0.5f, 0.5f };
-	vertices[49].texcoord = { uv  * 1.f, 0.5f, 0.5f };
-	vertices[50].texcoord = { uv  * 1.f, 0.0f, 0.5f };
-	vertices[51].texcoord = { uv  * 0.f, 0.0f, 0.5f };
+	//year d0 top -- new
+	timer_vertices[48].position = { s_p + 8.f * i_w, 0  , 0.f };
+	timer_vertices[49].position = { s_p + 9.f * i_w, 0  , 0.f };
+	timer_vertices[50].position = { s_p + 9.f * i_w, -hr, 0.f };
+	timer_vertices[51].position = { s_p + 8.f * i_w, -hr, 0.f };
+	timer_vertices[48].texcoord = { uv  * 0.f, 0.5f, 0.5f };
+	timer_vertices[49].texcoord = { uv  * 1.f, 0.5f, 0.5f };
+	timer_vertices[50].texcoord = { uv  * 1.f, 0.0f, 0.5f };
+	timer_vertices[51].texcoord = { uv  * 0.f, 0.0f, 0.5f };
 
 	//year d0 bottom -- old
-	vertices[52].position = { s_p + 8.f * i_w, +hr , 0.f };
-	vertices[53].position = { s_p + 9.f * i_w, +hr , 0.f };
-	vertices[54].position = { s_p + 9.f * i_w, 0	 , 0.f };
-	vertices[55].position = { s_p + 8.f * i_w, 0	 , 0.f };
-	vertices[52].texcoord = { uv  * 0.f, 1.0f, 0.55f };
-	vertices[53].texcoord = { uv  * 1.f, 1.0f, 0.55f };
-	vertices[54].texcoord = { uv  * 1.f, 0.5f, 0.55f };
-	vertices[55].texcoord = { uv  * 0.f, 0.5f, 0.55f };
+	timer_vertices[52].position = { s_p + 8.f * i_w, +hr , 0.f };
+	timer_vertices[53].position = { s_p + 9.f * i_w, +hr , 0.f };
+	timer_vertices[54].position = { s_p + 9.f * i_w, 0	 , 0.f };
+	timer_vertices[55].position = { s_p + 8.f * i_w, 0	 , 0.f };
+	timer_vertices[52].texcoord = { uv  * 0.f, 1.0f, 0.55f };
+	timer_vertices[53].texcoord = { uv  * 1.f, 1.0f, 0.55f };
+	timer_vertices[54].texcoord = { uv  * 1.f, 0.5f, 0.55f };
+	timer_vertices[55].texcoord = { uv  * 0.f, 0.5f, 0.55f };
 
 	//year d0 -- rotating
-	vertices[56].position = { s_p + 8.f * i_w, +hr, 0.5f };
-	vertices[57].position = { s_p + 9.f * i_w, +hr, 0.5f };
-	vertices[58].position = { s_p + 9.f * i_w, -hr, 0.5f };
-	vertices[59].position = { s_p + 8.f * i_w, -hr, 0.5f };
-	vertices[56].texcoord = { uv * 0, 1.0f, 5.0f };
-	vertices[57].texcoord = { uv * 1, 1.0f, 5.0f };
-	vertices[58].texcoord = { uv * 1, 0.0f, 5.0f };
-	vertices[59].texcoord = { uv * 0, 0.0f, 5.0f };
+	timer_vertices[56].position = { s_p + 8.f * i_w, +hr, 0.5f };
+	timer_vertices[57].position = { s_p + 9.f * i_w, +hr, 0.5f };
+	timer_vertices[58].position = { s_p + 9.f * i_w, -hr, 0.5f };
+	timer_vertices[59].position = { s_p + 8.f * i_w, -hr, 0.5f };
+	timer_vertices[56].texcoord = { uv * 0, 1.0f, 5.0f };
+	timer_vertices[57].texcoord = { uv * 1, 1.0f, 5.0f };
+	timer_vertices[58].texcoord = { uv * 1, 0.0f, 5.0f };
+	timer_vertices[59].texcoord = { uv * 0, 0.0f, 5.0f };
 
-	//year d1 top -- new 
-	vertices[60].position = { s_p + 7.f * i_w, 0  , 0.f };
-	vertices[61].position = { s_p + 8.f * i_w, 0  , 0.f };
-	vertices[62].position = { s_p + 8.f * i_w, -hr, 0.f };
-	vertices[63].position = { s_p + 7.f * i_w, -hr, 0.f };
-	vertices[60].texcoord = { uv  * 0.f, 0.5f, 0.6f };
-	vertices[61].texcoord = { uv  * 1.f, 0.5f, 0.6f };
-	vertices[62].texcoord = { uv  * 1.f, 0.0f, 0.6f };
-	vertices[63].texcoord = { uv  * 0.f, 0.0f, 0.6f };
+	//year d1 top -- new
+	timer_vertices[60].position = { s_p + 7.f * i_w, 0  , 0.f };
+	timer_vertices[61].position = { s_p + 8.f * i_w, 0  , 0.f };
+	timer_vertices[62].position = { s_p + 8.f * i_w, -hr, 0.f };
+	timer_vertices[63].position = { s_p + 7.f * i_w, -hr, 0.f };
+	timer_vertices[60].texcoord = { uv  * 0.f, 0.5f, 0.6f };
+	timer_vertices[61].texcoord = { uv  * 1.f, 0.5f, 0.6f };
+	timer_vertices[62].texcoord = { uv  * 1.f, 0.0f, 0.6f };
+	timer_vertices[63].texcoord = { uv  * 0.f, 0.0f, 0.6f };
 
 	//year d1 bottom -- old
-	vertices[64].position = { s_p + 7.f * i_w, +hr , 0.f };
-	vertices[65].position = { s_p + 8.f * i_w, +hr , 0.f };
-	vertices[66].position = { s_p + 8.f * i_w, 0	 , 0.f };
-	vertices[67].position = { s_p + 7.f * i_w, 0	 , 0.f };
-	vertices[64].texcoord = { uv  * 0.f, 1.0f, 0.66f };
-	vertices[65].texcoord = { uv  * 1.f, 1.0f, 0.66f };
-	vertices[66].texcoord = { uv  * 1.f, 0.5f, 0.66f };
-	vertices[67].texcoord = { uv  * 0.f, 0.5f, 0.66f };
+	timer_vertices[64].position = { s_p + 7.f * i_w, +hr , 0.f };
+	timer_vertices[65].position = { s_p + 8.f * i_w, +hr , 0.f };
+	timer_vertices[66].position = { s_p + 8.f * i_w, 0	 , 0.f };
+	timer_vertices[67].position = { s_p + 7.f * i_w, 0	 , 0.f };
+	timer_vertices[64].texcoord = { uv  * 0.f, 1.0f, 0.66f };
+	timer_vertices[65].texcoord = { uv  * 1.f, 1.0f, 0.66f };
+	timer_vertices[66].texcoord = { uv  * 1.f, 0.5f, 0.66f };
+	timer_vertices[67].texcoord = { uv  * 0.f, 0.5f, 0.66f };
 
 	//year d1 -- rotating
-	vertices[68].position = { s_p + 7.f * i_w, +hr, 0.6f };
-	vertices[69].position = { s_p + 8.f * i_w, +hr, 0.6f };
-	vertices[70].position = { s_p + 8.f * i_w, -hr, 0.6f };
-	vertices[71].position = { s_p + 7.f * i_w, -hr, 0.6f };
-	vertices[68].texcoord = { uv * 0, 1.0f, 6.0f };
-	vertices[69].texcoord = { uv * 1, 1.0f, 6.0f };
-	vertices[70].texcoord = { uv * 1, 0.0f, 6.0f };
-	vertices[71].texcoord = { uv * 0, 0.0f, 6.0f };
+	timer_vertices[68].position = { s_p + 7.f * i_w, +hr, 0.6f };
+	timer_vertices[69].position = { s_p + 8.f * i_w, +hr, 0.6f };
+	timer_vertices[70].position = { s_p + 8.f * i_w, -hr, 0.6f };
+	timer_vertices[71].position = { s_p + 7.f * i_w, -hr, 0.6f };
+	timer_vertices[68].texcoord = { uv * 0, 1.0f, 6.0f };
+	timer_vertices[69].texcoord = { uv * 1, 1.0f, 6.0f };
+	timer_vertices[70].texcoord = { uv * 1, 0.0f, 6.0f };
+	timer_vertices[71].texcoord = { uv * 0, 0.0f, 6.0f };
 
-	//year d2 top -- new 
-	vertices[72].position = { s_p + 6.f * i_w, 0  , 0.f };
-	vertices[73].position = { s_p + 7.f * i_w, 0  , 0.f };
-	vertices[74].position = { s_p + 7.f * i_w, -hr, 0.f };
-	vertices[75].position = { s_p + 6.f * i_w, -hr, 0.f };
-	vertices[72].texcoord = { uv  * 0.f, 0.5f, 0.7f };
-	vertices[73].texcoord = { uv  * 1.f, 0.5f, 0.7f };
-	vertices[74].texcoord = { uv  * 1.f, 0.0f, 0.7f };
-	vertices[75].texcoord = { uv  * 0.f, 0.0f, 0.7f };
+	//year d2 top -- new
+	timer_vertices[72].position = { s_p + 6.f * i_w, 0  , 0.f };
+	timer_vertices[73].position = { s_p + 7.f * i_w, 0  , 0.f };
+	timer_vertices[74].position = { s_p + 7.f * i_w, -hr, 0.f };
+	timer_vertices[75].position = { s_p + 6.f * i_w, -hr, 0.f };
+	timer_vertices[72].texcoord = { uv  * 0.f, 0.5f, 0.7f };
+	timer_vertices[73].texcoord = { uv  * 1.f, 0.5f, 0.7f };
+	timer_vertices[74].texcoord = { uv  * 1.f, 0.0f, 0.7f };
+	timer_vertices[75].texcoord = { uv  * 0.f, 0.0f, 0.7f };
 
 	//year d2 bottom -- old
-	vertices[76].position = { s_p + 6.f * i_w, +hr , 0.f };
-	vertices[77].position = { s_p + 7.f * i_w, +hr , 0.f };
-	vertices[78].position = { s_p + 7.f * i_w, 0	 , 0.f };
-	vertices[79].position = { s_p + 6.f * i_w, 0	 , 0.f };
-	vertices[76].texcoord = { uv  * 0.f, 1.0f, 0.77f };
-	vertices[77].texcoord = { uv  * 1.f, 1.0f, 0.77f };
-	vertices[78].texcoord = { uv  * 1.f, 0.5f, 0.77f };
-	vertices[79].texcoord = { uv  * 0.f, 0.5f, 0.77f };
+	timer_vertices[76].position = { s_p + 6.f * i_w, +hr , 0.f };
+	timer_vertices[77].position = { s_p + 7.f * i_w, +hr , 0.f };
+	timer_vertices[78].position = { s_p + 7.f * i_w, 0	 , 0.f };
+	timer_vertices[79].position = { s_p + 6.f * i_w, 0	 , 0.f };
+	timer_vertices[76].texcoord = { uv  * 0.f, 1.0f, 0.77f };
+	timer_vertices[77].texcoord = { uv  * 1.f, 1.0f, 0.77f };
+	timer_vertices[78].texcoord = { uv  * 1.f, 0.5f, 0.77f };
+	timer_vertices[79].texcoord = { uv  * 0.f, 0.5f, 0.77f };
 
 	//year d2 -- rotating
-	vertices[80].position = { s_p + 6.f * i_w, +hr, 0.7f };
-	vertices[81].position = { s_p + 7.f * i_w, +hr, 0.7f };
-	vertices[82].position = { s_p + 7.f * i_w, -hr, 0.7f };
-	vertices[83].position = { s_p + 6.f * i_w, -hr, 0.7f };
-	vertices[80].texcoord = { uv * 0, 1.0f, 7.0f };
-	vertices[81].texcoord = { uv * 1, 1.0f, 7.0f };
-	vertices[82].texcoord = { uv * 1, 0.0f, 7.0f };
-	vertices[83].texcoord = { uv * 0, 0.0f, 7.0f };
+	timer_vertices[80].position = { s_p + 6.f * i_w, +hr, 0.7f };
+	timer_vertices[81].position = { s_p + 7.f * i_w, +hr, 0.7f };
+	timer_vertices[82].position = { s_p + 7.f * i_w, -hr, 0.7f };
+	timer_vertices[83].position = { s_p + 6.f * i_w, -hr, 0.7f };
+	timer_vertices[80].texcoord = { uv * 0, 1.0f, 7.0f };
+	timer_vertices[81].texcoord = { uv * 1, 1.0f, 7.0f };
+	timer_vertices[82].texcoord = { uv * 1, 0.0f, 7.0f };
+	timer_vertices[83].texcoord = { uv * 0, 0.0f, 7.0f };
 
-	//year d3 top -- new 
-	vertices[84].position = { s_p + 5.f * i_w, 0  , 0.f };
-	vertices[85].position = { s_p + 6.f * i_w, 0  , 0.f };
-	vertices[86].position = { s_p + 6.f * i_w, -hr, 0.f };
-	vertices[87].position = { s_p + 5.f * i_w, -hr, 0.f };
-	vertices[84].texcoord = { uv  * 0.f, 0.5f, 0.8f };
-	vertices[85].texcoord = { uv  * 1.f, 0.5f, 0.8f };
-	vertices[86].texcoord = { uv  * 1.f, 0.0f, 0.8f };
-	vertices[87].texcoord = { uv  * 0.f, 0.0f, 0.8f };
+	//year d3 top -- new
+	timer_vertices[84].position = { s_p + 5.f * i_w, 0  , 0.f };
+	timer_vertices[85].position = { s_p + 6.f * i_w, 0  , 0.f };
+	timer_vertices[86].position = { s_p + 6.f * i_w, -hr, 0.f };
+	timer_vertices[87].position = { s_p + 5.f * i_w, -hr, 0.f };
+	timer_vertices[84].texcoord = { uv  * 0.f, 0.5f, 0.8f };
+	timer_vertices[85].texcoord = { uv  * 1.f, 0.5f, 0.8f };
+	timer_vertices[86].texcoord = { uv  * 1.f, 0.0f, 0.8f };
+	timer_vertices[87].texcoord = { uv  * 0.f, 0.0f, 0.8f };
 
 	//year d3 bottom -- old
-	vertices[88].position = { s_p + 5.f * i_w, +hr , 0.f };
-	vertices[89].position = { s_p + 6.f * i_w, +hr , 0.f };
-	vertices[90].position = { s_p + 6.f * i_w, 0	 , 0.f };
-	vertices[91].position = { s_p + 5.f * i_w, 0	 , 0.f };
-	vertices[88].texcoord = { uv  * 0.f, 1.0f, 0.88f };
-	vertices[89].texcoord = { uv  * 1.f, 1.0f, 0.88f };
-	vertices[90].texcoord = { uv  * 1.f, 0.5f, 0.88f };
-	vertices[91].texcoord = { uv  * 0.f, 0.5f, 0.88f };
+	timer_vertices[88].position = { s_p + 5.f * i_w, +hr , 0.f };
+	timer_vertices[89].position = { s_p + 6.f * i_w, +hr , 0.f };
+	timer_vertices[90].position = { s_p + 6.f * i_w, 0	 , 0.f };
+	timer_vertices[91].position = { s_p + 5.f * i_w, 0	 , 0.f };
+	timer_vertices[88].texcoord = { uv  * 0.f, 1.0f, 0.88f };
+	timer_vertices[89].texcoord = { uv  * 1.f, 1.0f, 0.88f };
+	timer_vertices[90].texcoord = { uv  * 1.f, 0.5f, 0.88f };
+	timer_vertices[91].texcoord = { uv  * 0.f, 0.5f, 0.88f };
 
 	//year d3 -- rotating
-	vertices[92].position = { s_p + 5.f * i_w, +hr, 0.8f };
-	vertices[93].position = { s_p + 6.f * i_w, +hr, 0.8f };
-	vertices[94].position = { s_p + 6.f * i_w, -hr, 0.8f };
-	vertices[95].position = { s_p + 5.f * i_w, -hr, 0.8f };
-	vertices[92].texcoord = { uv * 0, 1.0f, 8.0f };
-	vertices[93].texcoord = { uv * 1, 1.0f, 8.0f };
-	vertices[94].texcoord = { uv * 1, 0.0f, 8.0f };
-	vertices[95].texcoord = { uv * 0, 0.0f, 8.0f };
+	timer_vertices[92].position = { s_p + 5.f * i_w, +hr, 0.8f };
+	timer_vertices[93].position = { s_p + 6.f * i_w, +hr, 0.8f };
+	timer_vertices[94].position = { s_p + 6.f * i_w, -hr, 0.8f };
+	timer_vertices[95].position = { s_p + 5.f * i_w, -hr, 0.8f };
+	timer_vertices[92].texcoord = { uv * 0, 1.0f, 8.0f };
+	timer_vertices[93].texcoord = { uv * 1, 1.0f, 8.0f };
+	timer_vertices[94].texcoord = { uv * 1, 0.0f, 8.0f };
+	timer_vertices[95].texcoord = { uv * 0, 0.0f, 8.0f };
 
 	uint16_t indices[] = { 0,3,1,1,3,2,4,7,5,5,7,6,8,11,9,9,11,10,
 						   12,15,13,13,15,14,16,19,17,17,19,18,20,23,21,21,23,22,
@@ -307,7 +307,7 @@ bool GameTimer::init()
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 96, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 96, timer_vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
@@ -332,14 +332,14 @@ bool GameTimer::init()
 
 	gt_date.digit_1.old_offset = 0.0f;
 	gt_date.digit_1.new_offset = 0.0f;
-	gt_date.digit_1.flip = -1; 
+	gt_date.digit_1.flip = -1;
 	date_d1_shown_offset = 0.f;
 
 	gt_month.digit_0.old_offset = 0.0f;
 	gt_month.digit_0.new_offset = uv * 1;
 	gt_month.digit_0.flip = -1;
 	month_d0_shown_offset = uv * 1;
-	
+
 	gt_month.digit_1.old_offset = 0.0f;
 	gt_month.digit_1.new_offset = 0.0f;
 	gt_month.digit_1.flip = -1;
@@ -369,7 +369,7 @@ bool GameTimer::init()
 	return true;
 }
 
-//will we need this for anything else? 
+//will we need this for anything else?
 CurrentTime GameTimer::get_current_time()
 {
 	tm* current_time = gmtime(&m_current_time);
@@ -456,7 +456,7 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 			gt_mon->digit_0.flip = -1;
 			month_digit_0_flip = 0; //indicate done flipping;
 		}
-		
+
 	}else if (month_digit_0_flip == 0) {//done flipping, waiting for new flip
 		gt_mon->digit_0.old_offset = month_offset_digit0;
 	}
@@ -578,13 +578,13 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 }
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
-{	
+{
 	const int One_Day_Sec = 10000;
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += One_Day_Sec; //alter date speed here
 	m_current_time = mktime(adv_time);
 
-	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date, 
+	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date,
 						gmtime(&m_current_time)->tm_mon + 1, &gt_month,
 						gmtime(&m_current_time)->tm_year + 1900, &gt_year);
 }
@@ -599,11 +599,11 @@ void GameTimer::draw(const mat3& projection) {
 	glUseProgram(effect.program);
 
 	// Enabling alpha channel for textures
-	glEnable(GL_BLEND); 
+	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glDisable(GL_DEPTH_TEST);
 
-	// Setting vertices and indices
+	// Setting timer_vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
@@ -633,7 +633,7 @@ void GameTimer::draw(const mat3& projection) {
 	GLint year_d3_uloc = glGetUniformLocation(effect.program, "year_d3");
 
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-	
+
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);

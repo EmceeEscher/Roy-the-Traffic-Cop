@@ -13,7 +13,7 @@
 
 Texture Car::car_texture;
 
-TexturedVertex vertices[12];
+TexturedVertex car_vertices[12];
 
 uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
 
@@ -51,41 +51,41 @@ bool Car::init(bool isVillain)
 	m_hr = car_texture.height * 0.5;
 
 	//bottom left
-	vertices[0].position = { -m_wr, m_hr,0.f };
-	vertices[0].texcoord = { full_car_offset, 0.f };
+	car_vertices[0].position = { -m_wr, m_hr,0.f };
+	car_vertices[0].texcoord = { full_car_offset, 0.f };
 	//left middle
-	vertices[1].position = { -m_wr/2,0.00f,0.f };
-	vertices[1].texcoord = { 0.031250f + full_car_offset, 0.500000f };
+	car_vertices[1].position = { -m_wr/2,0.00f,0.f };
+	car_vertices[1].texcoord = { 0.031250f + full_car_offset, 0.500000f };
 	//top left
-	vertices[2].position = { -m_wr,-m_hr,0.f };
-	vertices[2].texcoord = { full_car_offset, 1.f };
+	car_vertices[2].position = { -m_wr,-m_hr,0.f };
+	car_vertices[2].texcoord = { full_car_offset, 1.f };
 	//left top middle
-	vertices[3].position = { -m_wr/2,-m_hr,0.f };
-	vertices[3].texcoord = { 0.031250f + full_car_offset , 1.f };
+	car_vertices[3].position = { -m_wr/2,-m_hr,0.f };
+	car_vertices[3].texcoord = { 0.031250f + full_car_offset , 1.f };
 	//left bottom middle
-	vertices[4].position = { -m_wr/2, m_hr,0.f };
-	vertices[4].texcoord = { 0.031250f + full_car_offset, 0.f };
+	car_vertices[4].position = { -m_wr/2, m_hr,0.f };
+	car_vertices[4].texcoord = { 0.031250f + full_car_offset, 0.f };
 	//direct bottom
-	vertices[5].position = { 0.f, m_hr,0.f };
-	vertices[5].texcoord = { 0.062500f + full_car_offset, 0.f };
+	car_vertices[5].position = { 0.f, m_hr,0.f };
+	car_vertices[5].texcoord = { 0.062500f + full_car_offset, 0.f };
 	//direct top
-	vertices[6].position = { 0.f, -m_hr,0.f };
-	vertices[6].texcoord = { 0.062500f + full_car_offset, 1.f };
+	car_vertices[6].position = { 0.f, -m_hr,0.f };
+	car_vertices[6].texcoord = { 0.062500f + full_car_offset, 1.f };
 	//right bottom middle
-	vertices[7].position = { m_wr/2,  m_hr,0.f };
-	vertices[7].texcoord = { 0.093750f + full_car_offset, 0.f };
+	car_vertices[7].position = { m_wr/2,  m_hr,0.f };
+	car_vertices[7].texcoord = { 0.093750f + full_car_offset, 0.f };
 	//right top middle
-	vertices[8].position = { m_wr/2,  -m_hr,0.f };
-	vertices[8].texcoord = { 0.093750f + full_car_offset, 1.f };
+	car_vertices[8].position = { m_wr/2,  -m_hr,0.f };
+	car_vertices[8].texcoord = { 0.093750f + full_car_offset, 1.f };
 	//right middle
-	vertices[9].position = { m_wr/2, 0.00f,0.f };
-	vertices[9].texcoord = { 0.093750f + full_car_offset, 0.500000f };
+	car_vertices[9].position = { m_wr/2, 0.00f,0.f };
+	car_vertices[9].texcoord = { 0.093750f + full_car_offset, 0.500000f };
 	//top right
-	vertices[10].position = { m_wr, -m_hr,0.f };
-	vertices[10].texcoord = { 0.125000f + full_car_offset, 1.f };
+	car_vertices[10].position = { m_wr, -m_hr,0.f };
+	car_vertices[10].texcoord = { 0.125000f + full_car_offset, 1.f };
 	//bottom right
-	vertices[11].position = { m_wr, m_hr,0.f };
-	vertices[11].texcoord = { 0.125000f + full_car_offset, 0.f };
+	car_vertices[11].position = { m_wr, m_hr,0.f };
+	car_vertices[11].texcoord = { 0.125000f + full_car_offset, 0.f };
 
 	uint16_t indices[] = {0,1,2,3,2,1,4,1,0,5,3,4,3,5,6,5,7,6,6,7,8,8,9,10,10,9,11,11,9,7};
 
@@ -97,7 +97,7 @@ bool Car::init(bool isVillain)
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 12, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 12, car_vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
@@ -273,7 +273,7 @@ void Car::draw(const mat3& projection)
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
-	// Setting vertices and indices
+	// Setting car_vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
@@ -753,8 +753,8 @@ float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
 vec2 Car::get_vertex_pos(int index) {
 
 	vec2 vertex = {
-		(m_position.x + vertices[index].position.x * cos(m_rotation) - vertices[index].position.y * sin(m_rotation)),
-		(m_position.y + vertices[index].position.y * sin(m_rotation) + vertices[index].position.y * cos(m_rotation))
+		(m_position.x + car_vertices[index].position.x * cos(m_rotation) - car_vertices[index].position.y * sin(m_rotation)),
+		(m_position.y + car_vertices[index].position.y * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
 	};
 
 	return vertex;
