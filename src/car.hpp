@@ -166,5 +166,5 @@ private:
 	bool m_turned;
 	Placard* m_turn_placard;
 	bool m_at_intersection;
-	int car_tex_x0; //specifies near x offset of the indicated car texture
+	float car_tex_x0; //specifies near x offset of the indicated car texture
 };
