@@ -13,9 +13,23 @@
 
 Texture Car::car_texture;
 
-TexturedVertex vertices[12];
+TexturedVertex car_vertices[13];
 
-uint16_t indices[] = { 0,1,2,3,4,5,0,2,6,7,8,9,10,0,6,6,11,12,13,10,6,6,12,13 };
+uint16_t indices[] = {
+	0,1,2,
+	3,2,1,
+	4,1,0,
+	5,6,7,
+	7,6,8,
+	8,6,9,
+	3,1,10,
+	1,4,10,
+	9,10, 11,
+	10, 4, 11,
+	12, 10, 5,
+	6, 5, 10,
+	6, 10, 9,
+	3, 10, 12 };
 
 bool Car::init(bool isVillain)
 {
@@ -43,50 +57,51 @@ bool Car::init(bool isVillain)
 	}
 	// The position (0,0) corresponds to the center of the texture
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
-	m_hr = car_texture.height * 0.5;
+	//m_hr = car_texture.height * 0.5;
+	m_hr = 22.00000f; //ignoring mirrors
 	float full_car_offset = 0.125 * car_tex_x0;
 
-	TexturedVertex vertices[13];
-	vertices[0].position = { -m_wr, - 18.00000f,0.f };
-	vertices[0].texcoord = { 0.000112f + full_car_offset, 0.140812f };
+	//TexturedVertex vertices[13];
+	car_vertices[0].position = { -m_wr, 18.00000f,0.f };
+	car_vertices[0].texcoord = { 0.000112f + full_car_offset, 0.140812f };
 
-	vertices[1].position = { -0.6f*m_wr, 0.000000f ,0.f };
-	vertices[1].texcoord = { 0.025310f + full_car_offset, 0.499466f };
+	car_vertices[1].position = { -0.6f*m_wr, 0.000000f ,0.f };
+	car_vertices[1].texcoord = { 0.025310f + full_car_offset, 0.499466f };
 
-	vertices[2].position = { -m_wr, 18.00000f ,0.f };
-	vertices[2].texcoord = { 0.000112f + full_car_offset, 0.858120f };
+	car_vertices[2].position = { -m_wr, -18.00000f ,0.f };
+	car_vertices[2].texcoord = { 0.000112f + full_car_offset, 0.858120f };
 
-	vertices[3].position = { -0.6f*m_wr, 22.00000f ,0.f };
-	vertices[3].texcoord = { 0.025310f + full_car_offset, 0.942415f};
+	car_vertices[3].position = { -0.6f*m_wr, -22.00000f ,0.f };
+	car_vertices[3].texcoord = { 0.025310f + full_car_offset, 0.942415f};
 
-	vertices[4].position = { -0.6f*m_wr, - 22.00000f ,0.f };
-	vertices[4].texcoord = { 0.025310f + full_car_offset, 0.056517f };
+	car_vertices[4].position = { -0.6f*m_wr, 22.00000f ,0.f };
+	car_vertices[4].texcoord = { 0.025310f + full_car_offset, 0.056517f };
 
-	vertices[5].position = { 0.76f*m_wr, 22.00000f ,0.f };
-	vertices[5].texcoord = { 0.109941f + full_car_offset, 0.928707f };
+	car_vertices[5].position = { 0.76f*m_wr, -22.00000f ,0.f };
+	car_vertices[5].texcoord = { 0.109941f + full_car_offset, 0.928707f };
 
-	vertices[6].position = { 0.76f*m_wr, 0.000000f ,0.f };
-	vertices[6].texcoord = { 0.110067f + full_car_offset, 0.499466f };
+	car_vertices[6].position = { 0.76f*m_wr, 0.000000f ,0.f };
+	car_vertices[6].texcoord = { 0.110067f + full_car_offset, 0.499466f };
 
-	vertices[7].position = { m_wr, 12.50000f ,0.f };
-	vertices[7].texcoord = { 0.124801f + full_car_offset, 0.751568f };
+	car_vertices[7].position = { m_wr, -12.50000f ,0.f };
+	car_vertices[7].texcoord = { 0.124801f + full_car_offset, 0.751568f };
 
-	vertices[8].position = { m_wr, - 12.50000f ,0.f };
-	vertices[8].texcoord = { 0.124801f + full_car_offset, 0.247364f };
-									 
-	vertices[9].position = { 0.76f*m_wr, - 22.00000f,0.f };
-	vertices[9].texcoord = { 0.109941f + full_car_offset, 0.070225f };
+	car_vertices[8].position = { m_wr, 12.50000f ,0.f };
+	car_vertices[8].texcoord = { 0.124801f + full_car_offset, 0.247364f };
 
-	vertices[10].position = { 0.000000f, 0.000000f,0.f };
-	vertices[10].texcoord = { 0.062549f + full_car_offset, 0.499466f };
+	car_vertices[9].position = { 0.76f*m_wr, 22.00000f,0.f };
+	car_vertices[9].texcoord = { 0.109941f + full_car_offset, 0.070225f };
 
-	vertices[11].position = { 0.000000f, - 21.00000f,0.f };
-	vertices[11].texcoord = { 0.062418f + full_car_offset, 0.080462f };
+	car_vertices[10].position = { 0.000000f, 0.000000f,0.f };
+	car_vertices[10].texcoord = { 0.062549f + full_car_offset, 0.499466f };
 
-	vertices[12].position = { 0.000000f, 21.00000f,0.f };
-	vertices[12].texcoord = { 0.062418f + full_car_offset, 0.918470f };
+	car_vertices[11].position = { 0.000000f, 21.00000f,0.f };
+	car_vertices[11].texcoord = { 0.062418f + full_car_offset, 0.080462f };
 
-	uint16_t indices[] = { 
+	car_vertices[12].position = { 0.000000f, -21.00000f,0.f };
+	car_vertices[12].texcoord = { 0.062418f + full_car_offset, 0.918470f };
+
+	uint16_t indices[] = {
 		0,1,2,
 		3,2,1,
 		4,1,0,
@@ -108,7 +123,7 @@ bool Car::init(bool isVillain)
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 13, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 13, car_vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
@@ -136,10 +151,11 @@ bool Car::init(bool isVillain)
 	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
-
+	m_hit = false;
 	m_turned = false;
 	t = 0.f;
 	m_at_intersection = false;
+	m_spin_amount = 0.f;
 	std::srand(std::time(nullptr));
 
 	m_turn_placard = new Placard(m_position, m_rotation);
@@ -202,48 +218,70 @@ void Car::update(float ms)
 	}
 	else
 	{
-		//printf("in else\n");
-		if (t >= 0.f && t <= 1.f)
-		{
-			turn(t);
-			t += 0.005f;
-			update_rotation_on_turn(t);
-			//printf("%f", t);
-		}
-		else {
-			// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
-			if (t > 1.f) {
-				m_turned = true;
-				if (m_desired_direction == direction::EAST) {
-					m_velocity.y = 0.f;
-					m_acceleration.x = ACC;
-					m_acceleration.y = 0.f;
-				}
-				else if (m_desired_direction == direction::WEST) {
-					m_velocity.y = 0.f;
-					m_acceleration.x = -ACC;
-					m_acceleration.y = 0.f;
-				}
-				else if (m_desired_direction == direction::NORTH) {
-					m_velocity.x = 0.f;
-					m_acceleration.x = 0.f;
-					m_acceleration.y = -ACC;
-				}
-				else if (m_desired_direction == direction::SOUTH) {
-					m_velocity.x = 0.f;
-					m_acceleration.x = 0.f;
-					m_acceleration.y = ACC;
-				}
-				if (abs(m_velocity.x) < m_max_speed) {
-					m_velocity.x += m_acceleration.x;
-				}
+		if (!m_hit) {
 
-				if (abs(m_velocity.y) < m_max_speed) {
-					m_velocity.y += m_acceleration.y;
-				}
-				vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
-				move(m_displacement);
+			//printf("in else\n");
+			if (t >= 0.f && t <= 1.f)
+			{
+				turn(t);
+				t += 0.01f;
+				update_rotation_on_turn(t);
+				//printf("%f", t);
 			}
+			else {
+				// m_in_beyond_intersection triggers the stop sign again, m_velocity can't go below 0...
+				if (t > 1.f) {
+					m_turned = true;
+					if (m_desired_direction == direction::EAST) {
+						m_velocity.y = 0.f;
+						m_velocity.x = 0.8f * m_max_speed;
+						m_acceleration.x = ACC;
+						m_acceleration.y = 0.f;
+					}
+					else if (m_desired_direction == direction::WEST) {
+						m_velocity.y = 0.f;
+						m_velocity.x = -0.8f * m_max_speed;
+						m_acceleration.x = -ACC;
+						m_acceleration.y = 0.f;
+					}
+					else if (m_desired_direction == direction::NORTH) {
+						m_velocity.x = 0.f;
+						m_velocity.y = -0.8f * m_max_speed;
+						m_acceleration.x = 0.f;
+						m_acceleration.y = -ACC;
+					}
+					else if (m_desired_direction == direction::SOUTH) {
+						m_velocity.x = 0.f;
+						m_velocity.y = 0.8f * m_max_speed;
+						m_acceleration.x = 0.f;
+						m_acceleration.y = ACC;
+					}
+					if (abs(m_velocity.x) < m_max_speed) {
+						m_velocity.x += m_acceleration.x;
+					}
+
+					if (abs(m_velocity.y) < m_max_speed) {
+						m_velocity.y += m_acceleration.y;
+					}
+					vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+					move(m_displacement);
+				}
+			}
+		}
+		//TODO WHAT HAPPENS WHEN THE CAR HAS BEEN IN A COLLISION
+		//The car has been in a collision
+		else {
+			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
+				m_velocity.x += m_acceleration.x;
+				m_velocity.y += m_acceleration.y;
+				m_rotation += m_spin_amount * PI / 18;
+			} else {
+				m_velocity.x = 0.f;
+				m_velocity.y = 0.f;
+			}
+
+			vec2 m_displacement = {m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+			move(m_displacement);
 		}
 	}
 }
@@ -272,7 +310,7 @@ void Car::draw(const mat3& projection)
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
-	// Setting vertices and indices
+	// Setting car_vertices and indices
 	glBindVertexArray(mesh.vao);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
@@ -316,7 +354,7 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	if (!m_turned) {
+	if (!m_turned && !m_hit) {
 		if (m_lane == direction::WEST || m_lane == direction::NORTH) {
 			m_position.x += off.x;
 			m_position.y += off.y;
@@ -752,8 +790,8 @@ float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
 vec2 Car::get_vertex_pos(int index) {
 
 	vec2 vertex = {
-		(m_position.x + vertices[index].position.x * cos(m_rotation) - vertices[index].position.y * sin(m_rotation)),
-		(m_position.y + vertices[index].position.y * sin(m_rotation) + vertices[index].position.y * cos(m_rotation))
+		(m_position.x + car_vertices[index].position.x * cos(m_rotation) - car_vertices[index].position.y * sin(m_rotation)),
+		(m_position.y + car_vertices[index].position.y * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
 	};
 
 	return vertex;
@@ -788,6 +826,90 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 	float C = P1.y * P2.x - P2.y * P1.x;
 	float result = A * Ptest.x + B * Ptest.y + C;
 	return result >= 0.f;
+}
+
+void Car::collided(int hit_triangle) {
+	if (!m_hit) {
+		m_hit = true;
+		float speed_scale = m_max_speed;
+		float acc_scale = ACC;
+		vec2 new_dir = get_collision_direction(hit_triangle);
+		m_spin_amount = get_collision_spin(hit_triangle);
+		m_velocity = {new_dir.x * speed_scale, new_dir.y * speed_scale};
+		m_acceleration = {new_dir.x * -acc_scale, new_dir.y * -acc_scale};
+	}
+}
+
+float Car::get_collision_spin(int hit_triangle) {
+	switch(hit_triangle) {
+		case 1:
+		case 3:
+		case 4:
+		case 9:
+		case 10:
+		case 13:
+			return -1.f;
+		case 2:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 11:
+			return 1.f;
+		default:
+			return 0.f;
+	}
+}
+
+vec2 Car::get_collision_direction(int hit_triangle) {
+	vec2 velocity_dir;
+	// 0.866f roughly equals sqrt(3) / 2, can't use sqrt cuz it's a double, not float
+	switch(hit_triangle) {
+		case 0:
+			velocity_dir = {1.f, 0.f}; // to the right
+			break;
+		case 1:
+			velocity_dir = {0.866f, 0.5f}; //bottom right
+			break;
+		case 2:
+			velocity_dir = {0.866f, -0.5f}; //top right
+			break;
+		case 3:
+		case 4:
+			velocity_dir = {0.5f, 0.866f}; //slightly bottom right
+			break;
+		case 5:
+		case 6:
+			velocity_dir = {0.5f, -0.866f}; //slightly top right
+			break;
+		case 7:
+		case 8:
+			velocity_dir = {-0.5f, 0.866f}; //slightly bottom left
+			break;
+		case 9:
+		case 10:
+			velocity_dir = {-0.5f, -0.866f}; //slightly top left
+			break;
+		case 11:
+			velocity_dir = {-0.866f, 0.5f}; //bottom left
+			break;
+		case 12:
+			velocity_dir = {-1.f, 0.f}; //to the left
+			break;
+		case 13:
+			velocity_dir = {-0.866f, -0.5f}; //top left
+			break;
+		default:
+			velocity_dir = {0.f, 0.f}; //attacker car, don't move
+			break;
+	}
+
+	vec2 rotated_vel = {
+		(velocity_dir.x * cos(m_rotation) + velocity_dir.y * -sin(m_rotation)),
+		(velocity_dir.x * sin(m_rotation) + velocity_dir.y * cos(m_rotation))
+	};
+
+	return rotated_vel;
 }
 
 void Car::change_color() {
