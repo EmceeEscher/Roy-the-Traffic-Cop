@@ -148,6 +148,8 @@ public:
 	// based on which triangle in the mesh got hit
 	vec2 get_collision_direction(int hit_triangle);
 
+	float get_collision_spin(int hit_triangle);
+
 	void spinout();
 
 	void change_color();
@@ -178,4 +180,5 @@ private:
 	Placard* m_turn_placard;
 	bool m_at_intersection;
 	float car_tex_x0; //specifies near x offset of the indicated car texture
+	float m_spin_amount;
 };

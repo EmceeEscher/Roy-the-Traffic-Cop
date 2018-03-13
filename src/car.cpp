@@ -155,6 +155,7 @@ bool Car::init(bool isVillain)
 	m_turned = false;
 	t = 0.f;
 	m_at_intersection = false;
+	m_spin_amount = 0.f;
 	std::srand(std::time(nullptr));
 
 	m_turn_placard = new Placard(m_position, m_rotation);
@@ -273,6 +274,7 @@ void Car::update(float ms)
 			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
 				m_velocity.x += m_acceleration.x;
 				m_velocity.y += m_acceleration.y;
+				m_rotation += m_spin_amount * PI;
 			} else {
 				m_velocity.x = 0.f;
 				m_velocity.y = 0.f;
@@ -353,7 +355,7 @@ direction Car::get_desired_direction()const
 
 void Car::move(vec2 off)
 {
-	if (!m_turned) {
+	if (!m_turned && !m_hit) {
 		if (m_lane == direction::WEST || m_lane == direction::NORTH) {
 			m_position.x += off.x;
 			m_position.y += off.y;
@@ -837,11 +839,33 @@ void Car::collided(int hit_triangle) {
 	if (!m_hit) {
 		m_hit = true;
 		float speed_scale = m_max_speed;
-		float acc_scale = 0.f;//ACC;
+		float acc_scale = ACC;
 		vec2 new_dir = get_collision_direction(hit_triangle);
+		m_spin_amount = get_collision_spin(hit_triangle);
 		m_velocity = {new_dir.x * speed_scale, new_dir.y * speed_scale};
-		m_acceleration = {new_dir.x * -acc_scale, new_dir.y * acc_scale};
-		printf("car class gets: %d triangle\n", hit_triangle);
+		m_acceleration = {new_dir.x * -acc_scale, new_dir.y * -acc_scale};
+		printf("new vel: x: %f, y: %f\n", m_velocity.x, m_velocity.y);
+	}
+}
+
+float Car::get_collision_spin(int hit_triangle) {
+	switch(hit_triangle) {
+		case 1:
+		case 3:
+		case 4:
+		case 9:
+		case 10:
+		case 13:
+			return -1.f;
+		case 2:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 11:
+			return 1.f;
+		default:
+			return 0.f;
 	}
 }
 
