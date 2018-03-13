@@ -3,7 +3,6 @@
 bool AI::init()
 {
 	std::srand(std::time(nullptr));
-
 	return true;
 }
 
@@ -84,13 +83,15 @@ void AI::get_best_turning_direction(
 	// Don't want to modify the real game lanes
 	std::map<direction, Lane*> new_lanes = deep_copy_lanes(current_lanes);
 	std::vector<std::set<direction>> possible_moves = generate_moves(new_lanes);
+	int next_ply = current_ply + 1;
 	
 	for (std::vector<std::set<direction>>::iterator it = possible_moves.begin(); it != possible_moves.end(); it++)
 	{
 		apply_move_to_lanes(*it, new_lanes);
 		bool is_moving_active_lane = it->find(active_lane) != it->end();
+		int next_total_cars_turned = cars_turned + it->size();
 
-		get_best_turning_direction(active_lane, new_lanes, current_ply + 1, cars_turned + it->size(), is_moving_active_lane, bestPlayerOutcome);
+		get_best_turning_direction(active_lane, new_lanes, next_ply, next_total_cars_turned, is_moving_active_lane, bestPlayerOutcome);
 		for (auto current = new_lanes.begin(); current != new_lanes.end(); ++current) {
 			delete current->second;
 		}
@@ -281,7 +282,7 @@ direction AI::get_most_villainous_direction(direction active_lane, std::map<dire
 		int best_move_size = moves.begin()->size();
 
 		if (best_move_size < best_direction_score) {
-			best_direction = directions[i];
+			best_direction = current_direction;
 			best_direction_score = best_move_size;
 		}
 	}

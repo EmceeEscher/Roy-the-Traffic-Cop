@@ -21,11 +21,11 @@ struct PlayerOutcome
 class AI
 {
 public:
-	const int MaxPly = 5;
+	static const int MaxPly = 3;
 
 	// Estimated time it takes for the player to execute a move.
 	// Used to determine if the player must move a specific lane due to a time constraint
-	const float EstimatedPlayerMoveTime = 400;
+	static const int EstimatedPlayerMoveTime = 400;
 
 	bool init();
 
