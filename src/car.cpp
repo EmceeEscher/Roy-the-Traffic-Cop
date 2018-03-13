@@ -274,7 +274,7 @@ void Car::update(float ms)
 			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
 				m_velocity.x += m_acceleration.x;
 				m_velocity.y += m_acceleration.y;
-				m_rotation += m_spin_amount * PI;
+				m_rotation += m_spin_amount * PI / 18;
 			} else {
 				m_velocity.x = 0.f;
 				m_velocity.y = 0.f;
@@ -282,7 +282,6 @@ void Car::update(float ms)
 
 			vec2 m_displacement = {m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 			move(m_displacement);
-			//spinout();
 		}
 	}
 }
@@ -762,20 +761,20 @@ rect_bounding_box Car::get_bounding_box() {
 	// Also need to remember that positive y is downward
 
 	vec2 bottom_left = {
-		(m_position.x - m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation))
+		(m_position.x - m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation) *0.8f),
+		(m_position.y + m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation) *0.8f)
 	};
 	vec2 bottom_right = {
-		(m_position.x + m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation))
+		(m_position.x + m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation) *0.8f),
+		(m_position.y - m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation) *0.8f)
 	};
 	vec2 top_right = {
-		(m_position.x + m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation))
+		(m_position.x + m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation) *0.8f),
+		(m_position.y - m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation) *0.8f)
 	};
 	vec2 top_left = {
-		(m_position.x - m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation))
+		(m_position.x - m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation) *0.8f),
+		(m_position.y + m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation) *0.8f)
 	};
 
 	rect_bounding_box bounding_box = {bottom_left, bottom_right, top_right, top_left};
@@ -844,7 +843,6 @@ void Car::collided(int hit_triangle) {
 		m_spin_amount = get_collision_spin(hit_triangle);
 		m_velocity = {new_dir.x * speed_scale, new_dir.y * speed_scale};
 		m_acceleration = {new_dir.x * -acc_scale, new_dir.y * -acc_scale};
-		printf("new vel: x: %f, y: %f\n", m_velocity.x, m_velocity.y);
 	}
 }
 
@@ -916,17 +914,8 @@ vec2 Car::get_collision_direction(int hit_triangle) {
 		(velocity_dir.x * cos(m_rotation) + velocity_dir.y * -sin(m_rotation)),
 		(velocity_dir.x * sin(m_rotation) + velocity_dir.y * cos(m_rotation))
 	};
-	printf("rotated vel x: %f, y: %f\n", rotated_vel.x, rotated_vel.y);
 
 	return rotated_vel;
-}
-
-void Car::spinout() {
-	if (m_velocity.x > 0) {
-		m_velocity.x -= 0.5f;
-		t += m_velocity.x * 0.1f;
-		update_rotation_on_turn(t);
-	}
 }
 
 void Car::change_color() {
