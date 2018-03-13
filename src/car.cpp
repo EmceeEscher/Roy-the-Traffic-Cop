@@ -761,20 +761,20 @@ rect_bounding_box Car::get_bounding_box() {
 	// Also need to remember that positive y is downward
 
 	vec2 bottom_left = {
-		(m_position.x - m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation) *0.8f),
-		(m_position.y + m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation) *0.8f)
+		(m_position.x - m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
+		(m_position.y + m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
 	};
 	vec2 bottom_right = {
-		(m_position.x + m_wr * cos(-m_rotation) *0.8f + m_hr * sin(-m_rotation) *0.8f),
-		(m_position.y - m_wr * sin(-m_rotation) *0.8f + m_hr * cos(-m_rotation) *0.8f)
+		(m_position.x + m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
+		(m_position.y - m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
 	};
 	vec2 top_right = {
-		(m_position.x + m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation) *0.8f),
-		(m_position.y - m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation) *0.8f)
+		(m_position.x + m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
+		(m_position.y - m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
 	};
 	vec2 top_left = {
-		(m_position.x - m_wr * cos(-m_rotation) *0.8f - m_hr * sin(-m_rotation) *0.8f),
-		(m_position.y + m_wr * sin(-m_rotation) *0.8f - m_hr * cos(-m_rotation) *0.8f)
+		(m_position.x - m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
+		(m_position.y + m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
 	};
 
 	rect_bounding_box bounding_box = {bottom_left, bottom_right, top_right, top_left};
@@ -810,20 +810,14 @@ bool Car::check_collision(vec2 test_vertex) {
 
 bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 
-	// float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
-	//
-	// float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
-	// float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
-	// float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
-	// float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
-	// //printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
-	// return (abs(collisionSum - tArea) <= 0.1f);
+	float tArea = get_triangle_area(t.a, t.b, t.c); // first car's triangle area
 
-	bool implicit_ab = check_implicit(t.a, t.b, test_vertex);
-	bool implicit_bc = check_implicit(t.b, t.c, test_vertex);
-	bool implicit_ca = check_implicit(t.c, t.a, test_vertex);
-
-	return implicit_ab && implicit_bc && implicit_ca;
+	float collisionArea1 = get_triangle_area(t.a, t.b, test_vertex);
+	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
+	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
+	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
+	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
+	return (abs(collisionSum - tArea) <= 0.1f);
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
