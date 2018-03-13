@@ -42,6 +42,7 @@ bool LaneManager::update(float ms)
 		m_ai->make_villains_decide(m_lanes);
 	}
 
+	add_car();
 	intersection_collision_check();
 	return true;
 }
@@ -309,23 +310,11 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 
 void LaneManager::add_car()
 {
-  int longest_line = 0;
   for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
   {
-    int cars_in_lane = it->second->get_cars().size();
-    if (cars_in_lane > longest_line)
-    {
-      longest_line = cars_in_lane;
-    }
-  }
-
-  for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
-  {
-    int cars_in_lane = it->second->get_cars().size();
-    if ((cars_in_lane < longest_line || it->first == direction::WEST) && !it->second->is_lane_full())
+    if (!it->second->is_lane_full())
     {
       it->second->add_car(carType::REGULAR);
-      break;
     }
   }
 }
