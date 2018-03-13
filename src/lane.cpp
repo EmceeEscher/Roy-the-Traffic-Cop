@@ -93,28 +93,24 @@ void Lane::add_car(carType type)
 				new_car.set_rotation(PI / 2);
 				new_car.set_original_rotation(PI / 2);
 				new_car.set_lane(direction::NORTH);
-				//new_car.set_desired_direction(direction::EAST);
 			}
 			else if (m_dir == direction::WEST) {
 				new_car.set_position({ -130.f,537.f });
 				new_car.set_lane(direction::WEST);
 				new_car.set_rotation(0);
 				new_car.set_original_rotation(0);
-				new_car.set_desired_direction(direction::EAST);
 			}
 			else if (m_dir == direction::EAST) {
 				new_car.set_position({ 1100.f,445.f });
 				new_car.set_rotation(PI);
 				new_car.set_original_rotation(PI);
 				new_car.set_lane(direction::EAST);
-				new_car.set_desired_direction(direction::WEST);
 			}
 			else if (m_dir == direction::SOUTH) {
 				new_car.set_position({ 550,1100.f });
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
-				new_car.set_desired_direction(direction::WEST);
 			}
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);

@@ -155,7 +155,6 @@ bool LaneManager::intersection_collision_check() {
 }
 
 int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
-	printf("tryna collide\n");
 
 	Car::Triangle victim_triangles[14];
 
