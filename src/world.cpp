@@ -120,6 +120,7 @@ bool World::init(vec2 screen)
 
 	m_background.init();
 	m_ai.init();
+	m_remove_intersection.init();
 	m_game_timer.init();
 	m_lane_manager.init(m_ai);
 	return m_traffic_cop.init();
