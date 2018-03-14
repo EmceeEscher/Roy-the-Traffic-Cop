@@ -1,7 +1,8 @@
 #include "lane_manager.hpp"
 #include "car.hpp"
 //DEBUG
-//#include <windows.h>
+#include <windows.h>
+#include <tuple>
 
 
 
@@ -281,14 +282,15 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 	int vic_counter = 0;
 	int attack_counter;
 	for (Car::Triangle victim_tri : victim_triangles) {
-		//printf("Triangle %i (%f, %f) (%f,%f) (%f,%f) Area %f Point hitting (%f, %f) \n", counter, t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, first_car->get_triangle_area(victim_triangles[3].a, victim_triangles[3].b, victim_triangles[3].c), impact_vertex.x, impact_vertex.y);
-
 		attack_counter = 0;
 		for (Car::Triangle attacker_tri : attacker_triangles) {
+			//printf("Victim Triangle %i (%f, %f) (%f,%f) (%f,%f) Point hitting (%f, %f) \n", vic_counter, victim_tri.a.x, victim_tri.a.y, victim_tri.b.x, victim_tri.b.y, victim_tri.c.x, victim_tri.c.y, attacker_tri.a.x, attacker_tri.a.y);
+			//printf("Both cars inIntersection? Victim: %i Attacker: %i\n", victim_car->is_in_beyond_intersec(), attacker_car->is_in_beyond_intersec());
 			if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.b, victim_tri)
-			  || victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
+				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
 					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
+					//Sleep(1000);
 					return vic_counter;
 				}
 				attack_counter++;
