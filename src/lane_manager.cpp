@@ -510,7 +510,7 @@ bool LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 			}
 		}
 		if (car_delete(cars[i].get_position())) {
-			lane->m_cars.pop_front();
+			lane->m_cars.erase(lane->m_cars.begin() + i);
 			++m_points;
 		}
 	}
