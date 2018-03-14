@@ -174,7 +174,6 @@ void Lane::turn_car()
 
 bool Lane::is_lane_full() const
 {
-	printf("%zu", m_cars.size());
 	return m_cars.size() >= MaxCarsPerLane;
 }
 
