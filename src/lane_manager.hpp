@@ -5,6 +5,7 @@
 #include "car.hpp"
 #include "direction.hpp"
 #include "car_type.hpp"
+#include "remove_intersection.hpp"
 
 #include <map>
 #include <string>
@@ -17,7 +18,7 @@ public:
 
     //initializes 4 empty lanes
     //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
-    bool init(AI ai);
+    bool init(AI ai, RemoveIntersection remove_intersection);
 
     // Releases instance
     void destroy();
@@ -55,6 +56,8 @@ private:
     float const m_time_per_action = 5000;
     float m_time_remaining;
 		AI* m_ai;
+		RemoveIntersection* m_remove_intersection;
+		std::vector<Car*> cars_in_intersec_removal;
 		std::map<direction, vec2> m_lane_coords;
 		unsigned int m_points;
 

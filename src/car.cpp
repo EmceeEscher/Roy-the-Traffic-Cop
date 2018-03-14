@@ -918,3 +918,7 @@ void Car::change_color() {
 	m_color[1] = 0.f;
 	m_color[2] = 0.f;
 }
+
+bool Car::is_hit() {
+	return m_hit;
+}
