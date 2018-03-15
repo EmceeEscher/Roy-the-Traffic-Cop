@@ -11,12 +11,21 @@ void AI::make_villains_decide(std::map<direction, Lane*> lanes)
 	for (std::map<direction, Lane*>::iterator it = lanes.begin(); it != lanes.end(); it++)
 	{
 		std::deque<Car> carsInLane = it->second->get_cars();
+
+		// Ignore cars that have already entered the intersection
+		int cars_in_intersection = 0;
+		for (std::deque<Car>::iterator car = carsInLane.begin(); car != carsInLane.end(); car++) {
+			if (car->is_in_beyond_intersec()) {
+				cars_in_intersection++;
+			}
+		}
+
 		// Villains should never remain villains after making it to second in line in the intersection.
 		// vehicles generated into lanes without cars already in them are not eligible to be villains
-		if (carsInLane.size() > 1) {
-			if (carsInLane[1].is_villain()) {
+		if (carsInLane.size() > 1 + cars_in_intersection) {
+			if (carsInLane[1 + cars_in_intersection].is_villain()) {
 				direction new_direction = make_villain_decide(it->first, lanes);
-				carsInLane[1].set_desired_direction(new_direction);
+				carsInLane[1 + cars_in_intersection].set_desired_direction(new_direction);
 			}
 		}
 	}
