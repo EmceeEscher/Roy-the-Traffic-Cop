@@ -31,11 +31,16 @@ bool LaneManager::update(float ms)
 
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars
 
-	lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms);
-	lane_queue(m_lanes[direction::WEST], m_lane_coords[direction::EAST], ms);
-	lane_queue(m_lanes[direction::SOUTH], m_lane_coords[direction::SOUTH], ms);
-	lane_queue(m_lanes[direction::EAST], m_lane_coords[direction::WEST], ms);
+	if (lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms) ||
+		lane_queue(m_lanes[direction::WEST], m_lane_coords[direction::EAST], ms) ||
+		lane_queue(m_lanes[direction::SOUTH], m_lane_coords[direction::SOUTH], ms) ||
+		lane_queue(m_lanes[direction::EAST], m_lane_coords[direction::WEST], ms)) {
+		// lane_queue returns true if its time has expired.
+		// If this is the case, we should readjust new villains.
+		m_ai->make_villains_decide(m_lanes);
+	}
 
+	add_car();
 	intersection_collision_check();
 	return true;
 }
@@ -95,7 +100,6 @@ bool LaneManager::intersection_collision_check() {
 }
 
 LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car) {
-	printf("tryna collide\n");
 
 	Car::Triangle victim_triangles[14];
 
@@ -246,23 +250,11 @@ LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* vic
 
 void LaneManager::add_car()
 {
-  int longest_line = 0;
   for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
   {
-    int cars_in_lane = it->second->get_cars().size();
-    if (cars_in_lane > longest_line)
-    {
-      longest_line = cars_in_lane;
-    }
-  }
-
-  for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
-  {
-    int cars_in_lane = it->second->get_cars().size();
-    if ((cars_in_lane < longest_line || it->first == direction::WEST) && !it->second->is_lane_full())
+    if (!it->second->is_lane_full())
     {
       it->second->add_car(carType::REGULAR);
-      break;
     }
   }
 }
@@ -285,6 +277,7 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 void LaneManager::turn_car(direction dir)
 {
   m_lanes[dir]->turn_car();
+  m_lanes[dir]->set_time_remaining(m_lanes[dir]->MaxTimePerCar);
   m_ai->make_villains_decide(m_lanes);
 }
 
@@ -335,13 +328,13 @@ bool LaneManager::lane_collision_check(Car& current_car, Car& front_car) {
 	return false;
 }
 
-void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
+bool LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	lane->update(ms);
-	if (lane->get_time_remaining() <= 0)
+	bool time_expired = lane->get_time_remaining() <= 0;
+	if (time_expired)
 	{
 		lane->turn_car();
 		lane->set_time_remaining(lane->MaxTimePerCar);
-		// m_ai->make_villains_decide(m_lanes); TODO (JORDAN): MAKE THIS WORK!!!!!
 	}
 	std::deque<Car> &cars = lane->m_cars;
 	//Finding out which is currently front
@@ -461,4 +454,6 @@ void LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 			++m_points;
 		}
 	}
+
+	return time_expired;
 }

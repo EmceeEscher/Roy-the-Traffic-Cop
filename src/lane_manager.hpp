@@ -45,7 +45,7 @@ public:
 
 		bool lane_collision_check(Car& current_car, Car& front_car);
 
-		void lane_queue(Lane* lane, vec2 lane_intersection,float ms);
+		bool lane_queue(Lane* lane, vec2 lane_intersection,float ms);
 
 		// Will return true if any cars in the process of turning are colliding
 		bool intersection_collision_check();
