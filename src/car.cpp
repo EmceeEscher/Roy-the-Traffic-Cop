@@ -819,8 +819,8 @@ bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
 	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
 	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
-	if (tArea == 0.f) { printf("why Triangle: (%f %f) (%f %f) (%f %f) Vertex: (%f, %f)\n", t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, test_vertex.x, test_vertex.y); 
-	Sleep(2000);
+	if (tArea == 0.f) {
+		printf("why Triangle: (%f %f) (%f %f) (%f %f) Vertex: (%f, %f)\n", t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, test_vertex.x, test_vertex.y); 
 	}
 	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
 

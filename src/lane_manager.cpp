@@ -64,89 +64,31 @@ bool LaneManager::intersection_collision_check() {
 		for (int j = i + 1; j < cars_in_intersec.size(); j++) {
 			Car* second_car = cars_in_intersec[j];
 			rect_bounding_box second_bb = second_car->get_bounding_box();
-			if (first_car->check_collision(second_bb.bottom_left)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(second_car, first_car, second_bb.bottom_left);
-				if (collided_triangle != -1) {
-					first_car->collided(collided_triangle);
-					second_car->collided(-1);
-					printf("first car getting hit by second bottom left\n");
-					//first_car->change_color();
-				}
-				//DEBUG
 
-
-				//TODO: If mesh_collision_check != -1, apply collision depending on triangle returned
-			}
-			else if (first_car->check_collision(second_bb.bottom_right)) {
+			// First car is victim
+			if (first_car->check_collision(second_bb.bottom_left)
+				|| first_car->check_collision(second_bb.bottom_right)
+				|| first_car->check_collision(second_bb.top_right)
+				|| first_car->check_collision(second_bb.top_left)) {
 				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(second_car, first_car, second_bb.bottom_right);
-				if (collided_triangle != -1) {
-					first_car->collided(collided_triangle);
-					second_car->collided(-1);
-					printf("first car getting hit by second bottom right\n");
-					//first_car->change_color();
+				int victim_triangle = mesh_collision_check(second_car, first_car, { 0.0f, 0.0f }).victim_index;
+				int attacker_triangle = mesh_collision_check(second_car, first_car, { 0.0f, 0.0f }).attacker_index;
+				if (victim_triangle != -1) {
+					first_car->collided(victim_triangle);
+					second_car->collided(attacker_triangle);
 				}
 			}
-			else if (first_car->check_collision(second_bb.top_left)) {
+			//Second car is victim
+			else if (second_car->check_collision(first_bb.bottom_left)
+				|| second_car->check_collision(first_bb.bottom_right)
+				|| second_car->check_collision(first_bb.top_right)
+				|| second_car->check_collision(first_bb.top_left)) {
 				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(second_car, first_car, second_bb.top_left);
-				if (collided_triangle != -1) {
-					first_car->collided(collided_triangle);
-					second_car->collided(-1);
-					printf("first car getting hit by second top left\n");
-					//first_car->change_color();
-				}
-			}
-			else if (first_car->check_collision(second_bb.top_right)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(second_car, first_car, second_bb.top_right);
-				if (collided_triangle != -1) {
-					first_car->collided(collided_triangle);
-					second_car->collided(-1);
-					printf("first car getting hit by second top right\n");
-					//first_car->change_color();
-				}
-			}
-
-			else if (second_car->check_collision(first_bb.bottom_left)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(first_car, second_car, first_bb.bottom_left);
-				if (collided_triangle != -1) {
-					first_car->collided(-1);
-					second_car->collided(collided_triangle);
-					printf("second car getting hit by first bottom left\n");
-					//first_car->change_color();
-				}
-			}
-			else if (second_car->check_collision(first_bb.bottom_right)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(first_car, second_car, first_bb.bottom_right);
-				if (collided_triangle != -1) {
-					first_car->collided(-1);
-					second_car->collided(collided_triangle);
-					printf("second car getting hit by first bottom right\n");
-					//first_car->change_color();
-				}
-			}
-			else if (second_car->check_collision(first_bb.top_right)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(first_car, second_car, first_bb.top_right);
-				if (collided_triangle != -1) {
-					first_car->collided(-1);
-					second_car->collided(collided_triangle);
-					printf("second car getting hit by first top right\n");
-					//first_car->change_color();
-				}
-			}
-			else if (second_car->check_collision(first_bb.top_left)) {
-				collision_occurring = true;
-				int collided_triangle = mesh_collision_check(first_car, second_car, first_bb.top_left);
-				if (collided_triangle != -1) {
-					first_car->collided(-1);
-					second_car->collided(collided_triangle);
-					printf("second car getting hit by first top left\n");
-					//first_car->change_color();
+				int victim_triangle = mesh_collision_check(first_car, second_car, { 0.0f, 0.0f }).victim_index;
+				int attacker_triangle = mesh_collision_check(first_car, second_car, { 0.0f, 0.0f }).attacker_index;
+				if (victim_triangle != -1) {
+					first_car->collided(attacker_triangle);
+					second_car->collided(victim_triangle);
 				}
 			}
 		}
@@ -155,7 +97,7 @@ bool LaneManager::intersection_collision_check() {
 	return collision_occurring;
 }
 
-int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
+LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
 	printf("tryna collide\n");
 
 	Car::Triangle victim_triangles[14];
@@ -281,6 +223,9 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 
 	int vic_counter = 0;
 	int attack_counter;
+	LaneManager::tuple collisionTriangles;
+	collisionTriangles.victim_index = -1;
+	collisionTriangles.attacker_index = -1;
 	for (Car::Triangle victim_tri : victim_triangles) {
 		attack_counter = 0;
 		for (Car::Triangle attacker_tri : attacker_triangles) {
@@ -291,7 +236,9 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
 					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
 					//Sleep(1000);
-					return vic_counter;
+					collisionTriangles.victim_index = vic_counter;
+					collisionTriangles.attacker_index = attack_counter;
+					return collisionTriangles;
 				}
 				attack_counter++;
 		}
@@ -303,7 +250,7 @@ int LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 i
 		// }
 		vic_counter++;
 	}
-	return -1;
+	return collisionTriangles;
 }
 
 void LaneManager::add_car()
