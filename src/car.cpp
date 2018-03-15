@@ -785,8 +785,6 @@ rect_bounding_box Car::get_bounding_box() {
 
 float Car::get_triangle_area(vec2 p0, vec2 p1, vec2 p2) {
 	float tArea = (abs((p1.x - p0.x)*(p2.y - p0.y) - (p2.x - p0.x)*(p1.y - p0.y))) / 2.0f;
-	//float tArea = abs(p0.x * (p1.y - p2.y) + p1.x * (p2.y - p0.y) + p2.x * (p0.y - p1.y)) / 2.0f;
-	//printf("Area before return: %f\n", tArea);
 	return tArea;
 }
 

@@ -71,8 +71,8 @@ bool LaneManager::intersection_collision_check() {
 				|| first_car->check_collision(second_bb.top_right)
 				|| first_car->check_collision(second_bb.top_left)) {
 				collision_occurring = true;
-				int victim_triangle = mesh_collision_check(second_car, first_car, { 0.0f, 0.0f }).victim_index;
-				int attacker_triangle = mesh_collision_check(second_car, first_car, { 0.0f, 0.0f }).attacker_index;
+				int victim_triangle = mesh_collision_check(second_car, first_car).victim_index;
+				int attacker_triangle = mesh_collision_check(second_car, first_car).attacker_index;
 				if (victim_triangle != -1) {
 					first_car->collided(victim_triangle);
 					second_car->collided(attacker_triangle);
@@ -84,8 +84,8 @@ bool LaneManager::intersection_collision_check() {
 				|| second_car->check_collision(first_bb.top_right)
 				|| second_car->check_collision(first_bb.top_left)) {
 				collision_occurring = true;
-				int victim_triangle = mesh_collision_check(first_car, second_car, { 0.0f, 0.0f }).victim_index;
-				int attacker_triangle = mesh_collision_check(first_car, second_car, { 0.0f, 0.0f }).attacker_index;
+				int victim_triangle = mesh_collision_check(first_car, second_car).victim_index;
+				int attacker_triangle = mesh_collision_check(first_car, second_car).attacker_index;
 				if (victim_triangle != -1) {
 					first_car->collided(attacker_triangle);
 					second_car->collided(victim_triangle);
@@ -97,7 +97,7 @@ bool LaneManager::intersection_collision_check() {
 	return collision_occurring;
 }
 
-LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car, vec2 impact_vertex) {
+LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car) {
 	printf("tryna collide\n");
 
 	Car::Triangle victim_triangles[14];
@@ -219,7 +219,7 @@ LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* vic
 	// Determine victim_car's triangle coordinates
 	// Determine which corner of first_car bounding box hit second_car bounding box
 	// For each triangle, check if impact corner is inside
-	// TODO: Depending on which triangle gets hit first, call different collision responses on victim_car
+	// Depending on which triangle gets hit first, call different collision responses on victim_car
 
 	int vic_counter = 0;
 	int attack_counter;
@@ -242,12 +242,6 @@ LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* vic
 				}
 				attack_counter++;
 		}
-		// if (victim_car->check_mesh_collision(impact_vertex, victim_tri)) {
-		// 	printf("triangle %i hit\n", counter);
-		// //	DEBUG to use Sleep, you need to include <windows.h>
-		// //	Sleep(1000);
-		// 	return counter;
-		// }
 		vic_counter++;
 	}
 	return collisionTriangles;
