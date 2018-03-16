@@ -67,14 +67,16 @@ bool LaneManager::intersection_collision_check() {
 			Car* second_car = cars_in_intersec[j];
 			rect_bounding_box second_bb = second_car->get_bounding_box();
 
+			LaneManager::collisionTuple collision_triangles = {-1, -1};
 			// First car is victim
 			if (first_car->check_collision(second_bb.bottom_left)
 				|| first_car->check_collision(second_bb.bottom_right)
 				|| first_car->check_collision(second_bb.top_right)
 				|| first_car->check_collision(second_bb.top_left)) {
 				collision_occurring = true;
-				int victim_triangle = mesh_collision_check(second_car, first_car).victim_index;
-				int attacker_triangle = mesh_collision_check(second_car, first_car).attacker_index;
+				collision_triangles = mesh_collision_check(second_car, first_car);
+				int victim_triangle = collision_triangles.victim_index;
+				int attacker_triangle = collision_triangles.attacker_index;
 				if (victim_triangle != -1) {
 					first_car->collided(victim_triangle);
 					second_car->collided(attacker_triangle);
@@ -86,8 +88,9 @@ bool LaneManager::intersection_collision_check() {
 				|| second_car->check_collision(first_bb.top_right)
 				|| second_car->check_collision(first_bb.top_left)) {
 				collision_occurring = true;
-				int victim_triangle = mesh_collision_check(first_car, second_car).victim_index;
-				int attacker_triangle = mesh_collision_check(first_car, second_car).attacker_index;
+				collision_triangles = mesh_collision_check(second_car, first_car);
+				int victim_triangle = collision_triangles.victim_index;
+				int attacker_triangle = collision_triangles.attacker_index;
 				if (victim_triangle != -1) {
 					first_car->collided(attacker_triangle);
 					second_car->collided(victim_triangle);
@@ -99,7 +102,7 @@ bool LaneManager::intersection_collision_check() {
 	return collision_occurring;
 }
 
-LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car) {
+LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car, Car* victim_car) {
 
 	Car::Triangle victim_triangles[14];
 
@@ -224,7 +227,7 @@ LaneManager::tuple LaneManager::mesh_collision_check(Car* attacker_car, Car* vic
 
 	int vic_counter = 0;
 	int attack_counter;
-	LaneManager::tuple collisionTriangles;
+	LaneManager::collisionTuple collisionTriangles;
 	collisionTriangles.victim_index = -1;
 	collisionTriangles.attacker_index = -1;
 	for (Car::Triangle victim_tri : victim_triangles) {

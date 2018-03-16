@@ -821,7 +821,7 @@ bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 	}
 	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
 
-	return (abs(collisionSum - tArea) <= 2.0f);
+	return (abs(collisionSum - tArea) <= 1.0f);
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {

@@ -12,7 +12,7 @@
 class LaneManager
 {
 public:
-	struct tuple {
+	struct collisionTuple {
 		int attacker_index;
 		int victim_index;
 	};
@@ -51,7 +51,7 @@ public:
 		bool intersection_collision_check();
 
 		// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
-		LaneManager::tuple mesh_collision_check(Car* first_car, Car* second_car);
+		LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
 
 
 private:
