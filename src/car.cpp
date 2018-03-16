@@ -15,6 +15,11 @@ Texture Car::car_texture;
 
 TexturedVertex car_vertices[13];
 
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(1, 7);
+std::uniform_int_distribution<> dis2(0, 3);
+
 uint16_t indices[] = {
 	0,1,2,
 	3,2,1,
@@ -43,18 +48,13 @@ bool Car::init(bool isVillain)
 		}
 	}
 
-	//uncomment below if you want villain to be red cars;
-	srand(time(NULL));
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(1, 7);
-
 	if (isVillain) {
 		car_tex_x0 = 0; //villains are red
 	}
 	else {
 		car_tex_x0 = dis(gen); //other cars are a random texture.
 	}
+
 	// The position (0,0) corresponds to the center of the texture
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
 	//m_hr = car_texture.height * 0.5;
@@ -156,8 +156,6 @@ bool Car::init(bool isVillain)
 	t = 0.f;
 	m_at_intersection = false;
 	m_spin_amount = 0.f;
-	std::srand(std::time(nullptr));
-
 	m_turn_placard = new Placard(m_position, m_rotation);
 
 	m_color[0] = 1.f;
@@ -446,7 +444,7 @@ void Car::generate_desired_direction()
 {
 	m_desired_direction = m_lane;
 	while (m_desired_direction == m_lane) {
-		m_desired_direction = direction(rand() % 4);
+		m_desired_direction = direction(dis2(gen));
 	}
 	m_turn_placard->change_turn_direction(get_turn_direction());
 }
