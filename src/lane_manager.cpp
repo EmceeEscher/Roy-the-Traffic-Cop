@@ -9,10 +9,10 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
-	m_lane_coords[direction::NORTH] = { 450.f,398.f };
-	m_lane_coords[direction::EAST] = { 400.f,540.f };
-	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
-	m_lane_coords[direction::WEST] = { 610.f,450.f };
+  m_lane_coords[direction::NORTH] = { 450.f,398.f };
+  m_lane_coords[direction::EAST] = { 400.f,540.f };
+  m_lane_coords[direction::SOUTH] = { 550.f,590.f };
+  m_lane_coords[direction::WEST] = { 610.f,450.f };
 
   m_time_remaining = m_time_per_action;
   m_points = 0;
