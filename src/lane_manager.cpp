@@ -13,7 +13,6 @@ bool LaneManager::init(AI ai, RemoveIntersection remove_intersection)
 	m_lane_coords[direction::EAST] = { 400.f,540.f };
 	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
 	m_lane_coords[direction::WEST] = { 610.f,450.f };
-  cars_in_intersec_removal;
   m_time_remaining = m_time_per_action;
   m_points = 0;
   m_ai = &ai;
@@ -40,9 +39,6 @@ bool LaneManager::update(float ms)
 		// If this is the case, we should readjust new villains.
 		m_ai->make_villains_decide(m_lanes);
 	}
-
-	m_remove_intersection->remove_car_hit(cars_in_intersec_removal);
-
 	add_car();
 	intersection_collision_check();
 	return true;
@@ -58,7 +54,6 @@ bool LaneManager::intersection_collision_check() {
 			Car* first_car = &(curr_cars[0]);
 			if (first_car->is_in_beyond_intersec()) {
 				cars_in_intersec.push_back(first_car);
-				cars_in_intersec_removal.push_back(first_car);
 			}
 		}
 	}

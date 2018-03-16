@@ -1,11 +1,19 @@
 #pragma once
-#include "lane_manager.hpp"
 #include "car.hpp"
+#include "direction.hpp"
+#include "lane.hpp"
+#include <vector>
 
 class RemoveIntersection {
 public:
+	RemoveIntersection();
+	~RemoveIntersection();
+
 	bool init();
 
-	void remove_car_hit(std::vector<Car*> hit_cars);
+	void check_lanes(std::map<direction, Lane*> m_lanes);
+
+private:
+	std::vector<Car*> cars_in_intersec;
 
 };

@@ -49,6 +49,8 @@ private:
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
+	void clear_intersection();
+
 private:
 	// Window handle
 	GLFWwindow* m_window;
