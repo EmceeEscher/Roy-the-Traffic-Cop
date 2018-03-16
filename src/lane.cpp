@@ -89,25 +89,25 @@ void Lane::add_car(carType type)
 
 		if(new_car.init(new_villain)){
 			if (m_dir == direction::NORTH) {
-				new_car.set_position({ 450.f,-150.f });
+				new_car.set_position({ 450.f,-200.f });
 				new_car.set_rotation(PI / 2);
 				new_car.set_original_rotation(PI / 2);
 				new_car.set_lane(direction::NORTH);
 			}
 			else if (m_dir == direction::WEST) {
-				new_car.set_position({ -150.f,537.f });
+				new_car.set_position({ -200.f,537.f });
 				new_car.set_lane(direction::WEST);
 				new_car.set_rotation(0);
 				new_car.set_original_rotation(0);
 			}
 			else if (m_dir == direction::EAST) {
-				new_car.set_position({ 1150.f,445.f });
+				new_car.set_position({ 1200.f,445.f });
 				new_car.set_rotation(PI);
 				new_car.set_original_rotation(PI);
 				new_car.set_lane(direction::EAST);
 			}
 			else if (m_dir == direction::SOUTH) {
-				new_car.set_position({ 550,1150.f });
+				new_car.set_position({ 550,1200.f });
 				new_car.set_rotation(3.0*PI / 2.0);
 				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
