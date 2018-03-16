@@ -15,6 +15,11 @@ Texture Car::car_texture;
 
 TexturedVertex car_vertices[13];
 
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<> dis(1, 7);
+std::uniform_int_distribution<> dis2(0, 3);
+
 uint16_t indices[] = {
 	0,1,2,
 	3,2,1,
@@ -43,18 +48,13 @@ bool Car::init(bool isVillain)
 		}
 	}
 
-	//uncomment below if you want villain to be red cars;
-	srand(time(NULL));
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dis(1, 7);
-
 	if (isVillain) {
 		car_tex_x0 = 0; //villains are red
 	}
 	else {
 		car_tex_x0 = dis(gen); //other cars are a random texture.
 	}
+
 	// The position (0,0) corresponds to the center of the texture
 	m_wr = car_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
 	//m_hr = car_texture.height * 0.5;
@@ -143,7 +143,7 @@ bool Car::init(bool isVillain)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 5.f, 537.f };
+	m_position = { -200.f, 537.f };
 	m_velocity = { 15.0f, .0f };
 	m_acceleration = { ACC, .0f };
 	m_max_speed = { 200.f };
@@ -156,8 +156,6 @@ bool Car::init(bool isVillain)
 	t = 0.f;
 	m_at_intersection = false;
 	m_spin_amount = 0.f;
-	std::srand(std::time(nullptr));
-
 	m_turn_placard = new Placard(m_position, m_rotation);
 
 	m_color[0] = 1.f;
@@ -446,7 +444,7 @@ void Car::generate_desired_direction()
 {
 	m_desired_direction = m_lane;
 	while (m_desired_direction == m_lane) {
-		m_desired_direction = direction(rand() % 4);
+		m_desired_direction = direction(dis2(gen));
 	}
 	m_turn_placard->change_turn_direction(get_turn_direction());
 }
@@ -791,7 +789,7 @@ vec2 Car::get_vertex_pos(int index) {
 
 	vec2 vertex = {
 		(m_position.x + car_vertices[index].position.x * cos(m_rotation) - car_vertices[index].position.y * sin(m_rotation)),
-		(m_position.y + car_vertices[index].position.y * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
+		(m_position.y + car_vertices[index].position.x * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
 	};
 
 	return vertex;
@@ -816,8 +814,12 @@ bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
 	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
 	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
+	if (tArea == 0.f) {
+		printf("why Triangle: (%f %f) (%f %f) (%f %f) Vertex: (%f, %f)\n", t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, test_vertex.x, test_vertex.y); 
+	}
 	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
-	return (abs(collisionSum - tArea) <= 0.1f);
+
+	return (abs(collisionSum - tArea) <= 1.0f);
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {

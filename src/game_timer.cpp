@@ -579,9 +579,9 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {
-	const int One_Day_Sec = 10000;
+	const int game_sec_per_ms = 332; //sec_in_year/music_length/1000ms
 	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += One_Day_Sec; //alter date speed here
+	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms); 
 	m_current_time = mktime(adv_time);
 
 	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date,
