@@ -12,7 +12,11 @@
 class LaneManager
 {
 public:
-		const float VillainSpawnProbability = 0.25; // We may want to make this level dependent in the future. Revise when levels are added.
+	struct collisionTuple {
+		int attacker_index;
+		int victim_index;
+	};
+	const float VillainSpawnProbability = 0.25; // We may want to make this level dependent in the future. Revise when levels are added.
 
 
     //initializes 4 empty lanes
@@ -47,7 +51,7 @@ public:
 		bool intersection_collision_check();
 
 		// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
-		int mesh_collision_check(Car* first_car, Car* second_car, vec2 first_car_bb);
+		LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
 
 
 private:

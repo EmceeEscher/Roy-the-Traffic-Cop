@@ -789,7 +789,7 @@ vec2 Car::get_vertex_pos(int index) {
 
 	vec2 vertex = {
 		(m_position.x + car_vertices[index].position.x * cos(m_rotation) - car_vertices[index].position.y * sin(m_rotation)),
-		(m_position.y + car_vertices[index].position.y * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
+		(m_position.y + car_vertices[index].position.x * sin(m_rotation) + car_vertices[index].position.y * cos(m_rotation))
 	};
 
 	return vertex;
@@ -814,8 +814,12 @@ bool Car::check_mesh_collision(vec2 test_vertex, Triangle t) {
 	float collisionArea2 = get_triangle_area(t.a, test_vertex, t.c);
 	float collisionArea3 = get_triangle_area(test_vertex, t.b, t.c);
 	float collisionSum = collisionArea1 + collisionArea2 + collisionArea3;
+	if (tArea == 0.f) {
+		printf("why Triangle: (%f %f) (%f %f) (%f %f) Vertex: (%f, %f)\n", t.a.x, t.a.y, t.b.x, t.b.y, t.c.x, t.c.y, test_vertex.x, test_vertex.y); 
+	}
 	//printf("Second car tArea: %f   collisionArea: %f \n", tArea, collisionSum);
-	return (abs(collisionSum - tArea) <= 0.1f);
+
+	return (abs(collisionSum - tArea) <= 1.0f);
 }
 
 bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
