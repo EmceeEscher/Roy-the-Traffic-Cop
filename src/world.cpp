@@ -88,6 +88,7 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to open audio device");
 		return false;
 	}
+	Mix_AllocateChannels(16);
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
 	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
@@ -99,9 +100,8 @@ bool World::init(vec2 screen)
 	}
 
 	// Playing background music undefinitely
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(m_background_music, -1);
-
-	fprintf(stderr, "Loaded music");
 
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);

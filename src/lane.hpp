@@ -11,6 +11,10 @@
 #include <cstdlib>
 #include <ctime>
 
+#define SDL_MAIN_HANDLED
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+
 class Lane
 {
 public:
@@ -71,4 +75,7 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
+
+	Mix_Chunk* m_car_horn;
+	Mix_Chunk* m_car_rev;
 };
