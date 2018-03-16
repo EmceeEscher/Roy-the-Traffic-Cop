@@ -143,7 +143,7 @@ bool Car::init(bool isVillain)
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1;
 	m_scale.y = 1;
-	m_position = { 5.f, 537.f };
+	m_position = { -200.f, 537.f };
 	m_velocity = { 15.0f, .0f };
 	m_acceleration = { ACC, .0f };
 	m_max_speed = { 200.f };
