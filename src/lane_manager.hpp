@@ -8,6 +8,9 @@
 
 #include <map>
 #include <string>
+#define SDL_MAIN_HANDLED
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 class LaneManager
 {
@@ -54,8 +57,9 @@ private:
     std::map<direction, Lane*> m_lanes;
     float const m_time_per_action = 5000;
     float m_time_remaining;
-		AI* m_ai;
-		std::map<direction, vec2> m_lane_coords;
-		unsigned int m_points;
-
+	AI* m_ai;
+	std::map<direction, vec2> m_lane_coords;
+	unsigned int m_points;
+	
+	Mix_Chunk* m_crash;
 };
