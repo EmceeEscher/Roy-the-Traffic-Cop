@@ -310,4 +310,6 @@ void ScoreDisplay::update_score(int score)
 	else {
 		m_current_score = 999;
 	}
+
+	SplitSetScoreDigits(m_current_score, &gt_score);
 }
