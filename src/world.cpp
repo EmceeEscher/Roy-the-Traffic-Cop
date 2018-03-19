@@ -121,6 +121,7 @@ bool World::init(vec2 screen)
 	m_background.init();
 	m_ai.init();
 	m_game_timer.init();
+	m_score_display.init();
 	m_lane_manager.init(m_ai);
 	return m_traffic_cop.init();
 }
@@ -137,7 +138,6 @@ void World::destroy()
 
 	m_traffic_cop.destroy();
 	m_background.destroy();
-	m_car.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -152,6 +152,7 @@ bool World::update(float elapsed_ms)
 	m_game_timer.get_current_time();
 	m_lane_manager.update(elapsed_ms);
 	m_points = m_lane_manager.points();
+	m_score_display.update_score(m_points);
 	return true;
 }
 
@@ -203,6 +204,7 @@ void World::draw()
 		car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
+	m_score_display.draw(projection_2D);
 
 
 

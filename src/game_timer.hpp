@@ -41,9 +41,6 @@ public:
 	// Renders
 	void draw(const mat3& projection) override;
 
-	// update
-	void update(float ms);
-
 private:
 	time_t m_current_time; // Current date
 	vec2 m_scale;
