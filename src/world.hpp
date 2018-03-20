@@ -11,6 +11,7 @@
 #include "lane.hpp"
 #include "direction.hpp"
 #include "score_display.hpp"
+#include "coin.hpp"
 
 // stlib
 #include <vector>
@@ -63,6 +64,7 @@ private:
 	AI m_ai;
 	LaneManager m_lane_manager;
 	ScoreDisplay m_score_display;
+	Coin m_coin_icon;
   
 	float lanes_rot[4];
 
