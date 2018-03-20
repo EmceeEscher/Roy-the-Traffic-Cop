@@ -11,6 +11,8 @@
 #include "lane.hpp"
 #include "direction.hpp"
 #include "remove_intersection.hpp"
+#include "score_display.hpp"
+#include "coin.hpp"
 
 // stlib
 #include <vector>
@@ -67,6 +69,8 @@ private:
 	AI m_ai;
 	RemoveIntersection m_remove_intersection;
 	LaneManager m_lane_manager;
+	ScoreDisplay m_score_display;
+	Coin m_coin_icon;
   
 	float lanes_rot[4];
 

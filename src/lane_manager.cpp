@@ -5,6 +5,11 @@
 
 bool LaneManager::init(AI ai, RemoveIntersection remove_intersection)
 {
+  SDL_Init(SDL_INIT_AUDIO);
+  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+  m_crash = Mix_LoadWAV(audio_path("carCrash.wav"));
+  Mix_AllocateChannels(3);
+  
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -17,6 +22,7 @@ bool LaneManager::init(AI ai, RemoveIntersection remove_intersection)
   m_points = 0;
   m_ai = &ai;
   m_remove_intersection = &remove_intersection;
+
 
   return true;
 }
@@ -97,7 +103,10 @@ bool LaneManager::intersection_collision_check() {
 			}
 		}
 	}
-
+	if (collision_occurring) {
+		Mix_VolumeChunk(m_crash, MIX_MAX_VOLUME / 2);
+		Mix_PlayChannel(-1, m_crash, 0);
+	}
 	return collision_occurring;
 }
 

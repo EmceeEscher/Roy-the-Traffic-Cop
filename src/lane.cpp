@@ -13,20 +13,26 @@ Lane::Lane(direction dir, float villainSpawnProbability)
 	m_lane_coords[direction::WEST] = { 400.f,540.f };
 	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
 	m_lane_coords[direction::EAST] = { 610.f,450.f };
+
+	SDL_Init(SDL_INIT_AUDIO);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	m_car_horn = Mix_LoadWAV(audio_path("carHorn1.wav"));
+	m_car_rev = Mix_LoadWAV(audio_path("carRev.wav"));
+
 }
 
-bool Lane::init(direction dir, float villainSpawnProbability)
-{
-	lanes_rot[0] = PI;			// North
-	lanes_rot[1] = PI / 2.0;		// West
-	lanes_rot[2] = 0;			// South
-	lanes_rot[3] = 3.0*PI / 2.0;	// East
-	m_dir = dir;
-	m_time_remaining = MaxTimePerCar;
-	m_villain_spawn_probability = villainSpawnProbability;
-	std::srand(std::time(nullptr));
-	return true;
-}
+//bool Lane::init(direction dir, float villainSpawnProbability)
+//{
+//	lanes_rot[0] = PI;			// North
+//	lanes_rot[1] = PI / 2.0;		// West
+//	lanes_rot[2] = 0;			// South
+//	lanes_rot[3] = 3.0*PI / 2.0;	// East
+//	m_dir = dir;
+//	m_time_remaining = MaxTimePerCar;
+//	m_villain_spawn_probability = villainSpawnProbability;
+//	std::srand(std::time(nullptr));
+//	return true;
+//}
 
 Lane::~Lane()
 {
@@ -68,6 +74,10 @@ std::deque<Car> Lane::get_cars() const
 bool Lane::update(float ms)
 {
 	m_time_remaining -= ms;
+	if (m_time_remaining <= 2500) {
+		Mix_VolumeChunk(m_car_horn, MIX_MAX_VOLUME / 50);
+		Mix_PlayChannel(-1, m_car_horn, 0);
+	}
 	return true;
 }
 
@@ -143,6 +153,8 @@ void Lane::turn_car()
 					if (selected_car.is_in_beyond_intersec()) {
 						selected_car.speed_up();
 					}
+					Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
+					Mix_PlayChannel(-1, m_car_rev, 0);
 				}
 			}
 
@@ -153,21 +165,14 @@ void Lane::turn_car()
 					if (selected_car.is_in_beyond_intersec()) {
 						selected_car.speed_up();
 					}
+					Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
+					Mix_PlayChannel(-1, m_car_rev, 0);
 				}
 			}
 		}
 
 		if (index + 1 < m_cars.size()) {
 			m_cars[index + 1].start_timer(MaxTimePerCar);
-		}
-
-		//wait...
-		//this->erase_first_car();
-		for(std::deque<Car>::iterator it = m_cars.begin(); it != m_cars.end(); it++)
-		{
-			//*it.advance(); //<-- tell remaining cars to move up in the lane
-			//Do we need to tell them? I'm assuming that they will just move forward until a hit the previous car's collision
-			//box, or until it's touch a stop collision box in which case turn car will then allow them to proceed through. How feasible is this?
 		}
 	}
 }

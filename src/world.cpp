@@ -88,6 +88,7 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to open audio device");
 		return false;
 	}
+	Mix_AllocateChannels(16);
 
 	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
 	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
@@ -99,9 +100,8 @@ bool World::init(vec2 screen)
 	}
 
 	// Playing background music undefinitely
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(m_background_music, -1);
-
-	fprintf(stderr, "Loaded music");
 
 	int fb_w, fb_h;
 			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
@@ -122,7 +122,9 @@ bool World::init(vec2 screen)
 	m_ai.init();
 	m_remove_intersection.init();
 	m_game_timer.init();
-	m_lane_manager.init(m_ai,m_remove_intersection);
+	m_score_display.init();
+	m_lane_manager.init(m_ai);
+	m_coin_icon.init();
 	return m_traffic_cop.init();
 }
 
@@ -155,6 +157,8 @@ bool World::update(float elapsed_ms)
 	m_remove_intersection.update(elapsed_ms,this->hit_count());
 
 	m_points = m_lane_manager.points();
+	m_score_display.update_score(m_points);
+	m_coin_icon.update(elapsed_ms);
 	return true;
 }
 
@@ -207,6 +211,8 @@ void World::draw()
 	m_traffic_cop.draw(projection_2D);
 	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
+	m_score_display.draw(projection_2D);
+	m_coin_icon.draw(projection_2D);
 
 
 
