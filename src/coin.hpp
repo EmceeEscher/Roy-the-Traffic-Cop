@@ -24,6 +24,7 @@ public:
 	void set_vertices(int coin_frame);
 
 private:
+	TexturedVertex coin_vertices[4];
 	float m_prev_time;
 	float m_fps;
 	vec2 m_position; // Window coordinates

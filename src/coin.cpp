@@ -18,6 +18,15 @@ bool Coin::init()
 	glGenBuffers(1, &mesh.vbo);
 	glGenBuffers(1, &mesh.ibo);
 
+	float wr = coin_texture.width * 0.5;
+	float hr = coin_texture.height * 0.5;
+
+	float sprite_width = coin_texture.width / 6;
+	coin_vertices[0].position = { -wr, +hr, 0.f };
+	coin_vertices[1].position = { -wr + sprite_width, +hr, 0.f };
+	coin_vertices[2].position = { -wr + sprite_width, -hr, 0.f };
+	coin_vertices[3].position = { -wr, -hr, 0.f };
+
 	curr_frame = 0;
 	set_vertices(curr_frame);
 
@@ -43,23 +52,14 @@ bool Coin::init()
 
 void Coin::set_vertices(int coin_frame) {
 	// The position (0,0) corresponds to the center of the texture
-	float wr = coin_texture.width * 0.5;
-	float hr = coin_texture.height * 0.5;
 
-	float sprite_width = coin_texture.width / 6;
 
 	float texture_locs[] = { 0.f, 1.f / 6, 2.f / 6, 3.f / 6, 4.f / 6, 5.f / 6, 1.f };
-
-	TexturedVertex vertices[4];
 	
-	vertices[0].position = { -wr, +hr, 0.f };
-	vertices[0].texcoord = { texture_locs[coin_frame], 1.f };//top left
-	vertices[1].position = { -wr + sprite_width, +hr, 0.f };
-	vertices[1].texcoord = { texture_locs[coin_frame + 1], 1.f };//top right
-	vertices[2].position = { -wr + sprite_width, -hr, 0.f };
-	vertices[2].texcoord = { texture_locs[coin_frame + 1], 0.f };//bottom right
-	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[3].texcoord = { texture_locs[coin_frame], 0.f };//bottom left
+	coin_vertices[0].texcoord = { texture_locs[coin_frame], 1.f };//top left
+	coin_vertices[1].texcoord = { texture_locs[coin_frame + 1], 1.f };//top right
+	coin_vertices[2].texcoord = { texture_locs[coin_frame + 1], 0.f };//bottom right
+	coin_vertices[3].texcoord = { texture_locs[coin_frame], 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -69,7 +69,7 @@ void Coin::set_vertices(int coin_frame) {
 
 	// Vertex Buffer creation
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, coin_vertices, GL_DYNAMIC_DRAW);
 
 	// Index Buffer creation
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
