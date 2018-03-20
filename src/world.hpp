@@ -10,6 +10,8 @@
 #include "lane_manager.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
+#include "score_display.hpp"
+#include "coin.hpp"
 
 // stlib
 #include <vector>
@@ -61,8 +63,8 @@ private:
 	Background m_background;
 	AI m_ai;
 	LaneManager m_lane_manager;
-	//Just a single car to show for now.
-	Car m_car;
+	ScoreDisplay m_score_display;
+	Coin m_coin_icon;
   
 	float lanes_rot[4];
 
