@@ -53,12 +53,10 @@ public:
 	bool init();
 
 	// Advances the current in-game time by the appropriate amount of time for the clock tick
-	void advance_time(float real_time_seconds_elapsed);
+	void update_score(int new_score);
 
 	// Split and set Date digits for texture offset
-	void SplitSetDateDigits(int day, gt_tracker* gt_day, 
-							int mon, gt_tracker* gt_mon,
-							int year, gt_tracker* gt_year);
+	void SplitSetScoreDigits(int score, gt_tracker* gt_score);
 
 	// Renders
 	void draw(const mat3& projection) override;

@@ -9,19 +9,11 @@ float s_p_sd;
 gt_tracker gt_date_sp;
 gt_tracker gt_month_sp;
 gt_tracker gt_year_sp;
-int date_digit_0_flip_sd = 0;
-int date_digit_1_flip_sd = 0;
-int month_digit_0_flip_sd = 0;
-int month_digit_1_flip_sd = 0;
 int year_d0_flip_sd = 0;
 int year_d1_flip_sd = 0;
 int year_d2_flip_sd = 0;
 int year_d3_flip_sd = 0;
 
-float month_d0_shown_offset_sd;
-float month_d1_shown_offset_sd;
-float date_d0_shown_offset_sd;
-float date_d1_shown_offset_sd;
 float year_d0_shown_offset_sd;
 float year_d1_shown_offset_sd;
 float year_d2_shown_offset_sd;
@@ -188,115 +180,85 @@ bool ScoreDisplay::init()
 	return true;
 }
 
-void ScoreDisplay::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_tracker* gt_mon, int year, gt_tracker* gt_year_sp) {
-	float year_offset_d0 = std::fmodf(year, 10) * uv_sd;
-	float year_offset_d1 = std::fmodf(year / 10, 10) * uv_sd;
-	float year_offset_d2 = std::fmodf(year / 100, 10) * uv_sd;
-	float year_offset_d3 = std::fmodf(year / 1000, 10) * uv_sd;
+void ScoreDisplay::SplitSetScoreDigits(int score, gt_tracker* gt_score) {
+	float score_offset_d0 = std::fmodf(score, 10) * uv_sd;
+	float score_offset_d1 = std::fmodf(score / 10, 10) * uv_sd;
+	float score_offset_d2 = std::fmodf(score / 100, 10) * uv_sd;
 
-	if (gt_year_sp->digit_0.new_offset != year_offset_d0) { //need to flip
-		year_d0_shown_offset_sd = gt_year_sp->digit_0.old_offset;
-		gt_year_sp->digit_0.new_offset = year_offset_d0;
-		gt_year_sp->digit_0.old_offset = year_offset_d0 - uv_sd;
+	if (gt_score->digit_0.new_offset != score_offset_d0) { //need to flip
+		year_d0_shown_offset_sd = gt_score->digit_0.old_offset;
+		gt_score->digit_0.new_offset = score_offset_d0;
+		gt_score->digit_0.old_offset = score_offset_d0 - uv_sd;
 		year_d0_flip_sd = 1;
-		gt_year_sp->digit_0.flip = 1;
+		gt_score->digit_0.flip = 1;
 
 	}
 	else if (year_d0_flip_sd == 1) {//middle of flipping
-		gt_year_sp->digit_0.flip -= 0.1;
-		if (gt_year_sp->digit_0.flip <= 0) {
-			year_d0_shown_offset_sd = gt_year_sp->digit_0.new_offset; //show new_offset once flipped past halfway
+		gt_score->digit_0.flip -= 0.1;
+		if (gt_score->digit_0.flip <= 0) {
+			year_d0_shown_offset_sd = gt_score->digit_0.new_offset; //show new_offset once flipped past halfway
 		}
-		if (gt_year_sp->digit_0.flip <= -1) {
-			gt_year_sp->digit_0.flip = -1;
+		if (gt_score->digit_0.flip <= -1) {
+			gt_score->digit_0.flip = -1;
 			year_d0_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
 	else if (year_d0_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_year_sp->digit_0.old_offset = year_offset_d0;
+		gt_score->digit_0.old_offset = score_offset_d0;
 	}
 
-	if (gt_year_sp->digit_1.new_offset != year_offset_d1) { //need to flip
-		year_d1_shown_offset_sd = gt_year_sp->digit_1.old_offset;
-		gt_year_sp->digit_1.new_offset = year_offset_d1;
-		gt_year_sp->digit_1.old_offset = year_offset_d1 - uv_sd;
+	if (gt_score->digit_1.new_offset != score_offset_d1) { //need to flip
+		year_d1_shown_offset_sd = gt_score->digit_1.old_offset;
+		gt_score->digit_1.new_offset = score_offset_d1;
+		gt_score->digit_1.old_offset = score_offset_d1 - uv_sd;
 		year_d1_flip_sd = 1;
-		gt_year_sp->digit_1.flip = 1;
+		gt_score->digit_1.flip = 1;
 
 	}
 	else if (year_d1_flip_sd == 1) {//middle of flipping
-		gt_year_sp->digit_1.flip -= 0.1;
-		if (gt_year_sp->digit_1.flip <= 0) {
-			year_d1_shown_offset_sd = gt_year_sp->digit_1.new_offset; //show new_offset once flipped past halfway
+		gt_score->digit_1.flip -= 0.1;
+		if (gt_score->digit_1.flip <= 0) {
+			year_d1_shown_offset_sd = gt_score->digit_1.new_offset; //show new_offset once flipped past halfway
 		}
-		if (gt_year_sp->digit_1.flip <= -1) {
-			gt_year_sp->digit_1.flip = -1;
+		if (gt_score->digit_1.flip <= -1) {
+			gt_score->digit_1.flip = -1;
 			year_d1_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
 	else if (year_d1_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_year_sp->digit_1.old_offset = year_offset_d1;
+		gt_score->digit_1.old_offset = score_offset_d1;
 	}
 
-	if (gt_year_sp->digit_2.new_offset != year_offset_d2) { //need to flip
-		year_d2_shown_offset_sd = gt_year_sp->digit_2.old_offset;
-		gt_year_sp->digit_2.new_offset = year_offset_d2;
-		gt_year_sp->digit_2.old_offset = year_offset_d2 - uv_sd;
+	if (gt_score->digit_2.new_offset != score_offset_d2) { //need to flip
+		year_d2_shown_offset_sd = gt_score->digit_2.old_offset;
+		gt_score->digit_2.new_offset = score_offset_d2;
+		gt_score->digit_2.old_offset = score_offset_d2 - uv_sd;
 		year_d2_flip_sd = 1;
-		gt_year_sp->digit_2.flip = 1;
+		gt_score->digit_2.flip = 1;
 
 	}
 	else if (year_d2_flip_sd == 1) {//middle of flipping
-		gt_year_sp->digit_2.flip -= 0.1;
-		if (gt_year_sp->digit_2.flip <= 0) {
-			year_d2_shown_offset_sd = gt_year_sp->digit_2.new_offset; //show new_offset once flipped past halfway
+		gt_score->digit_2.flip -= 0.1;
+		if (gt_score->digit_2.flip <= 0) {
+			year_d2_shown_offset_sd = gt_score->digit_2.new_offset; //show new_offset once flipped past halfway
 		}
-		if (gt_year_sp->digit_2.flip <= -1) {
-			gt_year_sp->digit_2.flip = -1;
+		if (gt_score->digit_2.flip <= -1) {
+			gt_score->digit_2.flip = -1;
 			year_d2_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
 	else if (year_d2_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_year_sp->digit_2.old_offset = year_offset_d2;
+		gt_score->digit_2.old_offset = score_offset_d2;
 	}
 
-	if (gt_year_sp->digit_3.new_offset != year_offset_d3) { //need to flip
-		year_d3_shown_offset_sd = gt_year_sp->digit_3.old_offset;
-		gt_year_sp->digit_3.new_offset = year_offset_d3;
-		gt_year_sp->digit_3.old_offset = year_offset_d3 - uv_sd;
-		year_d3_flip_sd = 1;
-		gt_year_sp->digit_3.flip = 1;
-
-	}
-	else if (year_d3_flip_sd == 1) {//middle of flipping
-		gt_year_sp->digit_3.flip -= 0.1;
-		if (gt_year_sp->digit_3.flip <= 0) {
-			year_d3_shown_offset_sd = gt_year_sp->digit_3.new_offset; //show new_offset once flipped past halfway
-		}
-		if (gt_year_sp->digit_3.flip <= -1) {
-			gt_year_sp->digit_3.flip = -1;
-			year_d3_flip_sd = 0; //indicate done flipping;
-		}
-
-	}
-	else if (year_d3_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_year_sp->digit_3.old_offset = year_offset_d3;
-	}
 }
 
-void ScoreDisplay::advance_time(float real_time_seconds_elapsed)
+void ScoreDisplay::update_score(int new_score)
 {
-	const int game_sec_per_ms = 332; //sec_in_year/music_length/1000ms
-	struct tm * adv_time = localtime(&m_current_time);
-	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms);
-	m_current_time = mktime(adv_time);
-
-	SplitSetDateDigits(gmtime(&m_current_time)->tm_mday, &gt_date_sp,
-		gmtime(&m_current_time)->tm_mon + 1, &gt_month_sp,
-		gmtime(&m_current_time)->tm_year + 1900, &gt_year_sp);
+	SplitSetScoreDigits(new_score, &gt_year_sp);
 }
 
 void ScoreDisplay::draw(const mat3& projection) {
