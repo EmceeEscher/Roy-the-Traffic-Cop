@@ -9,6 +9,8 @@ public:
 	// Creates instance
 	bool init();
 
+	void destroy();
+
 	// Advances the current in-game time by the appropriate amount of time for the clock tick
 	void update_score(int new_score);
 

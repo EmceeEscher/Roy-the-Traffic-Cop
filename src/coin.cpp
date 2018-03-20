@@ -50,6 +50,18 @@ bool Coin::init()
 	return true;
 }
 
+// Releases all graphics resources
+void Coin::destroy()
+{
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
+}
+
 void Coin::set_vertices(int coin_frame) {
 	// The position (0,0) corresponds to the center of the texture
 

@@ -174,6 +174,16 @@ bool ScoreDisplay::init()
 	return true;
 }
 
+void ScoreDisplay::destroy() {
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
+}
+
 void ScoreDisplay::SplitSetScoreDigits(int score, gt_tracker* gt_score) {
 	float score_offset_d0 = std::fmodf(score, 10) * uv_sd;
 	float score_offset_d1 = std::fmodf(score / 10, 10) * uv_sd;
