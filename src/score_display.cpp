@@ -1,7 +1,7 @@
 #include "score_display.hpp"
 
 Texture ScoreDisplay::calendar_tex_sd;
-TexturedVertex2 score_vertices[96];
+TexturedVertex2 score_vertices[36];
 
 float uv_sd;
 float i_w_sd;
@@ -50,255 +50,101 @@ bool ScoreDisplay::init()
 	s_p_sd = -600.f; //starting position
 	float hr = calendar_tex_sd.height * 0.5;
 
-	//date digit 0 top -- new
-	score_vertices[0].position = { s_p_sd + i_w_sd	    , 0  , 0.f };
-	score_vertices[1].position = { s_p_sd + 2 * i_w_sd  , 0  , 0.f };
-	score_vertices[2].position = { s_p_sd + 2 * i_w_sd	, -hr, 0.f };
-	score_vertices[3].position = { s_p_sd + i_w_sd		, -hr, 0.f };
-	score_vertices[0].texcoord = { uv_sd * 0.f, 0.5  , 0.1f };
-	score_vertices[1].texcoord = { uv_sd * 1.f, 0.5  , 0.1f };
-	score_vertices[2].texcoord = { uv_sd * 1.f, 0.0f , 0.1f };
-	score_vertices[3].texcoord = { uv_sd * 0.f, 0.0f , 0.1f };
-
-	//date digit 0 bottom -- old
-	score_vertices[4].position = { s_p_sd + i_w_sd		, +hr, 0.f };
-	score_vertices[5].position = { s_p_sd + 2 * i_w_sd   , +hr, 0.f };
-	score_vertices[6].position = { s_p_sd + 2 * i_w_sd	, 0, 0.f };
-	score_vertices[7].position = { s_p_sd + i_w_sd		, 0, 0.f };
-	score_vertices[4].texcoord = { uv_sd * 0.f, 1.0f,  0.11f };
-	score_vertices[5].texcoord = { uv_sd * 1.f, 1.0f,  0.11f };
-	score_vertices[6].texcoord = { uv_sd * 1.f, 0.5f, 0.11f };
-	score_vertices[7].texcoord = { uv_sd * 0.f, 0.5f,  0.11f };
-
-	//date display for date digit 0 -- rotating
-	score_vertices[8].position = { s_p_sd + i_w_sd		 , +hr, 0.1f };
-	score_vertices[9].position = { s_p_sd + 2 * i_w_sd  , +hr, 0.1f };
-	score_vertices[10].position = { s_p_sd + 2 * i_w_sd	 , -hr, 0.1f };
-	score_vertices[11].position = { s_p_sd + i_w_sd		 , -hr, 0.1f };
-	score_vertices[8].texcoord = { uv_sd * 0, 1.0f, 1.0f };
-	score_vertices[9].texcoord = { uv_sd * 1, 1.0f, 1.0f };
-	score_vertices[10].texcoord = { uv_sd * 1, 0.0f, 1.0f };
-	score_vertices[11].texcoord = { uv_sd * 0, 0.0f, 1.0f };
-
-
-	//date digit 1 top -- new
-	score_vertices[12].position = { s_p_sd      , 0  , 0.f };
-	score_vertices[13].position = { s_p_sd + i_w_sd, 0  , 0.f };
-	score_vertices[14].position = { s_p_sd + i_w_sd, -hr, 0.f };
-	score_vertices[15].position = { s_p_sd      , -hr, 0.f };
-	score_vertices[12].texcoord = { uv_sd  * 0.f, 0.5f, 0.2f };
-	score_vertices[13].texcoord = { uv_sd  * 1.f, 0.5f, 0.2f };
-	score_vertices[14].texcoord = { uv_sd  * 1.f, 0.0f, 0.2f };
-	score_vertices[15].texcoord = { uv_sd  * 0.f, 0.0f, 0.2f };
-
-	//date digit 1 bottom -- old
-	score_vertices[16].position = { s_p_sd      , +hr , 0.f };
-	score_vertices[17].position = { s_p_sd + i_w_sd, +hr , 0.f };
-	score_vertices[18].position = { s_p_sd + i_w_sd, 0	 , 0.f };
-	score_vertices[19].position = { s_p_sd      , 0	 , 0.f };
-	score_vertices[16].texcoord = { uv_sd  * 0.f, 1.0f, 0.22f };
-	score_vertices[17].texcoord = { uv_sd  * 1.f, 1.0f, 0.22f };
-	score_vertices[18].texcoord = { uv_sd  * 1.f, 0.5f, 0.22f };
-	score_vertices[19].texcoord = { uv_sd  * 0.f, 0.5f, 0.22f };
-
-	//date display for date digit 1 -- rotating
-	score_vertices[20].position = { s_p_sd 	, +hr, 0.2f };
-	score_vertices[21].position = { s_p_sd + i_w_sd , +hr, 0.2f };
-	score_vertices[22].position = { s_p_sd + i_w_sd	, -hr, 0.2f };
-	score_vertices[23].position = { s_p_sd	, -hr, 0.2f };
-	score_vertices[20].texcoord = { uv_sd * 0, 1.0f, 2.0f };
-	score_vertices[21].texcoord = { uv_sd * 1, 1.0f, 2.0f };
-	score_vertices[22].texcoord = { uv_sd * 1, 0.0f, 2.0f };
-	score_vertices[23].texcoord = { uv_sd * 0, 0.0f, 2.0f };
-
-	//month digit 0 top -- new
-	score_vertices[24].position = { s_p_sd + 3.5f * i_w_sd	, 0  , 0.f };
-	score_vertices[25].position = { s_p_sd + 4.5f * i_w_sd , 0  , 0.f };
-	score_vertices[26].position = { s_p_sd + 4.5f * i_w_sd	, -hr, 0.f };
-	score_vertices[27].position = { s_p_sd + 3.5f * i_w_sd	, -hr, 0.f };
-	score_vertices[24].texcoord = { uv_sd * 0.f, 0.5  , 0.3f };
-	score_vertices[25].texcoord = { uv_sd * 1.f, 0.5  , 0.3f };
-	score_vertices[26].texcoord = { uv_sd * 1.f, 0.0f , 0.3f };
-	score_vertices[27].texcoord = { uv_sd * 0.f, 0.0f , 0.3f };
-
-	//month digit 0 bottom -- old
-	score_vertices[28].position = { s_p_sd + 3.5f * i_w_sd	, +hr, 0.f };
-	score_vertices[29].position = { s_p_sd + 4.5f * i_w_sd , +hr, 0.f };
-	score_vertices[30].position = { s_p_sd + 4.5f * i_w_sd	, 0, 0.f };
-	score_vertices[31].position = { s_p_sd + 3.5f * i_w_sd	, 0, 0.f };
-	score_vertices[28].texcoord = { uv_sd * 0.f, 1.0f,  0.33f };
-	score_vertices[29].texcoord = { uv_sd * 1.f, 1.0f,  0.33f };
-	score_vertices[30].texcoord = { uv_sd * 1.f, 0.5f,  0.33f };
-	score_vertices[31].texcoord = { uv_sd * 0.f, 0.5f,  0.33f };
-
-	//month display for date digit 0 -- rotating
-	score_vertices[32].position = { s_p_sd + 3.5f * i_w_sd	, +hr, 0.3f };
-	score_vertices[33].position = { s_p_sd + 4.5f * i_w_sd , +hr, 0.3f };
-	score_vertices[34].position = { s_p_sd + 4.5f * i_w_sd	, -hr, 0.3f };
-	score_vertices[35].position = { s_p_sd + 3.5f * i_w_sd	, -hr, 0.3f };
-	score_vertices[32].texcoord = { uv_sd * 0, 1.0f, 3.0f };
-	score_vertices[33].texcoord = { uv_sd * 1, 1.0f, 3.0f };
-	score_vertices[34].texcoord = { uv_sd * 1, 0.0f, 3.0f };
-	score_vertices[35].texcoord = { uv_sd * 0, 0.0f, 3.0f };
-
-	//month digit 1 top -- new
-	score_vertices[36].position = { s_p_sd + 2.5f * i_w_sd, 0  , 0.f };
-	score_vertices[37].position = { s_p_sd + 3.5f * i_w_sd, 0  , 0.f };
-	score_vertices[38].position = { s_p_sd + 3.5f * i_w_sd, -hr, 0.f };
-	score_vertices[39].position = { s_p_sd + 2.5f * i_w_sd, -hr, 0.f };
-	score_vertices[36].texcoord = { uv_sd  * 0.f, 0.5f, 0.4f };
-	score_vertices[37].texcoord = { uv_sd  * 1.f, 0.5f, 0.4f };
-	score_vertices[38].texcoord = { uv_sd  * 1.f, 0.0f, 0.4f };
-	score_vertices[39].texcoord = { uv_sd  * 0.f, 0.0f, 0.4f };
-
-	//month digit 1 bottom -- old
-	score_vertices[40].position = { s_p_sd + 2.5f * i_w_sd, +hr , 0.f };
-	score_vertices[41].position = { s_p_sd + 3.5f * i_w_sd, +hr , 0.f };
-	score_vertices[42].position = { s_p_sd + 3.5f * i_w_sd, 0	 , 0.f };
-	score_vertices[43].position = { s_p_sd + 2.5f * i_w_sd, 0	 , 0.f };
-	score_vertices[40].texcoord = { uv_sd  * 0.f, 1.0f, 0.44f };
-	score_vertices[41].texcoord = { uv_sd  * 1.f, 1.0f, 0.44f };
-	score_vertices[42].texcoord = { uv_sd  * 1.f, 0.5f, 0.44f };
-	score_vertices[43].texcoord = { uv_sd  * 0.f, 0.5f, 0.44f };
-
-	//month display for date digit 1 -- rotating
-	score_vertices[44].position = { s_p_sd + 2.5f * i_w_sd, +hr, 0.4f };
-	score_vertices[45].position = { s_p_sd + 3.5f * i_w_sd, +hr, 0.4f };
-	score_vertices[46].position = { s_p_sd + 3.5f * i_w_sd, -hr, 0.4f };
-	score_vertices[47].position = { s_p_sd + 2.5f * i_w_sd, -hr, 0.4f };
-	score_vertices[44].texcoord = { uv_sd * 0, 1.0f, 4.0f };
-	score_vertices[45].texcoord = { uv_sd * 1, 1.0f, 4.0f };
-	score_vertices[46].texcoord = { uv_sd * 1, 0.0f, 4.0f };
-	score_vertices[47].texcoord = { uv_sd * 0, 0.0f, 4.0f };
-
 	//year d0 top -- new
-	score_vertices[48].position = { s_p_sd + 8.f * i_w_sd, 0  , 0.f };
-	score_vertices[49].position = { s_p_sd + 9.f * i_w_sd, 0  , 0.f };
-	score_vertices[50].position = { s_p_sd + 9.f * i_w_sd, -hr, 0.f };
-	score_vertices[51].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.f };
-	score_vertices[48].texcoord = { uv_sd  * 0.f, 0.5f, 0.5f };
-	score_vertices[49].texcoord = { uv_sd  * 1.f, 0.5f, 0.5f };
-	score_vertices[50].texcoord = { uv_sd  * 1.f, 0.0f, 0.5f };
-	score_vertices[51].texcoord = { uv_sd  * 0.f, 0.0f, 0.5f };
+	score_vertices[0].position = { s_p_sd + 8.f * i_w_sd, 0  , 0.f };
+	score_vertices[1].position = { s_p_sd + 9.f * i_w_sd, 0  , 0.f };
+	score_vertices[2].position = { s_p_sd + 9.f * i_w_sd, -hr, 0.f };
+	score_vertices[3].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.f };
+	score_vertices[0].texcoord = { uv_sd  * 0.f, 0.5f, 0.5f };
+	score_vertices[1].texcoord = { uv_sd  * 1.f, 0.5f, 0.5f };
+	score_vertices[2].texcoord = { uv_sd  * 1.f, 0.0f, 0.5f };
+	score_vertices[3].texcoord = { uv_sd  * 0.f, 0.0f, 0.5f };
 
 	//year d0 bottom -- old
-	score_vertices[52].position = { s_p_sd + 8.f * i_w_sd, +hr , 0.f };
-	score_vertices[53].position = { s_p_sd + 9.f * i_w_sd, +hr , 0.f };
-	score_vertices[54].position = { s_p_sd + 9.f * i_w_sd, 0	 , 0.f };
-	score_vertices[55].position = { s_p_sd + 8.f * i_w_sd, 0	 , 0.f };
-	score_vertices[52].texcoord = { uv_sd  * 0.f, 1.0f, 0.55f };
-	score_vertices[53].texcoord = { uv_sd  * 1.f, 1.0f, 0.55f };
-	score_vertices[54].texcoord = { uv_sd  * 1.f, 0.5f, 0.55f };
-	score_vertices[55].texcoord = { uv_sd  * 0.f, 0.5f, 0.55f };
+	score_vertices[4].position = { s_p_sd + 8.f * i_w_sd, +hr , 0.f };
+	score_vertices[5].position = { s_p_sd + 9.f * i_w_sd, +hr , 0.f };
+	score_vertices[6].position = { s_p_sd + 9.f * i_w_sd, 0	 , 0.f };
+	score_vertices[7].position = { s_p_sd + 8.f * i_w_sd, 0	 , 0.f };
+	score_vertices[4].texcoord = { uv_sd  * 0.f, 1.0f, 0.55f };
+	score_vertices[5].texcoord = { uv_sd  * 1.f, 1.0f, 0.55f };
+	score_vertices[6].texcoord = { uv_sd  * 1.f, 0.5f, 0.55f };
+	score_vertices[7].texcoord = { uv_sd  * 0.f, 0.5f, 0.55f };
 
 	//year d0 -- rotating
-	score_vertices[56].position = { s_p_sd + 8.f * i_w_sd, +hr, 0.5f };
-	score_vertices[57].position = { s_p_sd + 9.f * i_w_sd, +hr, 0.5f };
-	score_vertices[58].position = { s_p_sd + 9.f * i_w_sd, -hr, 0.5f };
-	score_vertices[59].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.5f };
-	score_vertices[56].texcoord = { uv_sd * 0, 1.0f, 5.0f };
-	score_vertices[57].texcoord = { uv_sd * 1, 1.0f, 5.0f };
-	score_vertices[58].texcoord = { uv_sd * 1, 0.0f, 5.0f };
-	score_vertices[59].texcoord = { uv_sd * 0, 0.0f, 5.0f };
+	score_vertices[8].position = { s_p_sd + 8.f * i_w_sd, +hr, 0.5f };
+	score_vertices[9].position = { s_p_sd + 9.f * i_w_sd, +hr, 0.5f };
+	score_vertices[10].position = { s_p_sd + 9.f * i_w_sd, -hr, 0.5f };
+	score_vertices[11].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.5f };
+	score_vertices[8].texcoord = { uv_sd * 0, 1.0f, 5.0f };
+	score_vertices[9].texcoord = { uv_sd * 1, 1.0f, 5.0f };
+	score_vertices[10].texcoord = { uv_sd * 1, 0.0f, 5.0f };
+	score_vertices[11].texcoord = { uv_sd * 0, 0.0f, 5.0f };
 
 	//year d1 top -- new
-	score_vertices[60].position = { s_p_sd + 7.f * i_w_sd, 0  , 0.f };
-	score_vertices[61].position = { s_p_sd + 8.f * i_w_sd, 0  , 0.f };
-	score_vertices[62].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.f };
-	score_vertices[63].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.f };
-	score_vertices[60].texcoord = { uv_sd  * 0.f, 0.5f, 0.6f };
-	score_vertices[61].texcoord = { uv_sd  * 1.f, 0.5f, 0.6f };
-	score_vertices[62].texcoord = { uv_sd  * 1.f, 0.0f, 0.6f };
-	score_vertices[63].texcoord = { uv_sd  * 0.f, 0.0f, 0.6f };
+	score_vertices[12].position = { s_p_sd + 7.f * i_w_sd, 0  , 0.f };
+	score_vertices[13].position = { s_p_sd + 8.f * i_w_sd, 0  , 0.f };
+	score_vertices[14].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.f };
+	score_vertices[15].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.f };
+	score_vertices[12].texcoord = { uv_sd  * 0.f, 0.5f, 0.6f };
+	score_vertices[13].texcoord = { uv_sd  * 1.f, 0.5f, 0.6f };
+	score_vertices[14].texcoord = { uv_sd  * 1.f, 0.0f, 0.6f };
+	score_vertices[15].texcoord = { uv_sd  * 0.f, 0.0f, 0.6f };
 
 	//year d1 bottom -- old
-	score_vertices[64].position = { s_p_sd + 7.f * i_w_sd, +hr , 0.f };
-	score_vertices[65].position = { s_p_sd + 8.f * i_w_sd, +hr , 0.f };
-	score_vertices[66].position = { s_p_sd + 8.f * i_w_sd, 0	 , 0.f };
-	score_vertices[67].position = { s_p_sd + 7.f * i_w_sd, 0	 , 0.f };
-	score_vertices[64].texcoord = { uv_sd  * 0.f, 1.0f, 0.66f };
-	score_vertices[65].texcoord = { uv_sd  * 1.f, 1.0f, 0.66f };
-	score_vertices[66].texcoord = { uv_sd  * 1.f, 0.5f, 0.66f };
-	score_vertices[67].texcoord = { uv_sd  * 0.f, 0.5f, 0.66f };
+	score_vertices[16].position = { s_p_sd + 7.f * i_w_sd, +hr , 0.f };
+	score_vertices[17].position = { s_p_sd + 8.f * i_w_sd, +hr , 0.f };
+	score_vertices[18].position = { s_p_sd + 8.f * i_w_sd, 0	 , 0.f };
+	score_vertices[19].position = { s_p_sd + 7.f * i_w_sd, 0	 , 0.f };
+	score_vertices[16].texcoord = { uv_sd  * 0.f, 1.0f, 0.66f };
+	score_vertices[17].texcoord = { uv_sd  * 1.f, 1.0f, 0.66f };
+	score_vertices[18].texcoord = { uv_sd  * 1.f, 0.5f, 0.66f };
+	score_vertices[19].texcoord = { uv_sd  * 0.f, 0.5f, 0.66f };
 
 	//year d1 -- rotating
-	score_vertices[68].position = { s_p_sd + 7.f * i_w_sd, +hr, 0.6f };
-	score_vertices[69].position = { s_p_sd + 8.f * i_w_sd, +hr, 0.6f };
-	score_vertices[70].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.6f };
-	score_vertices[71].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.6f };
-	score_vertices[68].texcoord = { uv_sd * 0, 1.0f, 6.0f };
-	score_vertices[69].texcoord = { uv_sd * 1, 1.0f, 6.0f };
-	score_vertices[70].texcoord = { uv_sd * 1, 0.0f, 6.0f };
-	score_vertices[71].texcoord = { uv_sd * 0, 0.0f, 6.0f };
+	score_vertices[20].position = { s_p_sd + 7.f * i_w_sd, +hr, 0.6f };
+	score_vertices[21].position = { s_p_sd + 8.f * i_w_sd, +hr, 0.6f };
+	score_vertices[22].position = { s_p_sd + 8.f * i_w_sd, -hr, 0.6f };
+	score_vertices[23].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.6f };
+	score_vertices[20].texcoord = { uv_sd * 0, 1.0f, 6.0f };
+	score_vertices[21].texcoord = { uv_sd * 1, 1.0f, 6.0f };
+	score_vertices[22].texcoord = { uv_sd * 1, 0.0f, 6.0f };
+	score_vertices[23].texcoord = { uv_sd * 0, 0.0f, 6.0f };
 
 	//year d2 top -- new
-	score_vertices[72].position = { s_p_sd + 6.f * i_w_sd, 0  , 0.f };
-	score_vertices[73].position = { s_p_sd + 7.f * i_w_sd, 0  , 0.f };
-	score_vertices[74].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.f };
-	score_vertices[75].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.f };
-	score_vertices[72].texcoord = { uv_sd  * 0.f, 0.5f, 0.7f };
-	score_vertices[73].texcoord = { uv_sd  * 1.f, 0.5f, 0.7f };
-	score_vertices[74].texcoord = { uv_sd  * 1.f, 0.0f, 0.7f };
-	score_vertices[75].texcoord = { uv_sd  * 0.f, 0.0f, 0.7f };
+	score_vertices[24].position = { s_p_sd + 6.f * i_w_sd, 0  , 0.f };
+	score_vertices[25].position = { s_p_sd + 7.f * i_w_sd, 0  , 0.f };
+	score_vertices[26].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.f };
+	score_vertices[27].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.f };
+	score_vertices[24].texcoord = { uv_sd  * 0.f, 0.5f, 0.7f };
+	score_vertices[25].texcoord = { uv_sd  * 1.f, 0.5f, 0.7f };
+	score_vertices[26].texcoord = { uv_sd  * 1.f, 0.0f, 0.7f };
+	score_vertices[27].texcoord = { uv_sd  * 0.f, 0.0f, 0.7f };
 
 	//year d2 bottom -- old
-	score_vertices[76].position = { s_p_sd + 6.f * i_w_sd, +hr , 0.f };
-	score_vertices[77].position = { s_p_sd + 7.f * i_w_sd, +hr , 0.f };
-	score_vertices[78].position = { s_p_sd + 7.f * i_w_sd, 0	 , 0.f };
-	score_vertices[79].position = { s_p_sd + 6.f * i_w_sd, 0	 , 0.f };
-	score_vertices[76].texcoord = { uv_sd  * 0.f, 1.0f, 0.77f };
-	score_vertices[77].texcoord = { uv_sd  * 1.f, 1.0f, 0.77f };
-	score_vertices[78].texcoord = { uv_sd  * 1.f, 0.5f, 0.77f };
-	score_vertices[79].texcoord = { uv_sd  * 0.f, 0.5f, 0.77f };
+	score_vertices[28].position = { s_p_sd + 6.f * i_w_sd, +hr , 0.f };
+	score_vertices[29].position = { s_p_sd + 7.f * i_w_sd, +hr , 0.f };
+	score_vertices[30].position = { s_p_sd + 7.f * i_w_sd, 0	 , 0.f };
+	score_vertices[31].position = { s_p_sd + 6.f * i_w_sd, 0	 , 0.f };
+	score_vertices[28].texcoord = { uv_sd  * 0.f, 1.0f, 0.77f };
+	score_vertices[29].texcoord = { uv_sd  * 1.f, 1.0f, 0.77f };
+	score_vertices[30].texcoord = { uv_sd  * 1.f, 0.5f, 0.77f };
+	score_vertices[31].texcoord = { uv_sd  * 0.f, 0.5f, 0.77f };
 
 	//year d2 -- rotating
-	score_vertices[80].position = { s_p_sd + 6.f * i_w_sd, +hr, 0.7f };
-	score_vertices[81].position = { s_p_sd + 7.f * i_w_sd, +hr, 0.7f };
-	score_vertices[82].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.7f };
-	score_vertices[83].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.7f };
-	score_vertices[80].texcoord = { uv_sd * 0, 1.0f, 7.0f };
-	score_vertices[81].texcoord = { uv_sd * 1, 1.0f, 7.0f };
-	score_vertices[82].texcoord = { uv_sd * 1, 0.0f, 7.0f };
-	score_vertices[83].texcoord = { uv_sd * 0, 0.0f, 7.0f };
+	score_vertices[32].position = { s_p_sd + 6.f * i_w_sd, +hr, 0.7f };
+	score_vertices[33].position = { s_p_sd + 7.f * i_w_sd, +hr, 0.7f };
+	score_vertices[34].position = { s_p_sd + 7.f * i_w_sd, -hr, 0.7f };
+	score_vertices[35].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.7f };
+	score_vertices[32].texcoord = { uv_sd * 0, 1.0f, 7.0f };
+	score_vertices[33].texcoord = { uv_sd * 1, 1.0f, 7.0f };
+	score_vertices[34].texcoord = { uv_sd * 1, 0.0f, 7.0f };
+	score_vertices[35].texcoord = { uv_sd * 0, 0.0f, 7.0f };
 
-	//year d3 top -- new
-	score_vertices[84].position = { s_p_sd + 5.f * i_w_sd, 0  , 0.f };
-	score_vertices[85].position = { s_p_sd + 6.f * i_w_sd, 0  , 0.f };
-	score_vertices[86].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.f };
-	score_vertices[87].position = { s_p_sd + 5.f * i_w_sd, -hr, 0.f };
-	score_vertices[84].texcoord = { uv_sd  * 0.f, 0.5f, 0.8f };
-	score_vertices[85].texcoord = { uv_sd  * 1.f, 0.5f, 0.8f };
-	score_vertices[86].texcoord = { uv_sd  * 1.f, 0.0f, 0.8f };
-	score_vertices[87].texcoord = { uv_sd  * 0.f, 0.0f, 0.8f };
-
-	//year d3 bottom -- old
-	score_vertices[88].position = { s_p_sd + 5.f * i_w_sd, +hr , 0.f };
-	score_vertices[89].position = { s_p_sd + 6.f * i_w_sd, +hr , 0.f };
-	score_vertices[90].position = { s_p_sd + 6.f * i_w_sd, 0	 , 0.f };
-	score_vertices[91].position = { s_p_sd + 5.f * i_w_sd, 0	 , 0.f };
-	score_vertices[88].texcoord = { uv_sd  * 0.f, 1.0f, 0.88f };
-	score_vertices[89].texcoord = { uv_sd  * 1.f, 1.0f, 0.88f };
-	score_vertices[90].texcoord = { uv_sd  * 1.f, 0.5f, 0.88f };
-	score_vertices[91].texcoord = { uv_sd  * 0.f, 0.5f, 0.88f };
-
-	//year d3 -- rotating
-	score_vertices[92].position = { s_p_sd + 5.f * i_w_sd, +hr, 0.8f };
-	score_vertices[93].position = { s_p_sd + 6.f * i_w_sd, +hr, 0.8f };
-	score_vertices[94].position = { s_p_sd + 6.f * i_w_sd, -hr, 0.8f };
-	score_vertices[95].position = { s_p_sd + 5.f * i_w_sd, -hr, 0.8f };
-	score_vertices[92].texcoord = { uv_sd * 0, 1.0f, 8.0f };
-	score_vertices[93].texcoord = { uv_sd * 1, 1.0f, 8.0f };
-	score_vertices[94].texcoord = { uv_sd * 1, 0.0f, 8.0f };
-	score_vertices[95].texcoord = { uv_sd * 0, 0.0f, 8.0f };
-
-	uint16_t indices[] = { 0,3,1,1,3,2,4,7,5,5,7,6,8,11,9,9,11,10,
+	uint16_t indices[] = { 
+		0,3,1,1,3,2,4,7,5,5,7,6,8,11,9,9,11,10,
 		12,15,13,13,15,14,16,19,17,17,19,18,20,23,21,21,23,22,
-		24,27,25,25,27,26,28,31,29,29,31,30,32,35,33,33,35,34,
-		36,39,37,37,39,38,40,43,41,41,43,42,44,47,45,45,47,46,
-		48,51,49,49,51,50,52,55,53,53,55,54,56,59,57,57,59,58,
-		60,63,61,61,63,62,64,67,65,65,67,66,68,71,69,69,71,70,
-		72,75,73,73,75,74,76,79,77,77,79,78,80,83,81,81,83,82,
-		84,87,85,85,87,86,88,91,89,89,91,90,92,95,93,93,95,94 };
+		24,27,25,25,27,26,28,31,29,29,30,30,32,35,33,33,35,34
+	};
 
 	// Clearing errors
 	gl_flush_errors();
@@ -306,12 +152,12 @@ bool ScoreDisplay::init()
 	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 96, score_vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 36, score_vertices, GL_STATIC_DRAW);
 
 	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 144, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 54, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
