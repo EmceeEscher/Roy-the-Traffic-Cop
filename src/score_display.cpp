@@ -1,35 +1,29 @@
 #include "score_display.hpp"
 
-Texture ScoreDisplay::calendar_tex_sd;
+Texture ScoreDisplay::score_tex;
 TexturedVertex2 score_vertices[36];
 
 float uv_sd;
 float i_w_sd;
 float s_p_sd;
-gt_tracker gt_date_sp;
-gt_tracker gt_month_sp;
-gt_tracker gt_year_sp;
-int year_d0_flip_sd = 0;
-int year_d1_flip_sd = 0;
-int year_d2_flip_sd = 0;
-int year_d3_flip_sd = 0;
+gt_tracker gt_curr_score;
+int d0_flip_sd = 0;
+int d1_flip_sd = 0;
+int d2_flip_sd = 0;
+int d3_flip_sd = 0;
 
-float year_d0_shown_offset_sd;
-float year_d1_shown_offset_sd;
-float year_d2_shown_offset_sd;
-float year_d3_shown_offset_sd;
+float d0_shown_offset_sd;
+float d1_shown_offset_sd;
+float d2_shown_offset_sd;
+float d3_shown_offset_sd;
 
 bool ScoreDisplay::init()
 {
-	struct tm init_time = { 0 };
-	init_time.tm_mday = DaysAfterUnixDate_sd + 1; //mktime uses 1 based indexing for days
-	init_time.tm_year = 70; // mktime starts from 1900 for some reason
-	m_current_time = mktime(&init_time);
 
 	//load texture
-	if (!calendar_tex_sd.is_valid())
+	if (!score_tex.is_valid())
 	{
-		if (!calendar_tex_sd.load_from_file(textures_path("numbers.png")))
+		if (!score_tex.load_from_file(textures_path("numbers.png")))
 		{
 			fprintf(stderr, "Failed to load game timer texture!");
 			return false;
@@ -37,10 +31,10 @@ bool ScoreDisplay::init()
 	}
 
 	//centre of the texture
-	uv_sd = 100.f / calendar_tex_sd.width; //texture uv
-	i_w_sd = calendar_tex_sd.width / 10.f; //individual number width
+	uv_sd = 100.f / score_tex.width; //texture uv
+	i_w_sd = score_tex.width / 10.f; //individual number width
 	s_p_sd = -600.f; //starting position
-	float hr = calendar_tex_sd.height * 0.5;
+	float hr = score_tex.height * 0.5;
 
 	//year d0 top -- new
 	score_vertices[0].position = { s_p_sd + 8.f * i_w_sd, 0  , 0.f };
@@ -162,20 +156,20 @@ bool ScoreDisplay::init()
 	m_scale.y = 0.4;
 	m_position = { 100.f, 80.f };
 
-	gt_year_sp.digit_0.old_offset = 0.0f;
-	gt_year_sp.digit_0.new_offset = uv_sd * 8;
-	gt_year_sp.digit_0.flip = -1;
-	year_d0_shown_offset_sd = uv_sd * 8;
+	gt_curr_score.digit_0.old_offset = 0.0f;
+	gt_curr_score.digit_0.new_offset = uv_sd * 8;
+	gt_curr_score.digit_0.flip = -1;
+	d0_shown_offset_sd = uv_sd * 8;
 
-	gt_year_sp.digit_1.old_offset = 0.0f;
-	gt_year_sp.digit_1.new_offset = uv_sd * 1;
-	gt_year_sp.digit_1.flip = -1;
-	year_d1_shown_offset_sd = uv_sd * 1;
+	gt_curr_score.digit_1.old_offset = 0.0f;
+	gt_curr_score.digit_1.new_offset = uv_sd * 1;
+	gt_curr_score.digit_1.flip = -1;
+	d1_shown_offset_sd = uv_sd * 1;
 
-	gt_year_sp.digit_2.old_offset = 0.0f;
-	gt_year_sp.digit_2.new_offset = uv_sd * 0;
-	gt_year_sp.digit_2.flip = -1;
-	year_d2_shown_offset_sd = uv_sd * 0;
+	gt_curr_score.digit_2.old_offset = 0.0f;
+	gt_curr_score.digit_2.new_offset = uv_sd * 0;
+	gt_curr_score.digit_2.flip = -1;
+	d2_shown_offset_sd = uv_sd * 0;
 
 	return true;
 }
@@ -186,71 +180,71 @@ void ScoreDisplay::SplitSetScoreDigits(int score, gt_tracker* gt_score) {
 	float score_offset_d2 = std::fmodf(score / 100, 10) * uv_sd;
 
 	if (gt_score->digit_0.new_offset != score_offset_d0) { //need to flip
-		year_d0_shown_offset_sd = gt_score->digit_0.old_offset;
+		d0_shown_offset_sd = gt_score->digit_0.old_offset;
 		gt_score->digit_0.new_offset = score_offset_d0;
 		gt_score->digit_0.old_offset = score_offset_d0 - uv_sd;
-		year_d0_flip_sd = 1;
+		d0_flip_sd = 1;
 		gt_score->digit_0.flip = 1;
 
 	}
-	else if (year_d0_flip_sd == 1) {//middle of flipping
+	else if (d0_flip_sd == 1) {//middle of flipping
 		gt_score->digit_0.flip -= 0.1;
 		if (gt_score->digit_0.flip <= 0) {
-			year_d0_shown_offset_sd = gt_score->digit_0.new_offset; //show new_offset once flipped past halfway
+			d0_shown_offset_sd = gt_score->digit_0.new_offset; //show new_offset once flipped past halfway
 		}
 		if (gt_score->digit_0.flip <= -1) {
 			gt_score->digit_0.flip = -1;
-			year_d0_flip_sd = 0; //indicate done flipping;
+			d0_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
-	else if (year_d0_flip_sd == 0) {//done flipping, waiting for new flip
+	else if (d0_flip_sd == 0) {//done flipping, waiting for new flip
 		gt_score->digit_0.old_offset = score_offset_d0;
 	}
 
 	if (gt_score->digit_1.new_offset != score_offset_d1) { //need to flip
-		year_d1_shown_offset_sd = gt_score->digit_1.old_offset;
+		d1_shown_offset_sd = gt_score->digit_1.old_offset;
 		gt_score->digit_1.new_offset = score_offset_d1;
 		gt_score->digit_1.old_offset = score_offset_d1 - uv_sd;
-		year_d1_flip_sd = 1;
+		d1_flip_sd = 1;
 		gt_score->digit_1.flip = 1;
 
 	}
-	else if (year_d1_flip_sd == 1) {//middle of flipping
+	else if (d1_flip_sd == 1) {//middle of flipping
 		gt_score->digit_1.flip -= 0.1;
 		if (gt_score->digit_1.flip <= 0) {
-			year_d1_shown_offset_sd = gt_score->digit_1.new_offset; //show new_offset once flipped past halfway
+			d1_shown_offset_sd = gt_score->digit_1.new_offset; //show new_offset once flipped past halfway
 		}
 		if (gt_score->digit_1.flip <= -1) {
 			gt_score->digit_1.flip = -1;
-			year_d1_flip_sd = 0; //indicate done flipping;
+			d1_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
-	else if (year_d1_flip_sd == 0) {//done flipping, waiting for new flip
+	else if (d1_flip_sd == 0) {//done flipping, waiting for new flip
 		gt_score->digit_1.old_offset = score_offset_d1;
 	}
 
 	if (gt_score->digit_2.new_offset != score_offset_d2) { //need to flip
-		year_d2_shown_offset_sd = gt_score->digit_2.old_offset;
+		d2_shown_offset_sd = gt_score->digit_2.old_offset;
 		gt_score->digit_2.new_offset = score_offset_d2;
 		gt_score->digit_2.old_offset = score_offset_d2 - uv_sd;
-		year_d2_flip_sd = 1;
+		d2_flip_sd = 1;
 		gt_score->digit_2.flip = 1;
 
 	}
-	else if (year_d2_flip_sd == 1) {//middle of flipping
+	else if (d2_flip_sd == 1) {//middle of flipping
 		gt_score->digit_2.flip -= 0.1;
 		if (gt_score->digit_2.flip <= 0) {
-			year_d2_shown_offset_sd = gt_score->digit_2.new_offset; //show new_offset once flipped past halfway
+			d2_shown_offset_sd = gt_score->digit_2.new_offset; //show new_offset once flipped past halfway
 		}
 		if (gt_score->digit_2.flip <= -1) {
 			gt_score->digit_2.flip = -1;
-			year_d2_flip_sd = 0; //indicate done flipping;
+			d2_flip_sd = 0; //indicate done flipping;
 		}
 
 	}
-	else if (year_d2_flip_sd == 0) {//done flipping, waiting for new flip
+	else if (d2_flip_sd == 0) {//done flipping, waiting for new flip
 		gt_score->digit_2.old_offset = score_offset_d2;
 	}
 
@@ -258,7 +252,7 @@ void ScoreDisplay::SplitSetScoreDigits(int score, gt_tracker* gt_score) {
 
 void ScoreDisplay::update_score(int new_score)
 {
-	SplitSetScoreDigits(new_score, &gt_year_sp);
+	SplitSetScoreDigits(new_score, &gt_curr_score);
 }
 
 void ScoreDisplay::draw(const mat3& projection) {
@@ -290,15 +284,15 @@ void ScoreDisplay::draw(const mat3& projection) {
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, calendar_tex_sd.id);
+	glBindTexture(GL_TEXTURE_2D, score_tex.id);
 
 	// Getting uniform locations for glUniform* calls
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-	GLint year_d0_uloc = glGetUniformLocation(effect.program, "year_d0");
-	GLint year_d1_uloc = glGetUniformLocation(effect.program, "year_d1");
-	GLint year_d2_uloc = glGetUniformLocation(effect.program, "year_d2");
-	GLint year_d3_uloc = glGetUniformLocation(effect.program, "year_d3");
+	GLint d0_uloc = glGetUniformLocation(effect.program, "year_d0");
+	GLint d1_uloc = glGetUniformLocation(effect.program, "year_d1");
+	GLint d2_uloc = glGetUniformLocation(effect.program, "year_d2");
+	GLint d3_uloc = glGetUniformLocation(effect.program, "year_d3");
 
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 
@@ -306,10 +300,10 @@ void ScoreDisplay::draw(const mat3& projection) {
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
-	glUniform4f(year_d0_uloc, gt_year_sp.digit_0.old_offset, gt_year_sp.digit_0.new_offset, year_d0_shown_offset_sd, gt_year_sp.digit_0.flip);
-	glUniform4f(year_d1_uloc, gt_year_sp.digit_1.old_offset, gt_year_sp.digit_1.new_offset, year_d1_shown_offset_sd, gt_year_sp.digit_1.flip);
-	glUniform4f(year_d2_uloc, gt_year_sp.digit_2.old_offset, gt_year_sp.digit_2.new_offset, year_d2_shown_offset_sd, gt_year_sp.digit_2.flip);
-	glUniform4f(year_d3_uloc, gt_year_sp.digit_3.old_offset, gt_year_sp.digit_3.new_offset, year_d3_shown_offset_sd, gt_year_sp.digit_3.flip);
+	glUniform4f(d0_uloc, gt_curr_score.digit_0.old_offset, gt_curr_score.digit_0.new_offset, d0_shown_offset_sd, gt_curr_score.digit_0.flip);
+	glUniform4f(d1_uloc, gt_curr_score.digit_1.old_offset, gt_curr_score.digit_1.new_offset, d1_shown_offset_sd, gt_curr_score.digit_1.flip);
+	glUniform4f(d2_uloc, gt_curr_score.digit_2.old_offset, gt_curr_score.digit_2.new_offset, d2_shown_offset_sd, gt_curr_score.digit_2.flip);
+	glUniform4f(d3_uloc, gt_curr_score.digit_3.old_offset, gt_curr_score.digit_3.new_offset, d3_shown_offset_sd, gt_curr_score.digit_3.flip);
 
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);

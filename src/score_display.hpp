@@ -30,25 +30,10 @@ private:
 
 */
 
-#include <ctime>
-using std::string;
-
-struct CurrentTime_sd
-{
-	int year;
-	int month;
-	int day;
-};
-
 class ScoreDisplay : public Renderable
 {
-	static Texture calendar_tex_sd;
+	static Texture score_tex;
 public:
-	const long int GameToRealSecondsRatio_sd = 
-		1
-		; // One real second corresponds to two days in game
-	const int DaysAfterUnixDate_sd = 17532; // January 1st, 2018: days because seconds lead to overflow
-
 	// Creates instance
 	bool init();
 
