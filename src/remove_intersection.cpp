@@ -102,7 +102,7 @@ void RemoveIntersection::update(float ms, int hit_count)
 	if (hit_count > 0) {
 		show = true;
 	}
-	if (m_press == 11) {
+	if (m_press == 10) {
 		show = false;
 		m_press = 0;
 	}

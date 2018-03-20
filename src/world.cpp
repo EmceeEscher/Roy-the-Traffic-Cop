@@ -269,7 +269,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		if (m_remove_intersection.show) {
 			m_remove_intersection.increment();
 		}
-		if (m_remove_intersection.m_press == 11) {
+		if (m_remove_intersection.m_press == 10) {
 			clear_intersection();
 		}
 	}
