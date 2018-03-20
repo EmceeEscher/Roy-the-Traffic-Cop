@@ -15,8 +15,16 @@ bool Coin::init()
 		}
 	}
 
+	glGenBuffers(1, &mesh.vbo);
+	glGenBuffers(1, &mesh.ibo);
+
 	curr_frame = 0;
 	set_vertices(curr_frame);
+
+	// Vertex Array (Container for Vertex + Index buffer)
+	glGenVertexArrays(1, &mesh.vao);
+	if (gl_has_errors())
+		fprintf(stderr, "having problems creating graphics for the coin");
 
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
@@ -60,19 +68,12 @@ void Coin::set_vertices(int coin_frame) {
 	gl_flush_errors();
 
 	// Vertex Buffer creation
-	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_DYNAMIC_DRAW);
 
 	// Index Buffer creation
-	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
-
-	// Vertex Array (Container for Vertex + Index buffer)
-	glGenVertexArrays(1, &mesh.vao);
-	if (gl_has_errors())
-		fprintf(stderr, "having problems creating graphics for the coin");
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_DYNAMIC_DRAW);
 }
 
 void Coin::update(float elapsed_ms) {
@@ -80,6 +81,7 @@ void Coin::update(float elapsed_ms) {
 	if (m_prev_time > m_fps) {
 		m_prev_time = 0;
 		curr_frame = (curr_frame + 1) % 6;
+		set_vertices(curr_frame);
 	}
 }
 
