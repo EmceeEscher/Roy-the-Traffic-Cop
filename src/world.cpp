@@ -136,6 +136,7 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
+	m_remove_intersection.destroy();
 	m_traffic_cop.destroy();
 	m_background.destroy();
 	m_car.destroy();
@@ -203,6 +204,7 @@ void World::draw()
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
+	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
 
 
