@@ -15,8 +15,25 @@ bool Coin::init()
 		}
 	}
 
+	glGenBuffers(1, &mesh.vbo);
+	glGenBuffers(1, &mesh.ibo);
+
+	float wr = coin_texture.width * 0.5;
+	float hr = coin_texture.height * 0.5;
+
+	float sprite_width = coin_texture.width / 6;
+	coin_vertices[0].position = { -wr, +hr, 0.f };
+	coin_vertices[1].position = { -wr + sprite_width, +hr, 0.f };
+	coin_vertices[2].position = { -wr + sprite_width, -hr, 0.f };
+	coin_vertices[3].position = { -wr, -hr, 0.f };
+
 	curr_frame = 0;
 	set_vertices(curr_frame);
+
+	// Vertex Array (Container for Vertex + Index buffer)
+	glGenVertexArrays(1, &mesh.vao);
+	if (gl_has_errors())
+		fprintf(stderr, "having problems creating graphics for the coin");
 
 	// Loading shaders
 	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
@@ -33,25 +50,28 @@ bool Coin::init()
 	return true;
 }
 
+// Releases all graphics resources
+void Coin::destroy()
+{
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteBuffers(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
+}
+
 void Coin::set_vertices(int coin_frame) {
 	// The position (0,0) corresponds to the center of the texture
-	float wr = coin_texture.width * 0.5;
-	float hr = coin_texture.height * 0.5;
 
-	float sprite_width = coin_texture.width / 6;
 
 	float texture_locs[] = { 0.f, 1.f / 6, 2.f / 6, 3.f / 6, 4.f / 6, 5.f / 6, 1.f };
-
-	TexturedVertex vertices[4];
 	
-	vertices[0].position = { -wr, +hr, 0.f };
-	vertices[0].texcoord = { texture_locs[coin_frame], 1.f };//top left
-	vertices[1].position = { -wr + sprite_width, +hr, 0.f };
-	vertices[1].texcoord = { texture_locs[coin_frame + 1], 1.f };//top right
-	vertices[2].position = { -wr + sprite_width, -hr, 0.f };
-	vertices[2].texcoord = { texture_locs[coin_frame + 1], 0.f };//bottom right
-	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[3].texcoord = { texture_locs[coin_frame], 0.f };//bottom left
+	coin_vertices[0].texcoord = { texture_locs[coin_frame], 1.f };//top left
+	coin_vertices[1].texcoord = { texture_locs[coin_frame + 1], 1.f };//top right
+	coin_vertices[2].texcoord = { texture_locs[coin_frame + 1], 0.f };//bottom right
+	coin_vertices[3].texcoord = { texture_locs[coin_frame], 0.f };//bottom left
 
 	// counterclockwise as it's the default opengl front winding direction
 	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
@@ -60,19 +80,12 @@ void Coin::set_vertices(int coin_frame) {
 	gl_flush_errors();
 
 	// Vertex Buffer creation
-	glGenBuffers(1, &mesh.vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, coin_vertices, GL_DYNAMIC_DRAW);
 
 	// Index Buffer creation
-	glGenBuffers(1, &mesh.ibo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
-
-	// Vertex Array (Container for Vertex + Index buffer)
-	glGenVertexArrays(1, &mesh.vao);
-	if (gl_has_errors())
-		fprintf(stderr, "having problems creating graphics for the coin");
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_DYNAMIC_DRAW);
 }
 
 void Coin::update(float elapsed_ms) {

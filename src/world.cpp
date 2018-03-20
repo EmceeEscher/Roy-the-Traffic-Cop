@@ -139,6 +139,8 @@ void World::destroy()
 
 	m_traffic_cop.destroy();
 	m_background.destroy();
+	m_score_display.destroy();
+	m_coin_icon.destroy();
 	glfwDestroyWindow(m_window);
 }
 
