@@ -150,7 +150,8 @@ bool World::update(float elapsed_ms)
 	int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
-	
+
+	m_traffic_cop.update(elapsed_ms);
 	m_game_timer.advance_time(elapsed_ms);
 	m_game_timer.get_current_time();
 	m_lane_manager.update(elapsed_ms);

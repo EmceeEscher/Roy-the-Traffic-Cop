@@ -12,7 +12,7 @@ bool TrafficCop::init()
 	// Load shared texture
 	if (!cop_texture.is_valid())
 	{
-		if (!cop_texture.load_from_file(textures_path("Roy.png")))
+		if (!cop_texture.load_from_file(textures_path("RoyCloud.png")))
 		{
 			fprintf(stderr, "Failed to load cop texture!");
 			return false;
@@ -60,9 +60,12 @@ bool TrafficCop::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = 1;
-	m_scale.y = 1;
+	m_scale.x = 1.0;
+	m_scale.y = 1.0;
 	m_position = { 500.f, 500.f};
+	grow_shrink_time = 5000.f;
+	max_grow_shrink_time = 5000.f;
+	grow = true;
 	//m_rotation = 0.f;
 
 	return true;
@@ -80,12 +83,31 @@ void TrafficCop::destroy()
 	glDeleteShader(effect.program);
 }
 
+void TrafficCop::update(float ms) {
+	float interpolation_val = (max_grow_shrink_time - grow_shrink_time) / max_grow_shrink_time;
+	if (grow) {
+		grow_shrink_time -= ms;
+		m_scale.x += interpolation_val/300;
+		m_scale.y += interpolation_val/300;
+		if (m_scale.x > 1.2f) {
+			grow = false;
+		};
+	}
+	else {
+		grow_shrink_time += ms;
+		m_scale.x -= interpolation_val / 300;
+		m_scale.y -= interpolation_val / 300;
+		if (m_scale.x < 1.05) {
+			grow = true;
+		};
+	}
+}
 
 void TrafficCop::draw(const mat3& projection)
 {
 	transform_begin();
-	transform_scale(m_scale);
 	transform_translate(m_position);
+	transform_scale(m_scale);
 	transform_rotate(m_rotation);
 	transform_end();
 
