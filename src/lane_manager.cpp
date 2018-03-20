@@ -3,7 +3,7 @@
 
 
 
-bool LaneManager::init(AI ai, RemoveIntersection remove_intersection)
+bool LaneManager::init(AI ai)
 {
   SDL_Init(SDL_INIT_AUDIO);
   Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
@@ -21,7 +21,6 @@ bool LaneManager::init(AI ai, RemoveIntersection remove_intersection)
   m_time_remaining = m_time_per_action;
   m_points = 0;
   m_ai = &ai;
-  m_remove_intersection = &remove_intersection;
 
 
   return true;
