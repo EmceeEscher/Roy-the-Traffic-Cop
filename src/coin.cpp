@@ -80,7 +80,6 @@ void Coin::update(float elapsed_ms) {
 	if (m_prev_time > m_fps) {
 		m_prev_time = 0;
 		curr_frame = (curr_frame + 1) % 6;
-		set_vertices(curr_frame);
 	}
 }
 
