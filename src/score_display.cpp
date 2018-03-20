@@ -157,14 +157,14 @@ bool ScoreDisplay::init()
 	m_position = { 100.f, 80.f };
 
 	gt_curr_score.digit_0.old_offset = 0.0f;
-	gt_curr_score.digit_0.new_offset = uv_sd * 8;
+	gt_curr_score.digit_0.new_offset = uv_sd * 0;
 	gt_curr_score.digit_0.flip = -1;
-	d0_shown_offset_sd = uv_sd * 8;
+	d0_shown_offset_sd = uv_sd * 0;
 
 	gt_curr_score.digit_1.old_offset = 0.0f;
-	gt_curr_score.digit_1.new_offset = uv_sd * 1;
+	gt_curr_score.digit_1.new_offset = uv_sd * 0;
 	gt_curr_score.digit_1.flip = -1;
-	d1_shown_offset_sd = uv_sd * 1;
+	d1_shown_offset_sd = uv_sd * 0;
 
 	gt_curr_score.digit_2.old_offset = 0.0f;
 	gt_curr_score.digit_2.new_offset = uv_sd * 0;
