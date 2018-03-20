@@ -152,7 +152,7 @@ bool World::update(float elapsed_ms)
 	m_game_timer.get_current_time();
 	m_lane_manager.update(elapsed_ms);
 	m_points = m_lane_manager.points();
-	m_score_display.update_score(m_points);
+	m_score_display.advance_time(elapsed_ms);
 	return true;
 }
 
