@@ -51,6 +51,8 @@ private:
 
 	void clear_intersection();
 
+	int hit_count();
+
 private:
 	// Window handle
 	GLFWwindow* m_window;
@@ -65,8 +67,6 @@ private:
 	AI m_ai;
 	RemoveIntersection m_remove_intersection;
 	LaneManager m_lane_manager;
-	//Just a single car to show for now.
-	Car m_car;
   
 	float lanes_rot[4];
 

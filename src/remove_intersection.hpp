@@ -8,8 +8,12 @@ class RemoveIntersection: public Renderable
 {
 	static Texture spacebar_texture;
 public:
+	RemoveIntersection();
+	~RemoveIntersection();
 	// Creates all the associated render resources and default transform
 	bool init();
+
+	void update(float ms, int hit_count);
 
 	// Releases all associated resources
 	void destroy();
@@ -17,7 +21,16 @@ public:
 	// Renders
 	void draw(const mat3& projection)override;
 
+	void increment();
+
+	bool show;
+	unsigned int m_press;
+
+
 private:
+	float m_prev_time;
+	float m_fps;
+	int curr_frame;
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 };

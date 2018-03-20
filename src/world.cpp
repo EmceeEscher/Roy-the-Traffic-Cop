@@ -139,7 +139,6 @@ void World::destroy()
 	m_remove_intersection.destroy();
 	m_traffic_cop.destroy();
 	m_background.destroy();
-	m_car.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -149,10 +148,12 @@ bool World::update(float elapsed_ms)
 	int w, h;
     glfwGetFramebufferSize(m_window, &w, &h);
 	vec2 screen = { (float)w, (float)h };
-
+	
 	m_game_timer.advance_time(elapsed_ms);
 	m_game_timer.get_current_time();
 	m_lane_manager.update(elapsed_ms);
+	m_remove_intersection.update(elapsed_ms,this->hit_count());
+
 	m_points = m_lane_manager.points();
 	return true;
 }
@@ -258,7 +259,10 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_lane_manager.input_create_cars(direction::EAST);
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-		clear_intersection();
+		m_remove_intersection.increment();
+		if (m_remove_intersection.m_press == 11) {
+			clear_intersection();
+		}
 	}
 }
 
@@ -296,4 +300,32 @@ void World::clear_intersection() {
 			south_cars.erase(south_cars.begin() + i);
 		}
 	}
+}
+int World::hit_count() {
+	int counter = 0;
+	std::deque<Car> &west_cars = m_lane_manager.m_lanes[direction::WEST]->m_cars;
+	for (int i = 0; i < west_cars.size(); i++) {
+		if (west_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &east_cars = m_lane_manager.m_lanes[direction::EAST]->m_cars;
+	for (int i = 0; i < east_cars.size(); i++) {
+		if (east_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &north_cars = m_lane_manager.m_lanes[direction::NORTH]->m_cars;
+	for (int i = 0; i < north_cars.size(); i++) {
+		if (north_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &south_cars = m_lane_manager.m_lanes[direction::SOUTH]->m_cars;
+	for (int i = 0; i < south_cars.size(); i++) {
+		if (south_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	return counter;
 }
