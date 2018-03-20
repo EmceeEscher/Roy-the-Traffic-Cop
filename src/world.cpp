@@ -266,7 +266,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_lane_manager.input_create_cars(direction::EAST);
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-		m_remove_intersection.increment();
+		if (m_remove_intersection.show) {
+			m_remove_intersection.increment();
+		}
 		if (m_remove_intersection.m_press == 11) {
 			clear_intersection();
 		}
