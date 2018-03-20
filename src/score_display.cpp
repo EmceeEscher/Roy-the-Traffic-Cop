@@ -170,26 +170,6 @@ bool ScoreDisplay::init()
 	m_scale.y = 0.4;
 	m_position = { 100.f, 80.f };
 
-	gt_date_sp.digit_0.old_offset = 0.0f;
-	gt_date_sp.digit_0.new_offset = uv_sd * 1;
-	gt_date_sp.digit_0.flip = -1;
-	date_d0_shown_offset_sd = uv_sd * 1;
-
-	gt_date_sp.digit_1.old_offset = 0.0f;
-	gt_date_sp.digit_1.new_offset = 0.0f;
-	gt_date_sp.digit_1.flip = -1;
-	date_d1_shown_offset_sd = 0.f;
-
-	gt_month_sp.digit_0.old_offset = 0.0f;
-	gt_month_sp.digit_0.new_offset = uv_sd * 1;
-	gt_month_sp.digit_0.flip = -1;
-	month_d0_shown_offset_sd = uv_sd * 1;
-
-	gt_month_sp.digit_1.old_offset = 0.0f;
-	gt_month_sp.digit_1.new_offset = 0.0f;
-	gt_month_sp.digit_1.flip = -1;
-	month_d1_shown_offset_sd = 0.f;
-
 	gt_year_sp.digit_0.old_offset = 0.0f;
 	gt_year_sp.digit_0.new_offset = uv_sd * 8;
 	gt_year_sp.digit_0.flip = -1;
@@ -205,131 +185,14 @@ bool ScoreDisplay::init()
 	gt_year_sp.digit_2.flip = -1;
 	year_d2_shown_offset_sd = uv_sd * 0;
 
-	gt_year_sp.digit_3.old_offset = 0.0f;
-	gt_year_sp.digit_3.new_offset = uv_sd * 2;
-	gt_year_sp.digit_3.flip = -1;
-	year_d3_shown_offset_sd = uv_sd * 2;
-
-
 	return true;
 }
 
-//will we need this for anything else?
-CurrentTime_sd ScoreDisplay::get_current_time()
-{
-	tm* current_time = gmtime(&m_current_time);
-	string month = std::string(get_month_from_index(current_time->tm_mon));
-	CurrentTime_sd return_time = {
-		current_time->tm_year + 1900,
-		current_time->tm_mon,
-		current_time->tm_mday
-	};
-	return return_time;
-}
-
 void ScoreDisplay::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_tracker* gt_mon, int year, gt_tracker* gt_year_sp) {
-	float date_offset_digit0 = std::fmodf(day, 10) * uv_sd;
-	float date_offset_digit1 = std::fmodf(day / 10, 10) * uv_sd;
-	float month_offset_digit0 = std::fmodf(mon, 10) * uv_sd;
-	float month_offset_digit1 = std::fmodf(mon / 10, 10) * uv_sd;
 	float year_offset_d0 = std::fmodf(year, 10) * uv_sd;
 	float year_offset_d1 = std::fmodf(year / 10, 10) * uv_sd;
 	float year_offset_d2 = std::fmodf(year / 100, 10) * uv_sd;
 	float year_offset_d3 = std::fmodf(year / 1000, 10) * uv_sd;
-
-	if (gt_day->digit_0.new_offset != date_offset_digit0) { //need to flip
-															//prepare flip
-		date_d0_shown_offset_sd = gt_day->digit_0.old_offset;
-		gt_day->digit_0.new_offset = date_offset_digit0;
-		gt_day->digit_0.old_offset = date_offset_digit0 - uv_sd;
-		//flip
-		date_digit_0_flip_sd = 1;
-		gt_day->digit_0.flip = 1;
-
-	}
-	else if (date_digit_0_flip_sd == 1) {//middle of flipping
-		gt_day->digit_0.flip -= 0.1;
-		if (gt_day->digit_0.flip <= 0) {
-			date_d0_shown_offset_sd = gt_day->digit_0.new_offset; //show new_offset once flipped past halfway
-		}
-		if (gt_day->digit_0.flip <= -1) {
-			gt_day->digit_0.flip = -1;
-			date_digit_0_flip_sd = 0; //indicate done flipping;
-		}
-
-	}
-	else if (date_digit_0_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_day->digit_0.old_offset = date_offset_digit0;
-	}
-
-	if (gt_day->digit_1.new_offset != date_offset_digit1) { //need to flip
-		date_d1_shown_offset_sd = gt_day->digit_1.old_offset;
-		gt_day->digit_1.new_offset = date_offset_digit1;
-		gt_day->digit_1.old_offset = date_offset_digit1 - uv_sd;
-		date_digit_1_flip_sd = 1;
-		gt_day->digit_1.flip = 1;
-
-	}
-	else if (date_digit_1_flip_sd == 1) {//middle of flipping
-		gt_day->digit_1.flip -= 0.1;
-		if (gt_day->digit_1.flip <= 0) {
-			date_d1_shown_offset_sd = gt_day->digit_1.new_offset; //show new_offset once flipped past halfway
-		}
-		if (gt_day->digit_1.flip <= -1) {
-			gt_day->digit_1.flip = -1;
-			date_digit_1_flip_sd = 0; //indicate done flipping;
-		}
-
-	}
-	else if (date_digit_1_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_day->digit_1.old_offset = date_offset_digit1;
-	}
-
-	if (gt_mon->digit_0.new_offset != month_offset_digit0) { //need to flip
-		month_d0_shown_offset_sd = gt_mon->digit_0.old_offset;
-		gt_mon->digit_0.new_offset = month_offset_digit0;
-		gt_mon->digit_0.old_offset = month_offset_digit0 - uv_sd;
-		month_digit_0_flip_sd = 1;
-		gt_mon->digit_0.flip = 1;
-
-	}
-	else if (month_digit_0_flip_sd == 1) {//middle of flipping
-		gt_mon->digit_0.flip -= 0.1;
-		if (gt_mon->digit_0.flip <= 0) {
-			month_d0_shown_offset_sd = gt_mon->digit_0.new_offset; //show new_offset once flipped past halfway
-		}
-		if (gt_mon->digit_0.flip <= -1) {
-			gt_mon->digit_0.flip = -1;
-			month_digit_0_flip_sd = 0; //indicate done flipping;
-		}
-
-	}
-	else if (month_digit_0_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_mon->digit_0.old_offset = month_offset_digit0;
-	}
-
-	if (gt_mon->digit_1.new_offset != month_offset_digit1) { //need to flip
-		month_d1_shown_offset_sd = gt_mon->digit_1.old_offset;
-		gt_mon->digit_1.new_offset = month_offset_digit1;
-		gt_mon->digit_1.old_offset = month_offset_digit1 - uv_sd;
-		month_digit_1_flip_sd = 1;
-		gt_mon->digit_1.flip = 1;
-
-	}
-	else if (month_digit_1_flip_sd == 1) {//middle of flipping
-		gt_mon->digit_1.flip -= 0.1;
-		if (gt_mon->digit_1.flip <= 0) {
-			month_d1_shown_offset_sd = gt_mon->digit_1.new_offset; //show new_offset once flipped past halfway
-		}
-		if (gt_mon->digit_1.flip <= -1) {
-			gt_mon->digit_1.flip = -1;
-			month_digit_1_flip_sd = 0; //indicate done flipping;
-		}
-
-	}
-	else if (month_digit_1_flip_sd == 0) {//done flipping, waiting for new flip
-		gt_mon->digit_1.old_offset = month_offset_digit1;
-	}
 
 	if (gt_year_sp->digit_0.new_offset != year_offset_d0) { //need to flip
 		year_d0_shown_offset_sd = gt_year_sp->digit_0.old_offset;
