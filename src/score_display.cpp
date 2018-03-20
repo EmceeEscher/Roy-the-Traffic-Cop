@@ -333,10 +333,6 @@ void ScoreDisplay::draw(const mat3& projection) {
 	// Getting uniform locations for glUniform* calls
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-	GLint date_digit_0_uloc = glGetUniformLocation(effect.program, "date_digit_0");
-	GLint date_digit_1_uloc = glGetUniformLocation(effect.program, "date_digit_1");
-	GLint month_digit_0_uloc = glGetUniformLocation(effect.program, "month_digit_0");
-	GLint month_digit_1_uloc = glGetUniformLocation(effect.program, "month_digit_1");
 	GLint year_d0_uloc = glGetUniformLocation(effect.program, "year_d0");
 	GLint year_d1_uloc = glGetUniformLocation(effect.program, "year_d1");
 	GLint year_d2_uloc = glGetUniformLocation(effect.program, "year_d2");
@@ -347,10 +343,6 @@ void ScoreDisplay::draw(const mat3& projection) {
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
-	glUniform4f(date_digit_0_uloc, gt_date_sp.digit_0.old_offset, gt_date_sp.digit_0.new_offset, date_d0_shown_offset_sd, gt_date_sp.digit_0.flip);
-	glUniform4f(date_digit_1_uloc, gt_date_sp.digit_1.old_offset, gt_date_sp.digit_1.new_offset, date_d1_shown_offset_sd, gt_date_sp.digit_1.flip);
-	glUniform4f(month_digit_0_uloc, gt_month_sp.digit_0.old_offset, gt_month_sp.digit_0.new_offset, month_d0_shown_offset_sd, gt_month_sp.digit_0.flip);
-	glUniform4f(month_digit_1_uloc, gt_month_sp.digit_1.old_offset, gt_month_sp.digit_1.new_offset, month_d1_shown_offset_sd, gt_month_sp.digit_1.flip);
 
 	glUniform4f(year_d0_uloc, gt_year_sp.digit_0.old_offset, gt_year_sp.digit_0.new_offset, year_d0_shown_offset_sd, gt_year_sp.digit_0.flip);
 	glUniform4f(year_d1_uloc, gt_year_sp.digit_1.old_offset, gt_year_sp.digit_1.new_offset, year_d1_shown_offset_sd, gt_year_sp.digit_1.flip);
@@ -363,7 +355,7 @@ void ScoreDisplay::draw(const mat3& projection) {
 
 
 	// Drawing!
-	glDrawElements(GL_TRIANGLES, 144, GL_UNSIGNED_SHORT, nullptr);
+	glDrawElements(GL_TRIANGLES, 54, GL_UNSIGNED_SHORT, nullptr);
 }
 
 /*
