@@ -123,6 +123,7 @@ bool World::init(vec2 screen)
 	m_game_timer.init();
 	m_score_display.init();
 	m_lane_manager.init(m_ai);
+	m_coin_icon.init();
 	return m_traffic_cop.init();
 }
 
@@ -153,6 +154,7 @@ bool World::update(float elapsed_ms)
 	m_lane_manager.update(elapsed_ms);
 	m_points = m_lane_manager.points();
 	m_score_display.update_score(m_points);
+	m_coin_icon.update(elapsed_ms);
 	return true;
 }
 
@@ -205,6 +207,7 @@ void World::draw()
 	m_traffic_cop.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
+	m_coin_icon.draw(projection_2D);
 
 
 
