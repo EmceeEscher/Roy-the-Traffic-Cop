@@ -5,6 +5,8 @@
 #include <algorithm>
 
 
+Texture RemoveIntersection::spacebar1_texture;
+Texture RemoveIntersection::spacebar2_texture;
 Texture RemoveIntersection::spacebar_texture;
 RemoveIntersection::RemoveIntersection() :
 	m_press(0)
@@ -19,9 +21,10 @@ RemoveIntersection::~RemoveIntersection()
 bool RemoveIntersection::init()
 {
 	show = false;
-	curr_frame = 0;
 	m_prev_time = 0.f;
-	m_fps = 300.f;
+	spacebar1_texture.load_from_file(textures_path("spacebar1.png"));
+	spacebar2_texture.load_from_file(textures_path("spacebar2.png"));
+
 
 
 	// Load shared texture
@@ -87,12 +90,10 @@ void RemoveIntersection::update(float ms, int hit_count)
 {
 	m_prev_time += ms;
 	if (m_prev_time >=0 && m_prev_time < 150) {
-		curr_frame = (curr_frame + 1) % 6;
-		spacebar_texture.load_from_file(textures_path("spacebar1.png"));
+		spacebar_texture = spacebar1_texture;
 	}
 	else if(m_prev_time >= 150 && m_prev_time < 300){
-		curr_frame = (curr_frame + 1) % 6;
-		spacebar_texture.load_from_file(textures_path("spacebar3.png"));
+		spacebar_texture = spacebar2_texture;
 	}
 	else {
 		m_prev_time = 0;

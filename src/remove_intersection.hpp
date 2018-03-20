@@ -6,6 +6,8 @@
 
 class RemoveIntersection: public Renderable 
 {
+	static Texture spacebar1_texture;
+	static Texture spacebar2_texture;
 	static Texture spacebar_texture;
 public:
 	RemoveIntersection();
@@ -29,8 +31,6 @@ public:
 
 private:
 	float m_prev_time;
-	float m_fps;
-	int curr_frame;
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 };
