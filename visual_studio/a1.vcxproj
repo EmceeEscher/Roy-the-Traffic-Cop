@@ -511,6 +511,8 @@
     <ClCompile Include="$(ProjectDir)..\src\lane_manager.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\background.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\placard.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\score_display.cpp" />
+    <ClCompile Include="$(ProjectDir)..\src\coin.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
