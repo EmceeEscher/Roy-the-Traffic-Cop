@@ -8,9 +8,7 @@
 
 #include <map>
 #include <string>
-#define SDL_MAIN_HANDLED
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+
 
 class LaneManager
 {
@@ -66,5 +64,5 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
 	
-	Mix_Chunk* m_crash;
+
 };

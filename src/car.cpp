@@ -38,6 +38,12 @@ uint16_t indices[] = {
 
 bool Car::init(bool isVillain)
 {
+	//setting up audio for crash track
+	SDL_Init(SDL_INIT_AUDIO);
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	m_crash = Mix_LoadWAV(audio_path("carCrash.wav"));
+	Mix_AllocateChannels(3);
+
 	// Load shared texture
 	if (!car_texture.is_valid())
 	{
@@ -832,6 +838,8 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 
 void Car::collided(int hit_triangle) {
 	if (!m_hit) {
+		Mix_VolumeChunk(m_crash, MIX_MAX_VOLUME / 2);
+		Mix_PlayChannel(-1, m_crash, 0);
 		m_hit = true;
 		float speed_scale = m_max_speed;
 		float acc_scale = ACC;
