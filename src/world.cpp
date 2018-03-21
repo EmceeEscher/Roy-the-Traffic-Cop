@@ -118,6 +118,8 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
+	is_game_paused = false;
+
 	m_background.init();
 	m_ai.init();
 	m_remove_intersection.init();
@@ -149,20 +151,22 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	int w, h;
-    glfwGetFramebufferSize(m_window, &w, &h);
-	vec2 screen = { (float)w, (float)h };
+	if (!is_game_paused) {
+		int w, h;
+		glfwGetFramebufferSize(m_window, &w, &h);
+		vec2 screen = { (float)w, (float)h };
 
-	m_traffic_cop.update(elapsed_ms);
-	m_game_timer.advance_time(elapsed_ms);
-	m_game_timer.get_current_time();
-	m_lane_manager.update(elapsed_ms);
-	m_remove_intersection.update(elapsed_ms,this->hit_count());
+		m_traffic_cop.update(elapsed_ms);
+		m_game_timer.advance_time(elapsed_ms);
+		m_game_timer.get_current_time();
+		m_lane_manager.update(elapsed_ms);
+		m_remove_intersection.update(elapsed_ms, this->hit_count());
 
-	m_points = m_lane_manager.points();
-	m_score_display.update_score(m_points);
-	m_coin_icon.update(elapsed_ms);
-	return true;
+		m_points = m_lane_manager.points();
+		m_score_display.update_score(m_points);
+		m_coin_icon.update(elapsed_ms);
+		return true;
+	}
 }
 
 // Render our game world
@@ -266,6 +270,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_D) {
 		m_lane_manager.input_create_cars(direction::EAST);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+		is_game_paused = !is_game_paused;
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
 		if (m_remove_intersection.show) {
