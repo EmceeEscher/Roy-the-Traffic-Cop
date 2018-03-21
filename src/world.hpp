@@ -10,6 +10,9 @@
 #include "lane_manager.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
+#include "remove_intersection.hpp"
+#include "score_display.hpp"
+#include "coin.hpp"
 
 // stlib
 #include <vector>
@@ -48,6 +51,10 @@ private:
 	void on_key(GLFWwindow*, int key, int, int action, int mod);
 	void on_mouse_move(GLFWwindow* window, double xpos, double ypos);
 
+	void clear_intersection();
+
+	int hit_count();
+
 private:
 	// Window handle
 	GLFWwindow* m_window;
@@ -60,9 +67,10 @@ private:
 	TrafficCop m_traffic_cop;
 	Background m_background;
 	AI m_ai;
+	RemoveIntersection m_remove_intersection;
 	LaneManager m_lane_manager;
-	//Just a single car to show for now.
-	Car m_car;
+	ScoreDisplay m_score_display;
+	Coin m_coin_icon;
   
 	float lanes_rot[4];
 

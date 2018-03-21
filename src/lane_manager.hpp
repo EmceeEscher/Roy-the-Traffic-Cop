@@ -56,9 +56,10 @@ public:
 		// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
 		LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
 
+		std::map<direction, Lane*> m_lanes;
+
 
 private:
-    std::map<direction, Lane*> m_lanes;
     float const m_time_per_action = 5000;
     float m_time_remaining;
 	AI* m_ai;
