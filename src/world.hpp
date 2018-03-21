@@ -62,6 +62,9 @@ private:
 	// Currency earned
 	unsigned int m_points;
 
+	// Game Paused Status
+	bool is_game_paused;
+
 	// Game entities
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
