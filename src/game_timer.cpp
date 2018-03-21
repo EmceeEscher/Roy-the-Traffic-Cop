@@ -40,7 +40,7 @@ bool GameTimer::init()
 	{
 		if (!calendar_tex.load_from_file(textures_path("numbers.png")))
 		{
-			fprintf(stderr, "Failed to load background texture!");
+			fprintf(stderr, "Failed to load game timer texture!");
 			return false;
 		}
 	}
