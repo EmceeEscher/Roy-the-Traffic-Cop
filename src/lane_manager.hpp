@@ -64,6 +64,6 @@ private:
 	AI* m_ai;
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
-	
+	float spawn_delay;
 	Mix_Chunk* m_crash;
 };
