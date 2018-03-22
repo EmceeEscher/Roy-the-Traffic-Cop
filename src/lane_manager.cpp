@@ -106,7 +106,7 @@ bool LaneManager::intersection_collision_check() {
 		}
 	}
 	if (collision_occurring) {
-		Mix_VolumeChunk(m_crash, MIX_MAX_VOLUME / 2);
+		Mix_VolumeChunk(m_crash, 80);
 		Mix_PlayChannel(-1, m_crash, 0);
 	}
 	return collision_occurring;
