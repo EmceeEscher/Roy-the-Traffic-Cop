@@ -140,7 +140,7 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	if (!is_game_paused) {
+	if (!is_game_paused && !show_start_splash) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		vec2 screen = { (float)w, (float)h };
@@ -225,64 +225,61 @@ bool World::is_over()const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HANDLE KEY PRESSES HERE
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT|| key == GLFW_KEY_RIGHT)) {
-		Mix_PlayChannel(-1, m_roy_whistle, 0);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
-		m_traffic_cop.set_rotation(lanes_rot[0]);
-		m_lane_manager.turn_car(direction::NORTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
-		m_traffic_cop.set_rotation(lanes_rot[2]);
-		m_lane_manager.turn_car(direction::SOUTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
-	{
-		m_traffic_cop.set_rotation(lanes_rot[1]);
-		m_lane_manager.turn_car(direction::WEST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
-		m_traffic_cop.set_rotation(lanes_rot[3]);
-		m_lane_manager.turn_car(direction::EAST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_W) {
-		m_lane_manager.input_create_cars(direction::NORTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-		m_lane_manager.input_create_cars(direction::WEST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_S) {
-		m_lane_manager.input_create_cars(direction::SOUTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_D) {
-		m_lane_manager.input_create_cars(direction::EAST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
-		is_game_paused = !is_game_paused;
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) {
+	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) { //start game with G
 		show_start_splash = !show_start_splash;
 		Mix_PlayMusic(m_game_music, -1);
 		is_game_paused = !is_game_paused;
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-		if (m_remove_intersection.show) {
-			m_remove_intersection.increment();
+	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+		is_game_paused = !is_game_paused;
+		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
+	}
+	if (!is_game_paused && !show_start_splash) {
+		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
+			Mix_PlayChannel(-1, m_roy_whistle, 0);
 		}
-		if (m_remove_intersection.m_press == 10) {
-			clear_intersection();
+		if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
+			m_traffic_cop.set_rotation(lanes_rot[0]);
+			m_lane_manager.turn_car(direction::NORTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
+			m_traffic_cop.set_rotation(lanes_rot[2]);
+			m_lane_manager.turn_car(direction::SOUTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+		{
+			m_traffic_cop.set_rotation(lanes_rot[1]);
+			m_lane_manager.turn_car(direction::WEST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
+			m_traffic_cop.set_rotation(lanes_rot[3]);
+			m_lane_manager.turn_car(direction::EAST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_W) {
+			m_lane_manager.input_create_cars(direction::NORTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_A) {
+			m_lane_manager.input_create_cars(direction::WEST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_S) {
+			m_lane_manager.input_create_cars(direction::SOUTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_D) {
+			m_lane_manager.input_create_cars(direction::EAST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+			if (m_remove_intersection.show) {
+				m_remove_intersection.increment();
+			}
+			if (m_remove_intersection.m_press == 10) {
+				clear_intersection();
+			}
 		}
 	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HANDLE MOUSE CONTROL HERE (if we end up using it)
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
