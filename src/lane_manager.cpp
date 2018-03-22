@@ -21,7 +21,8 @@ bool LaneManager::init(AI ai)
   m_time_remaining = m_time_per_action;
   m_points = 0;
   m_ai = &ai;
-
+  srand(time(NULL));
+  spawn_delay = 0;
 
   return true;
 }
@@ -44,6 +45,8 @@ bool LaneManager::update(float ms)
 		// If this is the case, we should readjust new villains.
 		m_ai->make_villains_decide(m_lanes);
 	}
+  
+	spawn_delay -= ms;
 	add_car();
 	intersection_collision_check();
 	return true;
@@ -260,11 +263,13 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 
 void LaneManager::add_car()
 {
-  for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++)
+  std::map<direction, Lane*>::iterator it = m_lanes.begin();
+  std::advance(it, rand()%4);
   {
-    if (!it->second->is_lane_full())
+    if (!it->second->is_lane_full() && spawn_delay < 0)
     {
       it->second->add_car(carType::REGULAR);
+	  spawn_delay = rand() % 600 + 200.f;
     }
   }
 }
