@@ -65,6 +65,9 @@ private:
 	// Game Paused Status
 	bool is_game_paused;
 
+	// Start Screen Status
+	bool show_start_splash;
+
 	// Game entities
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
@@ -80,6 +83,7 @@ private:
 	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
+	Mix_Music* m_game_music;
 	Mix_Chunk* m_roy_whistle;
 
 	// C++ rng

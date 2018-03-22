@@ -52,9 +52,6 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
-#if __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Roy the Traffic Cop", nullptr, nullptr);
 	if (m_window == nullptr)
@@ -88,23 +85,14 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to open audio device");
 		return false;
 	}
-	Mix_AllocateChannels(16);
-
-	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_game_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_background_music = Mix_LoadMUS(audio_path("start_music.wav"));
 	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
-
-	if (m_background_music == nullptr || m_roy_whistle == nullptr)
-	{
-		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
-		return false;
-	}
-
-	// Playing background music undefinitely
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(m_background_music, -1);
 
 	int fb_w, fb_h;
-			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
+	glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 
 	// Rotation values for each lane
 	lanes_rot[0] = PI;			// North
@@ -118,7 +106,8 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	is_game_paused = false;
+	is_game_paused = true;
+	show_start_splash = true;
 
 	m_background.init();
 	m_ai.init();
@@ -272,6 +261,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		m_lane_manager.input_create_cars(direction::EAST);
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+		is_game_paused = !is_game_paused;
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) {
+		show_start_splash = !show_start_splash;
+		Mix_PlayMusic(m_game_music, -1);
 		is_game_paused = !is_game_paused;
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
