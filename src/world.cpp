@@ -118,10 +118,15 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
+	is_game_paused = false;
+
 	m_background.init();
 	m_ai.init();
+	m_remove_intersection.init();
 	m_game_timer.init();
+	m_score_display.init();
 	m_lane_manager.init(m_ai);
+	m_coin_icon.init();
 	return m_traffic_cop.init();
 }
 
@@ -135,24 +140,33 @@ void World::destroy()
 
 	Mix_CloseAudio();
 
+	m_remove_intersection.destroy();
 	m_traffic_cop.destroy();
 	m_background.destroy();
-	m_car.destroy();
+	m_score_display.destroy();
+	m_coin_icon.destroy();
 	glfwDestroyWindow(m_window);
 }
 
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	int w, h;
-    glfwGetFramebufferSize(m_window, &w, &h);
-	vec2 screen = { (float)w, (float)h };
+	if (!is_game_paused) {
+		int w, h;
+		glfwGetFramebufferSize(m_window, &w, &h);
+		vec2 screen = { (float)w, (float)h };
 
-	m_game_timer.advance_time(elapsed_ms);
-	m_game_timer.get_current_time();
-	m_lane_manager.update(elapsed_ms);
-	m_points = m_lane_manager.points();
-	return true;
+		m_traffic_cop.update(elapsed_ms);
+		m_game_timer.advance_time(elapsed_ms);
+		m_game_timer.get_current_time();
+		m_lane_manager.update(elapsed_ms);
+		m_remove_intersection.update(elapsed_ms, this->hit_count());
+
+		m_points = m_lane_manager.points();
+		m_score_display.update_score(m_points);
+		m_coin_icon.update(elapsed_ms);
+		return true;
+	}
 }
 
 // Render our game world
@@ -202,7 +216,10 @@ void World::draw()
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
+	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
+	m_score_display.draw(projection_2D);
+	m_coin_icon.draw(projection_2D);
 
 
 
@@ -254,6 +271,17 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_D) {
 		m_lane_manager.input_create_cars(direction::EAST);
 	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+		is_game_paused = !is_game_paused;
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+		if (m_remove_intersection.show) {
+			m_remove_intersection.increment();
+		}
+		if (m_remove_intersection.m_press == 10) {
+			clear_intersection();
+		}
+	}
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
@@ -262,4 +290,60 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// HANDLE MOUSE CONTROL HERE (if we end up using it)
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// printf("mouse position: %f,%f\n", xpos, ypos);
+}
+
+void World::clear_intersection() {
+
+	std::deque<Car> &west_cars = m_lane_manager.m_lanes[direction::WEST]->m_cars;
+	for (int i = 0; i < west_cars.size(); i++) {
+		if (west_cars[i].is_hit()) {
+			west_cars.erase(west_cars.begin() + i);
+		}
+	}
+	std::deque<Car> &east_cars = m_lane_manager.m_lanes[direction::EAST]->m_cars;
+	for (int i = 0; i < east_cars.size(); i++) {
+		if (east_cars[i].is_hit()) {
+			east_cars.erase(east_cars.begin() + i);
+		}
+	}
+	std::deque<Car> &north_cars = m_lane_manager.m_lanes[direction::NORTH]->m_cars;
+	for (int i = 0; i < north_cars.size(); i++) {
+		if (north_cars[i].is_hit()) {
+			north_cars.erase(north_cars.begin() + i);
+		}
+	}
+	std::deque<Car> &south_cars = m_lane_manager.m_lanes[direction::SOUTH]->m_cars;
+	for (int i = 0; i < south_cars.size(); i++) {
+		if (south_cars[i].is_hit()) {
+			south_cars.erase(south_cars.begin() + i);
+		}
+	}
+}
+int World::hit_count() {
+	int counter = 0;
+	std::deque<Car> &west_cars = m_lane_manager.m_lanes[direction::WEST]->m_cars;
+	for (int i = 0; i < west_cars.size(); i++) {
+		if (west_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &east_cars = m_lane_manager.m_lanes[direction::EAST]->m_cars;
+	for (int i = 0; i < east_cars.size(); i++) {
+		if (east_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &north_cars = m_lane_manager.m_lanes[direction::NORTH]->m_cars;
+	for (int i = 0; i < north_cars.size(); i++) {
+		if (north_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	std::deque<Car> &south_cars = m_lane_manager.m_lanes[direction::SOUTH]->m_cars;
+	for (int i = 0; i < south_cars.size(); i++) {
+		if (south_cars[i].is_hit()) {
+			counter++;
+		}
+	}
+	return counter;
 }

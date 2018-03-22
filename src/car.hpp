@@ -154,6 +154,8 @@ public:
 
 	void change_color();
 
+	bool is_hit();
+
 private:
 	float m_color[3];
 	vec2 m_position; // Window coordinates
