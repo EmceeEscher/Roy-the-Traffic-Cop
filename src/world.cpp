@@ -227,10 +227,10 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
 	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) { //start game with G
 		show_start_splash = !show_start_splash;
-		Mix_PlayMusic(m_game_music, -1);
 		is_game_paused = !is_game_paused;
+		Mix_PlayMusic(m_game_music, -1);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+	if (action == GLFW_PRESS && key == GLFW_KEY_P) { //pause anytime with P
 		is_game_paused = !is_game_paused;
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
