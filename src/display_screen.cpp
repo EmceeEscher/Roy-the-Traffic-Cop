@@ -5,16 +5,17 @@
 #include <vector>
 #include <algorithm>
 
-Texture DisplayScreen::start_splash_tex;
+Texture DisplayScreen::splash_screens;
 
 bool DisplayScreen::init()
 {
 	// Load shared texture
-	start_splash_tex.load_from_file(textures_path("RoyCloud.png"));
+	splash_screens.load_from_file(textures_path("StartSplash.png"));
 
 	// The position (0,0) corresponds to the center of the texture
-	float wr = start_splash_tex.width * 0.5;
-	float hr = start_splash_tex.height * 0.5;
+	float wr = splash_screens.width * 0.5;
+	float hr = splash_screens.height * 0.5;
+	float splash_width = 500.f;
 
 	TexturedVertex vertices[4];
 	vertices[0].position = { -wr, +hr, 0.f };
@@ -55,6 +56,11 @@ bool DisplayScreen::init()
 	// 1.0 would be as big as the original texture
 	m_scale.x = 1.0;
 	m_scale.y = 1.0;
+	m_position.x = 500;
+	m_position.y = 500;
+	draw_splash = true;
+	display_duration = 500.f;
+
 	return true;
 }
 
@@ -74,48 +80,50 @@ void DisplayScreen::update(bool paused, bool start_start, bool game_over, Curren
 
 }
 
-void DisplayScreen::draw(const mat3& projection)
+void DisplayScreen::draw(const mat3& projection)\
 {
-	transform_begin();
-	transform_translate(m_position);
-	transform_scale(m_scale);
-	transform_end();
+	if (draw_splash) {
+		transform_begin();
+		transform_scale(m_scale);
+		transform_translate(m_position);
+		transform_end();
 
-	// Setting shaders
-	glUseProgram(effect.program);
+		// Setting shaders
+		glUseProgram(effect.program);
 
-	// Enabling alpha channel for textures
-	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
+		// Enabling alpha channel for textures
+		glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
 
-	// Getting uniform locations for glUniform* calls
-	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
-	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+		// Getting uniform locations for glUniform* calls
+		GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
+		GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+		GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
-	// Setting vertices and indices
-	glBindVertexArray(mesh.vao);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+		// Setting vertices and indices
+		glBindVertexArray(mesh.vao);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
 
-	// Input data location as in the vertex buffer
-	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
-	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
-	glEnableVertexAttribArray(in_position_loc);
-	glEnableVertexAttribArray(in_texcoord_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
-	glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+		// Input data location as in the vertex buffer
+		GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
+		GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
+		glEnableVertexAttribArray(in_position_loc);
+		glEnableVertexAttribArray(in_texcoord_loc);
+		glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+		glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
-	// Enabling and binding texture to slot 0
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, start_splash_tex.id);
+		// Enabling and binding texture to slot 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, splash_screens.id);
 
-	// Setting uniform values to the currently bound program
-	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	float color[] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, color);
-	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+		// Setting uniform values to the currently bound program
+		glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
+		float color[] = { 1.f, 1.f, 1.f };
+		glUniform3fv(color_uloc, 1, color);
+		glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
-	// Drawing!
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+		// Drawing!
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+	}
 }

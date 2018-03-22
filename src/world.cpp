@@ -108,7 +108,7 @@ bool World::init(vec2 screen)
 
 	is_game_paused = true;
 	show_start_splash = true;
-	is_game_over = false;
+	is_game_over = false; //TODO: implement game over conditions, restart etc.
 
 	m_background.init();
 	m_ai.init();
@@ -117,6 +117,7 @@ bool World::init(vec2 screen)
 	m_score_display.init();
 	m_lane_manager.init(m_ai);
 	m_coin_icon.init();
+	m_display_screen.init();
 	return m_traffic_cop.init();
 }
 
@@ -212,9 +213,7 @@ void World::draw()
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
-	//m_display_screen.draw(projection_2D, is_game_paused, show_start_splash, is_game_over);
-
-
+	m_display_screen.draw(projection_2D);
 
 	// Presenting
 	glfwSwapBuffers(m_window);

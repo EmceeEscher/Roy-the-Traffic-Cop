@@ -3,12 +3,12 @@
 #include "common.hpp"
 #include "game_timer.hpp"
 
-
 using std::string;
 
 class DisplayScreen : public Renderable
 {
-	static Texture start_splash_tex;
+	static Texture splash_screens;
+
 public:
 	// Creates all the associated render resources and default transform
 	bool init();
@@ -25,5 +25,7 @@ public:
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
+	bool draw_splash; //if false, draw nothing
+	float display_duration; //display splash duration
 
 };
