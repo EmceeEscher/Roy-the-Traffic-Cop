@@ -108,6 +108,7 @@ bool World::init(vec2 screen)
 
 	is_game_paused = true;
 	show_start_splash = true;
+	is_game_over = false;
 
 	m_background.init();
 	m_ai.init();
@@ -140,6 +141,8 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
+	
+	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, m_game_timer.get_current_time());
 	if (!is_game_paused && !show_start_splash) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
@@ -147,7 +150,7 @@ bool World::update(float elapsed_ms)
 
 		m_traffic_cop.update(elapsed_ms);
 		m_game_timer.advance_time(elapsed_ms);
-		m_game_timer.get_current_time();
+		
 		m_lane_manager.update(elapsed_ms);
 		m_remove_intersection.update(elapsed_ms, this->hit_count());
 
@@ -209,6 +212,7 @@ void World::draw()
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
+	//m_display_screen.draw(projection_2D, is_game_paused, show_start_splash, is_game_over);
 
 
 

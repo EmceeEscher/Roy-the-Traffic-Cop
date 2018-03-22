@@ -13,6 +13,7 @@
 #include "remove_intersection.hpp"
 #include "score_display.hpp"
 #include "coin.hpp"
+#include "display_screen.hpp"
 
 // stlib
 #include <vector>
@@ -68,6 +69,9 @@ private:
 	// Start Screen Status
 	bool show_start_splash;
 
+	// Game over status
+	bool is_game_over;
+
 	// Game entities
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
@@ -77,6 +81,7 @@ private:
 	LaneManager m_lane_manager;
 	ScoreDisplay m_score_display;
 	Coin m_coin_icon;
+	DisplayScreen m_display_screen;
   
 	float lanes_rot[4];
 
