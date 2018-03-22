@@ -263,11 +263,6 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 
 void LaneManager::add_car()
 {
-	int lane_num = rand() % 4;
-	//if (m_lanes.at((direction)lane_num)->is_lane_full()) {
-	//	m_lanes.at((direction)lane_num)->add_car(carType::REGULAR);
-	//};
-
   std::map<direction, Lane*>::iterator it = m_lanes.begin();
   std::advance(it, rand()%4);
   {
