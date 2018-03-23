@@ -19,7 +19,7 @@ void LevelManager::destroy()
 void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms) {
 	if (year != game_time.year) {
 		if (points < required_points) {
-			//is_game_over = true;
+			is_game_over = true;
 		}
 		else if (game_level <= 10) {
 			game_level += 1;
