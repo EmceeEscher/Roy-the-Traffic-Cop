@@ -14,6 +14,9 @@ public:
 	// Releases all associated resources
 	void destroy();
 
+	// Return current game level
+	int get_level();
+
 	void update(float elapsed_ms);
 
 

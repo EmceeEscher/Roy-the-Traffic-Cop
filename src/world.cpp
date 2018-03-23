@@ -143,7 +143,8 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	//TODO: game_level will come from level_manager class
+
+	game_level = m_level_manager.get_level();
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	//m_game_timer.get_current_time()
 	if (!is_game_paused && !show_start_splash) {
