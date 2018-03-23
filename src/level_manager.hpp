@@ -22,6 +22,9 @@ public:
 
 	void update(int points, CurrentTime game_time, float elapsed_ms);
 
+	// Return total points required for next level
+	int get_next_level_point_req();
+
 
 private:
 	int game_level;

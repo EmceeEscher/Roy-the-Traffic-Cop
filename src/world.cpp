@@ -144,6 +144,7 @@ void World::destroy()
 bool World::update(float elapsed_ms)
 {
 	m_points = m_lane_manager.points();
+	m_req_points_next_level = m_level_manager.get_next_level_point_req();
 	game_level = m_level_manager.get_level();
 	is_game_over = m_level_manager.get_game_over();
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
@@ -178,7 +179,7 @@ void World::draw()
 
 	// Updating window title with points
 	std::stringstream title_ss;
-	title_ss << "Points: " << m_points;
+	title_ss << "Required Points to Advance: " << m_req_points_next_level;
 	glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
 	// Clearing backbuffer

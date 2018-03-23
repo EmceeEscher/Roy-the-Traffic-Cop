@@ -75,6 +75,9 @@ private:
 
 	int game_level;
 
+	//total points required to get to next level
+	int m_req_points_next_level; 
+
 	// Game entities
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
