@@ -162,9 +162,9 @@ bool Car::init(bool isVillain)
 	m_level = 1;
 	m_velocity = { 15.0f, .0f };
 	m_acceleration = { ACC, .0f };
-	m_max_speed = 150.f;
+	m_max_speed = 180.f;
 	t = 0.f;
-	stopping_distance = 97.5f;
+	stopping_distance = 117.f;
 	stopping_distance_scale = 0.f;
 	t_scale = 1.f;
 
@@ -653,7 +653,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 445.f, 445.f };
+			m_turn_pivot = { 530.f, 445.f };
 			return 's';
 		}
 		break;
@@ -671,7 +671,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 537.f, 537.f };
+			m_turn_pivot = { 470.f, 537.f };
 			return 's';
 		}
 		break;
@@ -689,7 +689,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 550.f, 470.f };
+			m_turn_pivot = { 550.f, 530.f };
 			return 's';
 		}
 		break;
@@ -708,7 +708,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 450.f, 550.f };
+			m_turn_pivot = { 450.f, 470.f };
 			return 's';
 		}
 		break;
