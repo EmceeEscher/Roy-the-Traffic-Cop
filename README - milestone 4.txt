@@ -15,6 +15,7 @@ Items implemented for the fourth milestone (robust play):
 - Added a mechanic to remove crashed cars from the intersection by repeatedly pressing spacebar
   (an image will pop up on screen to signify when to press the spacebar)
 - Added some more sound effects and music tracks
+- Made it so cars spawn automatically now instead of needing to be manually spawned
 - Cleaned up a number of AI bugs:
   - Cars won't turn in a different direction than their turn arrow now
   - Villain cars won't change their turn direction when they are first in line now
@@ -23,3 +24,5 @@ Items implemented for the fourth milestone (robust play):
   - fixed bug where it wouldn't recognize collisions with second car in line
     - both of these fixes mean there are now much fewer missed collisions
   - also made it so now both cars in a collision will bounce and spin instead of just one
+  - tuned speed of cars going straight so they don't crash after crossing the intersection
+- Changed the Roy sprite so it looks like he's floating above the intersection
