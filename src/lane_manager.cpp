@@ -5,11 +5,6 @@
 
 bool LaneManager::init(AI ai)
 {
-  SDL_Init(SDL_INIT_AUDIO);
-  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-  m_crash = Mix_LoadWAV(audio_path("carCrash.wav"));
-  Mix_AllocateChannels(3);
-  
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -107,10 +102,6 @@ bool LaneManager::intersection_collision_check() {
 				}
 			}
 		}
-	}
-	if (collision_occurring) {
-		Mix_VolumeChunk(m_crash, MIX_MAX_VOLUME / 2);
-		Mix_PlayChannel(-1, m_crash, 0);
 	}
 	return collision_occurring;
 }
@@ -251,7 +242,7 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 			if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.b, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
-					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
+					//printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
 					//Sleep(1000);
 					collisionTriangles.victim_index = vic_counter;
 					collisionTriangles.attacker_index = attack_counter;
