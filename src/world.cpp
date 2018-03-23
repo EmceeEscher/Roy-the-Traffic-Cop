@@ -106,9 +106,10 @@ bool World::init(vec2 screen)
 	lanes[2] = { 550.f,600.f };
 	lanes[3] = { 600.f,450.f };
 
-	is_game_paused = true;
+	is_game_paused = false;
 	show_start_splash = true;
 	is_game_over = false; //TODO: implement game over conditions, restart etc.
+	game_level = 1;
 
 	m_background.init();
 	m_ai.init();
@@ -142,8 +143,9 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	
-	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, m_game_timer.get_current_time());
+	//TODO: game_level will come from level_manager class
+	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
+	//m_game_timer.get_current_time()
 	if (!is_game_paused && !show_start_splash) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
@@ -158,6 +160,10 @@ bool World::update(float elapsed_ms)
 		m_points = m_lane_manager.points();
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
+
+		if (game_level > 11) {
+			game_level = 11;
+		}
 		return true;
 	}
 }
@@ -230,10 +236,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
 	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) { //start game with G
 		show_start_splash = !show_start_splash;
-		is_game_paused = !is_game_paused;
 		Mix_PlayMusic(m_game_music, -1);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_P) { //pause anytime with P
+	if (action == GLFW_PRESS && key == GLFW_KEY_P && !show_start_splash) { //pause anytime with P
 		is_game_paused = !is_game_paused;
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
