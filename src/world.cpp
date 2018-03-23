@@ -291,13 +291,13 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 		//TODO: All the destroys to free up memory
 		m_ai.init();
-		m_game_timer.init();
-		m_score_display.init();
+		m_game_timer.init(); //needs release graphics
+		m_score_display.init(); //needs release graphics
 		m_lane_manager.init(m_ai);
-		m_coin_icon.init();
-		m_display_screen.init();
+		m_coin_icon.init(); //needs release graphics
+		m_display_screen.init(); //needs release graphics
 		m_level_manager.init();
-		m_remove_intersection.init();
+		m_remove_intersection.init(); 
 
 		Mix_PlayMusic(m_background_music, -1);
 
