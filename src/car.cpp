@@ -838,7 +838,6 @@ bool Car::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 
 void Car::collided(int hit_triangle) {
 	if (!m_hit) {
-		Mix_PlayChannel(-1, m_crash, 0);
 		m_hit = true;
 		float speed_scale = m_max_speed;
 		float acc_scale = ACC;
@@ -850,6 +849,7 @@ void Car::collided(int hit_triangle) {
 }
 
 float Car::get_collision_spin(int hit_triangle) {
+	Mix_PlayChannel(-1, m_crash, 0);
 	switch(hit_triangle) {
 		case 1:
 		case 3:
