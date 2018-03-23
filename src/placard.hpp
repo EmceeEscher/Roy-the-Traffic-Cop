@@ -41,6 +41,9 @@ public:
   // Note: this color will be overwritten when the car reaches the front of the line by the timer colors (green->red)
   void change_color(float red, float green, float blue);
 
+  // Useful debug method
+  turn_direction get_turn_direction();
+
 private:
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture

@@ -156,6 +156,9 @@ public:
 
 	bool is_hit();
 
+	// useful debug method for testing car's turn placard direction
+	turn_direction get_placard_direction();
+
 private:
 	float m_color[3];
 	vec2 m_position; // Window coordinates
