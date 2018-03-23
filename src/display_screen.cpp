@@ -1,6 +1,7 @@
 // Header
 #include "display_screen.hpp"
 
+
 // stlib
 #include <vector>
 #include <algorithm>
@@ -10,38 +11,21 @@ Texture DisplayScreen::splash_screens;
 bool DisplayScreen::init()
 {
 	// Load shared texture
-	splash_screens.load_from_file(textures_path("StartSplash.png"));
+	splash_screens.load_from_file(textures_path("SplashScreens.png"));
 
 	// The position (0,0) corresponds to the center of the texture
 	float wr = splash_screens.width * 0.5;
 	float hr = splash_screens.height * 0.5;
-	float splash_width = 500.f;
+	float indiv_splash_width = 500.f;
+	float splash_uv = splash_screens.width / 500.f;
 
-	TexturedVertex vertices[4];
-	vertices[0].position = { -wr, +hr, 0.f };
-	vertices[0].texcoord = { 0.f, 1.f };//top left
-	vertices[1].position = { +wr, +hr, 0.f };
-	vertices[1].texcoord = { 1.f, 1.f };//top right
-	vertices[2].position = { +wr, -hr, 0.f };
-	vertices[2].texcoord = { 1.f, 0.f };//bottom right
-	vertices[3].position = { -wr, -hr, 0.f };
-	vertices[3].texcoord = { 0.f, 0.f };//bottom left
+	vertices[0].position = { -indiv_splash_width / 2, +hr, 0.f };
+	vertices[1].position = { +indiv_splash_width / 2, +hr, 0.f };
+	vertices[2].position = { +indiv_splash_width / 2, -hr, 0.f };
+	vertices[3].position = { -indiv_splash_width / 2, -hr, 0.f };
 
-	// counterclockwise as it's the default opengl front winding direction
-	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
-
-	// Clearing errors
-	gl_flush_errors();
-
-	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
-
-	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
@@ -59,7 +43,9 @@ bool DisplayScreen::init()
 	m_position.x = 500;
 	m_position.y = 500;
 	draw_splash = true;
-	display_duration = 500.f;
+	display_duration = 1000.f;
+	start_countdown = false;
+	prev_level = 0;
 
 	return true;
 }
@@ -76,11 +62,65 @@ void DisplayScreen::destroy()
 	glDeleteShader(effect.program);
 }
 
-void DisplayScreen::update(bool paused, bool start_start, bool game_over, CurrentTime game_time) {
+void DisplayScreen::update(bool paused, bool show_start, bool game_over, int level, float ms) {
+	if (paused) {
+		draw_splash = true;
+		SetSplashTexLocs(12);
+	}
+	else if (!paused && show_start && !game_over) {
+		draw_splash = true;
+		SetSplashTexLocs(0);
+	}
+	else if (!paused && !show_start && game_over) {
+		draw_splash = true;
+		SetSplashTexLocs(13);
+	}
+	else if (prev_level != level){
+		prev_level = level;
+		draw_splash = true;
+		start_countdown = true;
+		SetSplashTexLocs(level);
+	}
+
+	if (draw_splash && start_countdown) {
+		display_duration -= ms;
+		if (display_duration <= 0 && draw_splash) {
+			draw_splash = false;
+			start_countdown = false;
+			display_duration = 500.f;
+		}
+	}
+
 
 }
 
-void DisplayScreen::draw(const mat3& projection)\
+void DisplayScreen::SetSplashTexLocs(int splash_screen) {
+	// splash_screen: 0 - start, 1-10 - levels, 11 - survive, 12 - pause, 13 - game over
+
+	float texture_locs[] = { 0.f,500.f/7000.f,1000.f / 7000.f,1500.f / 7000.f,2000.f / 7000.f,2500.f / 7000.f,3000.f / 7000.f,
+		3500.f / 7000.f,4000.f / 7000.f,4500.f / 7000.f,5000.f / 7000.f,5500.f / 7000.f,6000.f / 7000.f,6500.f / 7000.f,1.f };
+
+	vertices[0].texcoord = { texture_locs[splash_screen], 1.f };//top left
+	vertices[1].texcoord = { texture_locs[splash_screen + 1], 1.f };//top right
+	vertices[2].texcoord = { texture_locs[splash_screen + 1], 0.f };//bottom right
+	vertices[3].texcoord = { texture_locs[splash_screen], 0.f };//bottom left
+
+	// counterclockwise as it's the default opengl front winding direction
+	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 };
+
+	// Clearing errors
+	gl_flush_errors();
+
+	// Vertex Buffer creation
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+
+	// Index Buffer creation
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+}
+
+void DisplayScreen::draw(const mat3& projection)
 {
 	if (draw_splash) {
 		transform_begin();
