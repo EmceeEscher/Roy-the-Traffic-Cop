@@ -59,9 +59,12 @@ bool LaneManager::intersection_collision_check() {
 	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
 		std::deque<Car> &curr_cars = it->second->m_cars;
 		if (curr_cars.size() > 0) {
-			Car* first_car = &(curr_cars[0]);
-			if (first_car->is_in_beyond_intersec()) {
-				cars_in_intersec.push_back(first_car);
+			Car* car;
+			for (int i = 0; i < curr_cars.size(); i++) {
+				car = &(curr_cars[i]);
+				if (car->is_in_beyond_intersec()) {
+					cars_in_intersec.push_back(car);
+				}
 			}
 		}
 	}
