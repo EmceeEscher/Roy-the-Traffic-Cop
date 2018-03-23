@@ -108,7 +108,7 @@ bool World::init(vec2 screen)
 
 	is_game_paused = false;
 	show_start_splash = true;
-	is_game_over = false; //TODO: implement game over conditions, restart etc.
+	is_game_over = false; //TODO: implement game over conditions etc.
 	game_level = 1;
 
 	m_background.init();
@@ -119,6 +119,7 @@ bool World::init(vec2 screen)
 	m_lane_manager.init(m_ai);
 	m_coin_icon.init();
 	m_display_screen.init();
+	m_level_manager.init();
 	return m_traffic_cop.init();
 }
 
@@ -131,7 +132,6 @@ void World::destroy()
 		Mix_FreeChunk(m_roy_whistle);
 
 	Mix_CloseAudio();
-
 	m_remove_intersection.destroy();
 	m_traffic_cop.destroy();
 	m_background.destroy();
@@ -283,6 +283,28 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 				clear_intersection();
 			}
 		}
+	}
+	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
+	{
+		int w, h;
+		glfwGetWindowSize(m_window, &w, &h);
+
+		//TODO: All the destroys to free up memory
+		m_ai.init();
+		m_game_timer.init();
+		m_score_display.init();
+		m_lane_manager.init(m_ai);
+		m_coin_icon.init();
+		m_display_screen.init();
+		m_level_manager.init();
+		m_remove_intersection.init();
+
+		Mix_PlayMusic(m_background_music, -1);
+
+		is_game_paused = false;
+		show_start_splash = true;
+		is_game_over = false;
+		game_level = 1;
 	}
 }
 

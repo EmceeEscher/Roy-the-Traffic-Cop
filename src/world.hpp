@@ -14,7 +14,7 @@
 #include "score_display.hpp"
 #include "coin.hpp"
 #include "display_screen.hpp"
-//#include "level_manager.hpp"
+#include "level_manager.hpp"
 
 // stlib
 #include <vector>
@@ -85,7 +85,7 @@ private:
 	ScoreDisplay m_score_display;
 	Coin m_coin_icon;
 	DisplayScreen m_display_screen;
-	//LevelManager m_level_manager;
+	LevelManager m_level_manager;
   
 	float lanes_rot[4];
 
