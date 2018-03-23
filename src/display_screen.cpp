@@ -90,7 +90,7 @@ void DisplayScreen::update(bool paused, bool show_start, bool game_over, int lev
 		if (display_duration <= 0 && draw_splash) {
 			draw_splash = false;
 			start_countdown = false;
-			display_duration = 500.f;
+			display_duration = 1000.f;
 		}
 	}
 

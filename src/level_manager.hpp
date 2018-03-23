@@ -1,5 +1,5 @@
 #pragma once
-
+#include "game_timer.hpp"
 #include "common.hpp"
 
 
@@ -17,9 +17,15 @@ public:
 	// Return current game level
 	int get_level();
 
-	void update(float elapsed_ms);
+	// Return if game is over
+	bool get_game_over();
+
+	void update(int points, CurrentTime game_time, float elapsed_ms);
 
 
 private:
-
+	int game_level;
+	bool is_game_over;
+	int year;
+	int required_points; //minimum amount of cars required to proceed to next level
 };

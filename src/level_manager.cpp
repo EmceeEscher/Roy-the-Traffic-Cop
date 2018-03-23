@@ -3,6 +3,10 @@
 
 bool LevelManager::init()
 {
+	game_level = 1;
+	is_game_over = false;
+	year = 2018;
+	required_points = 30;
 	return true;
 }
 
@@ -12,8 +16,27 @@ void LevelManager::destroy()
 
 }
 
-
-
-void LevelManager::update(float elapsed_ms) {
-
+void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms) {
+	if (year != game_time.year) {
+		if (points < required_points) {
+			is_game_over = true;
+		}
+		else if (game_level <= 10) {
+			++game_level;
+		}
+		else {
+			game_level = 11;
+		}
+		required_points += game_level * 10;
+		year = game_time.year;
+	}
 }
+
+int LevelManager::get_level() {
+	return game_level;
+}
+
+bool LevelManager::get_game_over() {
+	return is_game_over;
+}
+

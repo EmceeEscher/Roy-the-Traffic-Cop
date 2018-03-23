@@ -143,10 +143,12 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-
+	m_points = m_lane_manager.points();
 	game_level = m_level_manager.get_level();
+	is_game_over = m_level_manager.get_game_over();
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
-	//m_game_timer.get_current_time()
+	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms);
+
 	if (!is_game_paused && !show_start_splash) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
@@ -157,14 +159,8 @@ bool World::update(float elapsed_ms)
 		
 		m_lane_manager.update(elapsed_ms);
 		m_remove_intersection.update(elapsed_ms, this->hit_count());
-
-		m_points = m_lane_manager.points();
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
-
-		if (game_level > 11) {
-			game_level = 11;
-		}
 		return true;
 	}
 }
@@ -304,8 +300,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 
 		is_game_paused = false;
 		show_start_splash = true;
-		is_game_over = false;
-		game_level = 1;
 	}
 }
 
