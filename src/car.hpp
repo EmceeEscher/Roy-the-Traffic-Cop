@@ -156,8 +156,8 @@ public:
 
 	bool is_hit();
 
-	// Adding level elements associate with car
-	void set_level(int level);
+	// useful debug method for testing car's turn placard direction
+	turn_direction get_placard_direction();
 
 private:
 	float m_color[3];
@@ -166,6 +166,8 @@ private:
 	float m_rotation; // in radians
 	float m_original_rot;
 	size_t m_num_indices; // passed to glDrawElements
+	vec2 m_velocity;
+	vec2 m_acceleration;
 	bool m_can_move;
 	bool m_is_villain;
 	vec2 m_displacement;
@@ -173,8 +175,10 @@ private:
 	direction m_desired_direction;
 	vec2 m_turn_start_pos;
 	vec2 m_turn_pivot;
+	float m_max_speed;
 	float m_wr; //half width of car texture
 	float m_hr; //half height of car texture
+	float t;
 	bool m_in_beyond_intersection;
 	bool m_turned;
 	bool m_hit; //car collided or not
@@ -182,14 +186,4 @@ private:
 	bool m_at_intersection;
 	float car_tex_x0; //specifies near x offset of the indicated car texture
 	float m_spin_amount;
-
-	// Parameters that will change with level
-	int m_level;
-	vec2 m_velocity;
-	vec2 m_acceleration;
-	float m_max_speed;
-	float t;
-	float t_scale;
-	float stopping_distance;
-	float stopping_distance_scale;
 };

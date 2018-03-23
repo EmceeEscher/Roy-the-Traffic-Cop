@@ -772,6 +772,10 @@ bool Car::is_at_front() {
 	return m_at_intersection;
 }
 
+turn_direction Car::get_placard_direction() {
+	return m_turn_placard->get_turn_direction();
+}
+
 //bounding box inputs go in order: bottom left, bottom right, top right, top left
 rect_bounding_box Car::get_bounding_box() {
 	// I use negative rotation because I did the math assuming
