@@ -242,7 +242,7 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 			if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.b, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
-					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
+					//printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
 					//Sleep(1000);
 					collisionTriangles.victim_index = vic_counter;
 					collisionTriangles.attacker_index = attack_counter;
