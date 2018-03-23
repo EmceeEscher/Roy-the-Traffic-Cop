@@ -81,6 +81,9 @@ void DisplayScreen::update(bool paused, bool show_start, bool game_over, int lev
 		start_countdown = true;
 		SetSplashTexLocs(level);
 	}
+	else if (!paused && !start_countdown) {
+		draw_splash = false;
+	}
 
 	if (draw_splash && start_countdown) {
 		display_duration -= ms;
