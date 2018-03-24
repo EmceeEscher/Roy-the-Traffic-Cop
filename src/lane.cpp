@@ -194,3 +194,7 @@ void Lane::erase_first_car()
 {
 	m_cars.erase(m_cars.begin());
 }
+
+void Lane::set_car_direction(direction dir, int car_index) {
+	m_cars[car_index].set_desired_direction(dir);
+}

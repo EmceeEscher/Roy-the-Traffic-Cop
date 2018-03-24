@@ -63,6 +63,10 @@ public:
 
   // Erases the first car in the lane. (Call this after that car has finished turning)
   void erase_first_car();
+
+  // Sets the desired direction for the car_indexthd car in m_cars
+  void set_car_direction(direction dir, int car_index);
+
   std::deque<Car> m_cars; // Cars in the lane
 
 

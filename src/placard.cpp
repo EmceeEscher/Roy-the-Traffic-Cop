@@ -211,3 +211,7 @@ void Placard::change_color(float red, float green, float blue){
   m_green = green;
   m_blue = blue;
 }
+
+turn_direction Placard::get_turn_direction() {
+	return m_desired_turn;
+}

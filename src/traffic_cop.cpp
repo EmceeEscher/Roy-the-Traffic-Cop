@@ -63,8 +63,8 @@ bool TrafficCop::init()
 	m_scale.x = 1.0;
 	m_scale.y = 1.0;
 	m_position = { 500.f, 500.f};
-	grow_shrink_time = 5000.f;
-	max_grow_shrink_time = 5000.f;
+	grow_shrink_time = 3000.f;
+	max_grow_shrink_time = 3000.f;
 	grow = true;
 
 	return true;
@@ -83,20 +83,20 @@ void TrafficCop::destroy()
 }
 
 void TrafficCop::update(float ms) {
-	float interpolation_val = (max_grow_shrink_time - grow_shrink_time) / max_grow_shrink_time;
+	float interpolation_val = (max_grow_shrink_time - grow_shrink_time) / max_grow_shrink_time * 0.002;
 	if (grow) {
 		grow_shrink_time -= ms;
-		m_scale.x += interpolation_val/300;
-		m_scale.y += interpolation_val/300;
-		if (m_scale.x > 1.2f) {
+		m_scale.x += interpolation_val;
+		m_scale.y += interpolation_val;
+		if (m_scale.x > 1.2f || m_scale.y > 1.2f) {
 			grow = false;
 		};
 	}
-	else {
+	else if (!grow){
 		grow_shrink_time += ms;
-		m_scale.x -= interpolation_val / 300;
-		m_scale.y -= interpolation_val / 300;
-		if (m_scale.x < 1.05) {
+		m_scale.x -= interpolation_val;
+		m_scale.y -= interpolation_val;
+		if (m_scale.x < 1.05 || m_scale.y < 1.05) {
 			grow = true;
 		};
 	}

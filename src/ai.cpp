@@ -8,15 +8,34 @@ bool AI::init()
 
 void AI::make_villains_decide(std::map<direction, Lane*> lanes)
 {
+	std::map<direction, Lane*> new_lanes = deep_copy_lanes(lanes);
+	std::map<direction, int> cars_in_intersection;
+
+	// Prune cars in the intersection
+	for (std::map<direction, Lane*>::iterator it = new_lanes.begin(); it != new_lanes.end(); it++)
+	{
+		cars_in_intersection[it->first] = 0;
+
+		std::deque<Car> copiedCarsInLane = it->second->get_cars();
+		for (auto car = copiedCarsInLane.begin(); car != copiedCarsInLane.end(); car++) {
+			if (car->is_in_beyond_intersec()) {
+				cars_in_intersection[it->first] += 1;
+				it->second->erase_first_car();
+			}
+		}
+	}
+
 	for (std::map<direction, Lane*>::iterator it = lanes.begin(); it != lanes.end(); it++)
 	{
-		std::deque<Car> carsInLane = it->second->get_cars();
+		std::deque<Car> originalCarsInLane = it->second->get_cars();
+		std::deque<Car> copiedCarsInLane = new_lanes[it->first]->get_cars();
+
 		// Villains should never remain villains after making it to second in line in the intersection.
 		// vehicles generated into lanes without cars already in them are not eligible to be villains
-		if (carsInLane.size() > 1) {
-			if (carsInLane[1].is_villain()) {
-				direction new_direction = make_villain_decide(it->first, lanes);
-				carsInLane[1].set_desired_direction(new_direction);
+		if (copiedCarsInLane.size() > 1) {
+			if (copiedCarsInLane[1].is_villain()) {
+				direction new_direction = make_villain_decide(it->first, new_lanes);
+				it->second->set_car_direction(new_direction, 1 + cars_in_intersection[it->first]);
 			}
 		}
 	}
