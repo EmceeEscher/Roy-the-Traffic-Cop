@@ -279,7 +279,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			m_remove_intersection.increment();
 		}
 		if (m_remove_intersection.m_press == 10) {
-			clear_intersection();
+			m_lane_manager.clear_intersection();
 		}
 	}
 }
@@ -292,33 +292,6 @@ void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 	// printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
-void World::clear_intersection() {
-
-	std::deque<Car> &west_cars = m_lane_manager.m_lanes[direction::WEST]->m_cars;
-	for (int i = 0; i < west_cars.size(); i++) {
-		if (west_cars[i].is_hit()) {
-			west_cars.erase(west_cars.begin() + i);
-		}
-	}
-	std::deque<Car> &east_cars = m_lane_manager.m_lanes[direction::EAST]->m_cars;
-	for (int i = 0; i < east_cars.size(); i++) {
-		if (east_cars[i].is_hit()) {
-			east_cars.erase(east_cars.begin() + i);
-		}
-	}
-	std::deque<Car> &north_cars = m_lane_manager.m_lanes[direction::NORTH]->m_cars;
-	for (int i = 0; i < north_cars.size(); i++) {
-		if (north_cars[i].is_hit()) {
-			north_cars.erase(north_cars.begin() + i);
-		}
-	}
-	std::deque<Car> &south_cars = m_lane_manager.m_lanes[direction::SOUTH]->m_cars;
-	for (int i = 0; i < south_cars.size(); i++) {
-		if (south_cars[i].is_hit()) {
-			south_cars.erase(south_cars.begin() + i);
-		}
-	}
-}
 int World::hit_count() {
 	int counter = 0;
 	std::deque<Car> &west_cars = m_lane_manager.m_lanes[direction::WEST]->m_cars;

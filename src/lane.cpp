@@ -21,19 +21,6 @@ Lane::Lane(direction dir, float villainSpawnProbability)
 
 }
 
-//bool Lane::init(direction dir, float villainSpawnProbability)
-//{
-//	lanes_rot[0] = PI;			// North
-//	lanes_rot[1] = PI / 2.0;		// West
-//	lanes_rot[2] = 0;			// South
-//	lanes_rot[3] = 3.0*PI / 2.0;	// East
-//	m_dir = dir;
-//	m_time_remaining = MaxTimePerCar;
-//	m_villain_spawn_probability = villainSpawnProbability;
-//	std::srand(std::time(nullptr));
-//	return true;
-//}
-
 Lane::~Lane()
 {
 	m_cars.clear();

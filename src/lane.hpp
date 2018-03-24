@@ -21,12 +21,9 @@ public:
 	const int MaxCarsPerLane = 4;
 	float const MaxTimePerCar = 10000; // Max time before a car will turn
 
-  // constructor/destructor
-  Lane(direction dir, float villainSpawnProbability);
-  ~Lane();
-
-	// Creates instance
-	bool init(direction dir, float villainSpawnProbability);
+	// constructor/destructor
+	Lane(direction dir, float villainSpawnProbability);
+	~Lane();
 
 	// Returns the current time remaining on the timer
 	float get_time_remaining() const;
@@ -43,31 +40,31 @@ public:
 	// Get the lane label number
 	int get_lane_num()const;
 
-  // Returns the cars in the lane
-  std::deque<Car> get_cars() const;
+	// Returns the cars in the lane
+	std::deque<Car> get_cars() const;
 
-  // Moves the game ahead by ms milliseconds
-  bool update(float ms);
+	// Moves the game ahead by ms milliseconds
+	bool update(float ms);
 
-  // Adds the given car to the back of the lineup
-  void add_car(carType type);
+	// Adds the given car to the back of the lineup
+	void add_car(carType type);
 
-  // Removes the car at the front of the lane
-  void turn_car();
+	// Removes the car at the front of the lane
+	void turn_car();
 
-  // Returns true if the lane has MaxCarsPerLane cars in it
-  bool is_lane_full() const;
+	// Returns true if the lane has MaxCarsPerLane cars in it
+	bool is_lane_full() const;
 
-  // Returns true if the lane has at least 1 vehicle in it
-  bool is_lane_empty() const;
+	// Returns true if the lane has at least 1 vehicle in it
+	bool is_lane_empty() const;
 
-  // Erases the first car in the lane. (Call this after that car has finished turning)
-  void erase_first_car();
+	// Erases the first car in the lane. (Call this after that car has finished turning)
+	void erase_first_car();
 
-  // Sets the desired direction for the car_indexthd car in m_cars
-  void set_car_direction(direction dir, int car_index);
+	// Sets the desired direction for the car_indexthd car in m_cars
+	void set_car_direction(direction dir, int car_index);
 
-  std::deque<Car> m_cars; // Cars in the lane
+	std::deque<Car> m_cars; // Cars in the lane
 
 
 private:
