@@ -369,7 +369,6 @@ bool GameTimer::init()
 	return true;
 }
 
-//will we need this for anything else?
 CurrentTime GameTimer::get_current_time()
 {
 	tm* current_time = gmtime(&m_current_time);
@@ -579,7 +578,7 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {
-	const int game_sec_per_ms = 332; //sec_in_year/music_length/1000ms
+	const int game_sec_per_ms = 322; //sec_in_year/music_length/1000ms
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms); 
 	m_current_time = mktime(adv_time);
