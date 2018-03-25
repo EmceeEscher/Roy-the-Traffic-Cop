@@ -10,6 +10,10 @@
 #include <cmath>
 #include <stdexcept>
 
+#define SDL_MAIN_HANDLED
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+
 using std::string;
 
 class Car : public Renderable
@@ -187,6 +191,7 @@ private:
 	float car_tex_x0; //specifies near x offset of the indicated car texture
 	float m_spin_amount;
 
+
 	// Level associated variables
 	int m_level = 1;
 	vec2 m_acceleration;
@@ -196,4 +201,6 @@ private:
 	float stopping_distance;
 	float stopping_distance_scale;
 	float t_scale;
+  
+	Mix_Chunk* m_crash;
 };

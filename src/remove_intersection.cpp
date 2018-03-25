@@ -86,6 +86,11 @@ bool RemoveIntersection::init()
 	return true;
 }
 
+void RemoveIntersection::reset() {
+	show = false;
+	m_press = 0;
+}
+
 void RemoveIntersection::update(float ms, int hit_count)
 {
 	m_prev_time += ms;
