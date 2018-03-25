@@ -78,6 +78,7 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
+	bool car_is_honking;
 
 	Mix_Chunk* m_car_horn;
 	Mix_Chunk* m_car_rev;
