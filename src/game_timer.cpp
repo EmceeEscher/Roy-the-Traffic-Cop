@@ -369,6 +369,13 @@ bool GameTimer::init()
 	return true;
 }
 
+void GameTimer::reset() {
+	struct tm init_time = { 0 };
+	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
+	init_time.tm_year = 70; // mktime starts from 1900 for some reason
+	m_current_time = mktime(&init_time);
+}
+
 CurrentTime GameTimer::get_current_time()
 {
 	tm* current_time = gmtime(&m_current_time);

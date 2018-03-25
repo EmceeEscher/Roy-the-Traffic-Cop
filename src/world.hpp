@@ -46,6 +46,9 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+	
+	// reset game to starting state (hopefully without memory leaks)
+	void reset_game();
 
 
 private:

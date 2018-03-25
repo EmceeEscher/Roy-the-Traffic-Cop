@@ -27,6 +27,9 @@ public:
     // Releases instance
     void destroy();
 
+	// resets all lanes and internal variables
+	void reset();
+
     // Moves the game ahead by ms milliseconds
     bool update(float ms);
 

@@ -27,6 +27,16 @@ void LaneManager::destroy()
   m_lanes.clear();
 }
 
+void LaneManager::reset()
+{
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->clear_lane();
+	}
+	m_time_remaining = m_time_per_action;
+	m_points = 0;
+	spawn_delay = 0;
+}
+
 bool LaneManager::update(float ms)
 {
 

@@ -287,24 +287,23 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
 	{
-		int w, h;
-		glfwGetWindowSize(m_window, &w, &h);
-
-		//TODO: All the destroys to free up memory
-		m_ai.init();
-		m_game_timer.init(); //needs release graphics
-		m_score_display.init(); //needs release graphics
-		m_lane_manager.init(m_ai);
-		m_coin_icon.init(); //needs release graphics
-		m_display_screen.init(); //needs release graphics
-		m_level_manager.init();
-		m_remove_intersection.init(); 
-
-		Mix_PlayMusic(m_background_music, -1);
-
-		is_game_paused = false;
-		show_start_splash = true;
+		reset_game();
 	}
+}
+
+void World::reset_game() {
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+
+	m_lane_manager.reset();
+	m_game_timer.reset();
+	m_level_manager.init(); // only sets primitives, no memory leak
+	m_remove_intersection.reset();
+
+	Mix_PlayMusic(m_background_music, -1);
+
+	is_game_paused = false;
+	show_start_splash = true;
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)

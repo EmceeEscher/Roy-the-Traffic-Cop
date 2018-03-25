@@ -42,6 +42,10 @@ Lane::~Lane()
 	m_cars.clear();
 }
 
+void Lane::clear_lane() {
+	m_cars.clear();
+}
+
 int Lane::get_lane_num()const
 {
 	return m_lane_num;
