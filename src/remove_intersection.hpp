@@ -15,6 +15,9 @@ public:
 	// Creates all the associated render resources and default transform
 	bool init();
 
+	// clears symbol on game reset
+	void reset();
+
 	void update(float ms, int hit_count);
 
 	// Releases all associated resources

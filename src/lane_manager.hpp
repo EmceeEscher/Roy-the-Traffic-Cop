@@ -8,9 +8,7 @@
 
 #include <map>
 #include <string>
-#define SDL_MAIN_HANDLED
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+
 
 class LaneManager
 {
@@ -28,6 +26,9 @@ public:
 
     // Releases instance
     void destroy();
+
+	// resets all lanes and internal variables
+	void reset();
 
     // Moves the game ahead by ms milliseconds
     bool update(float ms);
@@ -69,5 +70,5 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
 	float spawn_delay;
-	Mix_Chunk* m_crash;
+
 };

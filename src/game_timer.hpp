@@ -23,6 +23,8 @@ public:
 	// Creates instance
 	bool init();
 
+	void reset();
+
 	// Returns the current in-game time
 	// Format: MONTH dd, yyyy (eg: December 18, 1995)
 	// Note: We're probably not going to be printing a string at the end,

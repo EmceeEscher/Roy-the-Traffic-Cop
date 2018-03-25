@@ -25,6 +25,9 @@ public:
 	Lane(direction dir, float villainSpawnProbability);
 	~Lane();
 
+	// remove all cars from lane (used for resetting the game)
+	void clear_lane();
+
 	// Returns the current time remaining on the timer
 	float get_time_remaining() const;
 
@@ -69,12 +72,13 @@ public:
 
 private:
 	float lanes_rot[4];
-  float m_time_remaining; // Time remaining on timer of car at front of lane
-  direction m_dir;
+	float m_time_remaining; // Time remaining on timer of car at front of lane
+	direction m_dir;
 	float m_villain_spawn_probability; // Probability that a car spawned in this lane will be a villain
 	std::map<direction, vec2> m_lane_coords;
 	vec2 m_stop_sign_loc;
 	int m_lane_num;
+	bool car_is_honking;
 
 	Mix_Chunk* m_car_horn;
 	Mix_Chunk* m_car_rev;

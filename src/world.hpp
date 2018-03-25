@@ -13,6 +13,8 @@
 #include "remove_intersection.hpp"
 #include "score_display.hpp"
 #include "coin.hpp"
+#include "display_screen.hpp"
+#include "level_manager.hpp"
 
 // stlib
 #include <vector>
@@ -44,6 +46,9 @@ public:
 
 	// Should the game be over ?
 	bool is_over()const;
+	
+	// reset game to starting state (hopefully without memory leaks)
+	void reset_game();
 
 
 private:
@@ -63,6 +68,17 @@ private:
 	// Game Paused Status
 	bool is_game_paused;
 
+	// Start Screen Status
+	bool show_start_splash;
+
+	// Game over status
+	bool is_game_over;
+
+	int game_level;
+
+	//total points required to get to next level
+	int m_req_points_next_level; 
+
 	// Game entities
 	GameTimer m_game_timer;
 	TrafficCop m_traffic_cop;
@@ -72,12 +88,15 @@ private:
 	LaneManager m_lane_manager;
 	ScoreDisplay m_score_display;
 	Coin m_coin_icon;
+	DisplayScreen m_display_screen;
+	LevelManager m_level_manager;
   
 	float lanes_rot[4];
 
 	vec2 lanes[4];
 
 	Mix_Music* m_background_music;
+	Mix_Music* m_game_music;
 	Mix_Chunk* m_roy_whistle;
 
 	// C++ rng

@@ -18,11 +18,18 @@ Lane::Lane(direction dir, float villainSpawnProbability)
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	m_car_horn = Mix_LoadWAV(audio_path("carHorn1.wav"));
 	m_car_rev = Mix_LoadWAV(audio_path("carRev.wav"));
+	Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
+	Mix_VolumeChunk(m_car_horn, MIX_MAX_VOLUME / 50);
+	car_is_honking = false;
 
 }
 
 Lane::~Lane()
 {
+	m_cars.clear();
+}
+
+void Lane::clear_lane() {
 	m_cars.clear();
 }
 
@@ -61,9 +68,9 @@ std::deque<Car> Lane::get_cars() const
 bool Lane::update(float ms)
 {
 	m_time_remaining -= ms;
-	if (m_time_remaining <= 2500) {
-		Mix_VolumeChunk(m_car_horn, MIX_MAX_VOLUME / 50);
+	if (m_time_remaining <= 2500 && !car_is_honking) {
 		Mix_PlayChannel(-1, m_car_horn, 0);
+		car_is_honking = true;
 	}
 	return true;
 }
@@ -140,8 +147,8 @@ void Lane::turn_car()
 					if (selected_car.is_in_beyond_intersec()) {
 						selected_car.speed_up();
 					}
-					Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
 					Mix_PlayChannel(-1, m_car_rev, 0);
+					car_is_honking = false;
 				}
 			}
 
@@ -152,8 +159,8 @@ void Lane::turn_car()
 					if (selected_car.is_in_beyond_intersec()) {
 						selected_car.speed_up();
 					}
-					Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
 					Mix_PlayChannel(-1, m_car_rev, 0);
+					car_is_honking = false;
 				}
 			}
 		}

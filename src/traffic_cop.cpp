@@ -66,7 +66,6 @@ bool TrafficCop::init()
 	grow_shrink_time = 3000.f;
 	max_grow_shrink_time = 3000.f;
 	grow = true;
-	//m_rotation = 0.f;
 
 	return true;
 }
