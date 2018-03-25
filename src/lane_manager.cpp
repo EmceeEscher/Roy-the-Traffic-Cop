@@ -4,12 +4,7 @@
 
 
 bool LaneManager::init(AI ai)
-{
-  SDL_Init(SDL_INIT_AUDIO);
-  Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-  m_crash = Mix_LoadWAV(audio_path("carCrash.wav"));
-  Mix_AllocateChannels(3);
-  
+{  
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -30,6 +25,16 @@ bool LaneManager::init(AI ai)
 void LaneManager::destroy()
 {
   m_lanes.clear();
+}
+
+void LaneManager::reset()
+{
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->clear_lane();
+	}
+	m_time_remaining = m_time_per_action;
+	m_points = 0;
+	spawn_delay = 0;
 }
 
 bool LaneManager::update(float ms)
@@ -107,10 +112,6 @@ bool LaneManager::intersection_collision_check() {
 				}
 			}
 		}
-	}
-	if (collision_occurring) {
-		Mix_VolumeChunk(m_crash, MIX_MAX_VOLUME / 2);
-		Mix_PlayChannel(-1, m_crash, 0);
 	}
 	return collision_occurring;
 }

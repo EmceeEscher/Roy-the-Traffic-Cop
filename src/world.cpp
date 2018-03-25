@@ -53,8 +53,8 @@ bool World::init(vec2 screen)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
 #if __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+	 glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	#endif
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 	m_window = glfwCreateWindow((int)screen.x, (int)screen.y, "Roy the Traffic Cop", nullptr, nullptr);
 	if (m_window == nullptr)
@@ -88,23 +88,14 @@ bool World::init(vec2 screen)
 		fprintf(stderr, "Failed to open audio device");
 		return false;
 	}
-	Mix_AllocateChannels(16);
-
-	m_background_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_game_music = Mix_LoadMUS(audio_path("music.wav"));
+	m_background_music = Mix_LoadMUS(audio_path("start_music.wav"));
 	m_roy_whistle = Mix_LoadWAV(audio_path("whistle.wav"));
-
-	if (m_background_music == nullptr || m_roy_whistle == nullptr)
-	{
-		fprintf(stderr, "Failed to load sounds, make sure the data directory is present");
-		return false;
-	}
-
-	// Playing background music undefinitely
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(m_background_music, -1);
 
 	int fb_w, fb_h;
-			glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
+	glfwGetFramebufferSize(m_window, &fb_w, &fb_h);
 
 	// Rotation values for each lane
 	lanes_rot[0] = PI;			// North
@@ -119,6 +110,9 @@ bool World::init(vec2 screen)
 	lanes[3] = { 600.f,450.f };
 
 	is_game_paused = false;
+	show_start_splash = true;
+	is_game_over = false; //TODO: implement game over conditions etc.
+	game_level = 1;
 
 	m_background.init();
 	m_ai.init();
@@ -127,6 +121,8 @@ bool World::init(vec2 screen)
 	m_score_display.init();
 	m_lane_manager.init(m_ai);
 	m_coin_icon.init();
+	m_display_screen.init();
+	m_level_manager.init();
 	return m_traffic_cop.init();
 }
 
@@ -139,7 +135,6 @@ void World::destroy()
 		Mix_FreeChunk(m_roy_whistle);
 
 	Mix_CloseAudio();
-
 	m_remove_intersection.destroy();
 	m_traffic_cop.destroy();
 	m_background.destroy();
@@ -151,18 +146,23 @@ void World::destroy()
 // Update our game world
 bool World::update(float elapsed_ms)
 {
-	if (!is_game_paused) {
+	m_points = m_lane_manager.points();
+	m_req_points_next_level = m_level_manager.get_next_level_point_req();
+	game_level = m_level_manager.get_level();
+	is_game_over = m_level_manager.get_game_over();
+	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
+	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms);
+
+	if (!is_game_paused && !show_start_splash) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		vec2 screen = { (float)w, (float)h };
 
 		m_traffic_cop.update(elapsed_ms);
 		m_game_timer.advance_time(elapsed_ms);
-		m_game_timer.get_current_time();
+		
 		m_lane_manager.update(elapsed_ms);
 		m_remove_intersection.update(elapsed_ms, this->hit_count());
-
-		m_points = m_lane_manager.points();
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
 		return true;
@@ -182,7 +182,7 @@ void World::draw()
 
 	// Updating window title with points
 	std::stringstream title_ss;
-	title_ss << "Points: " << m_points;
+	title_ss << "Required Points to Advance: " << m_req_points_next_level;
 	glfwSetWindowTitle(m_window, title_ss.str().c_str());
 
 	// Clearing backbuffer
@@ -220,8 +220,7 @@ void World::draw()
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
-
-
+	m_display_screen.draw(projection_2D);
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -236,59 +235,79 @@ bool World::is_over()const
 // On key callback
 void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 {
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HANDLE KEY PRESSES HERE
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT|| key == GLFW_KEY_RIGHT)) {
-		Mix_PlayChannel(-1, m_roy_whistle, 0);
+	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) { //start game with G
+		show_start_splash = !show_start_splash;
+		Mix_PlayMusic(m_game_music, -1);
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
-		m_traffic_cop.set_rotation(lanes_rot[0]);
-		m_lane_manager.turn_car(direction::NORTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
-		m_traffic_cop.set_rotation(lanes_rot[2]);
-		m_lane_manager.turn_car(direction::SOUTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
-	{
-		m_traffic_cop.set_rotation(lanes_rot[1]);
-		m_lane_manager.turn_car(direction::WEST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
-		m_traffic_cop.set_rotation(lanes_rot[3]);
-		m_lane_manager.turn_car(direction::EAST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_W) {
-		m_lane_manager.input_create_cars(direction::NORTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-		m_lane_manager.input_create_cars(direction::WEST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_S) {
-		m_lane_manager.input_create_cars(direction::SOUTH);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_D) {
-		m_lane_manager.input_create_cars(direction::EAST);
-	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_P) {
+	if (action == GLFW_PRESS && key == GLFW_KEY_P && !show_start_splash) { //pause anytime with P
 		is_game_paused = !is_game_paused;
+		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
-	if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
-		if (m_remove_intersection.show) {
-			m_remove_intersection.increment();
+	if (!is_game_paused && !show_start_splash) {
+		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
+			Mix_PlayChannel(-1, m_roy_whistle, 0);
 		}
-		if (m_remove_intersection.m_press == 10) {
-			clear_intersection();
+		if (action == GLFW_PRESS && key == GLFW_KEY_UP) {
+			m_traffic_cop.set_rotation(lanes_rot[0]);
+			m_lane_manager.turn_car(direction::NORTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_DOWN) {
+			m_traffic_cop.set_rotation(lanes_rot[2]);
+			m_lane_manager.turn_car(direction::SOUTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_LEFT)
+		{
+			m_traffic_cop.set_rotation(lanes_rot[1]);
+			m_lane_manager.turn_car(direction::WEST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_RIGHT) {
+			m_traffic_cop.set_rotation(lanes_rot[3]);
+			m_lane_manager.turn_car(direction::EAST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_W) {
+			m_lane_manager.input_create_cars(direction::NORTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_A) {
+			m_lane_manager.input_create_cars(direction::WEST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_S) {
+			m_lane_manager.input_create_cars(direction::SOUTH);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_D) {
+			m_lane_manager.input_create_cars(direction::EAST);
+		}
+		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
+			if (m_remove_intersection.show) {
+				m_remove_intersection.increment();
+			}
+			if (m_remove_intersection.m_press == 10) {
+				clear_intersection();
+			}
 		}
 	}
+	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
+	{
+		reset_game();
+	}
+}
+
+void World::reset_game() {
+	int w, h;
+	glfwGetWindowSize(m_window, &w, &h);
+
+	m_lane_manager.reset();
+	m_game_timer.reset();
+	m_level_manager.init(); // only sets primitives, no memory leak
+	m_remove_intersection.reset();
+
+	Mix_PlayMusic(m_background_music, -1);
+
+	is_game_paused = false;
+	show_start_splash = true;
 }
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// HANDLE MOUSE CONTROL HERE (if we end up using it)
-	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
