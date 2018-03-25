@@ -57,6 +57,9 @@ public:
 	// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
 	LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
 
+	// clears all crashed cars out of intersection
+	void clear_intersection();
+
 	std::map<direction, Lane*> m_lanes;
 
 

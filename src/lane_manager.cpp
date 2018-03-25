@@ -9,10 +9,10 @@ bool LaneManager::init(AI ai)
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
   m_lanes[direction::WEST] = new Lane(direction::WEST, VillainSpawnProbability);
-	m_lane_coords[direction::NORTH] = { 450.f,398.f };
-	m_lane_coords[direction::EAST] = { 400.f,540.f };
-	m_lane_coords[direction::SOUTH] = { 550.f,590.f };
-	m_lane_coords[direction::WEST] = { 610.f,450.f };
+  m_lane_coords[direction::NORTH] = { 450.f,398.f };
+  m_lane_coords[direction::EAST] = { 400.f,540.f };
+  m_lane_coords[direction::SOUTH] = { 550.f,590.f };
+  m_lane_coords[direction::WEST] = { 610.f,450.f };
   m_time_remaining = m_time_per_action;
   m_points = 0;
   m_ai = &ai;
@@ -475,4 +475,19 @@ bool LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 	}
 
 	return time_expired;
+}
+
+void LaneManager::clear_intersection() {
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		std::deque<Car> &curr_cars = it->second->m_cars;
+		if (curr_cars.size() > 0) {
+			Car* car;
+			for (int i = curr_cars.size() - 1; i >= 0; i--) {
+				car = &(curr_cars[i]);
+				if (car->is_hit()) {
+					curr_cars.erase(curr_cars.begin() + i);
+				}
+			}
+		}
+	}
 }
