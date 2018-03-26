@@ -39,7 +39,6 @@ uint16_t indices[] = {
 bool Car::init(bool isVillain)
 {
 	SDL_Init(SDL_INIT_AUDIO);
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	m_crash = Mix_LoadWAV(audio_path("carCrash.wav"));
 	Mix_VolumeChunk(m_crash, 80);
 
@@ -176,6 +175,10 @@ bool Car::init(bool isVillain)
 	return true;
 }
 
+// Release car audio resources
+void Car::release_audio_res() {
+	Mix_FreeChunk(m_crash);
+}
 // Releases all graphics resources
 void Car::destroy()
 {

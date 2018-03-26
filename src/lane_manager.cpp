@@ -469,6 +469,7 @@ bool LaneManager::lane_queue(Lane* lane, vec2 lane_intersection, float ms) {
 			}
 		}
 		if (car_delete(cars[i].get_position())) {
+			cars[i].release_audio_res();
 			lane->m_cars.erase(lane->m_cars.begin() + i);
 			++m_points;
 		}
@@ -485,6 +486,7 @@ void LaneManager::clear_intersection() {
 			for (int i = curr_cars.size() - 1; i >= 0; i--) {
 				car = &(curr_cars[i]);
 				if (car->is_hit()) {
+					car->release_audio_res();
 					curr_cars.erase(curr_cars.begin() + i);
 				}
 			}
