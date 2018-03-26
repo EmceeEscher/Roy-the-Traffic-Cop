@@ -149,16 +149,12 @@ bool Car::init(bool isVillain)
 	m_scale.x = 1;
 	m_scale.y = 1;
 	m_position = { -200.f, 537.f };
-	m_velocity = { 15.0f, .0f };
-	m_acceleration = { ACC, .0f };
-	m_max_speed = { 200.f };
 	m_can_move = false;
 	m_is_villain = isVillain;
 	m_rotation = 0.f;
 	m_in_beyond_intersection = false;
 	m_hit = false;
 	m_turned = false;
-	t = 0.f;
 	m_at_intersection = false;
 	m_spin_amount = 0.f;
 	m_turn_placard = new Placard(m_position, m_rotation);
@@ -166,6 +162,16 @@ bool Car::init(bool isVillain)
 	m_color[0] = 1.f;
 	m_color[1] = 1.f;
 	m_color[2] = 1.f;
+
+	// Initialization of variables that will be influenced by levels
+	m_level = 1;
+	m_velocity = { 15.0f, .0f };
+	m_acceleration = { ACC, .0f };
+	m_max_speed = 180.f;
+	t = 0.f;
+	stopping_distance = 117.f;
+	stopping_distance_scale = 0.f;
+	t_scale = 1.f;
 
 	return true;
 }
@@ -182,6 +188,20 @@ void Car::destroy()
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
 	glDeleteShader(effect.program);
+}
+
+
+// Used for setting level variables for cars at generation
+void Car::set_level(int level) {
+	if (level >= 1)
+		m_level = level;
+	else
+		m_level = 1;
+	float scale = 1 + (m_level - 1)*5.f / 100.f;
+	t_scale = t_scale + m_level * 0.1f;
+	m_velocity = { m_velocity.x * scale, m_velocity.y * scale };
+	m_max_speed = m_max_speed * scale;
+	stopping_distance = stopping_distance * scale;
 }
 
 // Called on each frame by World::update()
@@ -227,7 +247,7 @@ void Car::update(float ms)
 			if (t >= 0.f && t <= 1.f)
 			{
 				turn(t);
-				t += 0.01f;
+				t += 0.01f*t_scale;
 				update_rotation_on_turn(t);
 				//printf("%f", t);
 			}
@@ -237,25 +257,25 @@ void Car::update(float ms)
 					m_turned = true;
 					if (m_desired_direction == direction::EAST) {
 						m_velocity.y = 0.f;
-						m_velocity.x = 0.8f * m_max_speed;
+						m_velocity.x = 0.9f * m_max_speed;
 						m_acceleration.x = ACC;
 						m_acceleration.y = 0.f;
 					}
 					else if (m_desired_direction == direction::WEST) {
 						m_velocity.y = 0.f;
-						m_velocity.x = -0.8f * m_max_speed;
+						m_velocity.x = -0.9f * m_max_speed;
 						m_acceleration.x = -ACC;
 						m_acceleration.y = 0.f;
 					}
 					else if (m_desired_direction == direction::NORTH) {
 						m_velocity.x = 0.f;
-						m_velocity.y = -0.8f * m_max_speed;
+						m_velocity.y = -0.9f * m_max_speed;
 						m_acceleration.x = 0.f;
 						m_acceleration.y = -ACC;
 					}
 					else if (m_desired_direction == direction::SOUTH) {
 						m_velocity.x = 0.f;
-						m_velocity.y = 0.8f * m_max_speed;
+						m_velocity.y = 0.9f * m_max_speed;
 						m_acceleration.x = 0.f;
 						m_acceleration.y = ACC;
 					}
@@ -557,7 +577,7 @@ bool Car::is_approaching_stop(vec2 lane_pos)
 	float x_margin = abs(m_position.x - stop_x);
 	float y_margin = abs(m_position.y - stop_y);
 	//printf("%f,%f\n", x_margin, y_margin);
-	if (std::max(x_margin, y_margin) <= 130.f && (m_can_move == false))
+	if (std::max(x_margin, y_margin) <= stopping_distance && (m_can_move == false))
 		return true;
 	else
 		return false;
@@ -638,7 +658,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 445.f, 445.f };
+			m_turn_pivot = { 530.f, 445.f };
 			return 's';
 		}
 		break;
@@ -656,7 +676,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 537.f, 537.f };
+			m_turn_pivot = { 470.f, 537.f };
 			return 's';
 		}
 		break;
@@ -674,7 +694,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 550.f, 470.f };
+			m_turn_pivot = { 550.f, 530.f };
 			return 's';
 		}
 		break;
@@ -693,7 +713,7 @@ char Car::calculate_turn_dir(direction lane_dir, direction desired_dir)
 		else
 		{
 			//Change
-			m_turn_pivot = { 450.f, 550.f };
+			m_turn_pivot = { 450.f, 470.f };
 			return 's';
 		}
 		break;
@@ -755,10 +775,6 @@ void Car::start_timer(float max_time) {
 }
 bool Car::is_at_front() {
 	return m_at_intersection;
-}
-
-turn_direction Car::get_placard_direction() {
-	return m_turn_placard->get_turn_direction();
 }
 
 //bounding box inputs go in order: bottom left, bottom right, top right, top left
