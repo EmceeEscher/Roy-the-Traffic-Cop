@@ -165,6 +165,9 @@ public:
 	// Used for setting level variables for cars at generation
 	void set_level(int level);
 
+	// Release audio resources
+	void release_audio_res();
+
 
 private:
 	float m_color[3];

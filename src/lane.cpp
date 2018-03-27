@@ -15,7 +15,6 @@ Lane::Lane(direction dir, float villainSpawnProbability)
 	m_lane_coords[direction::EAST] = { 610.f,450.f };
 
 	SDL_Init(SDL_INIT_AUDIO);
-	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 	m_car_horn = Mix_LoadWAV(audio_path("carHorn1.wav"));
 	m_car_rev = Mix_LoadWAV(audio_path("carRev.wav"));
 	Mix_VolumeChunk(m_car_rev, MIX_MAX_VOLUME / 10);
