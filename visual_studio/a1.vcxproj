@@ -511,6 +511,7 @@
     <ClCompile Include="$(ProjectDir)..\src\lane_manager.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\background.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\placard.cpp" />
+    <ClCompile Include="..\src\ambulance.cpp" />
     <ClCompile Include="..\src\display_screen.cpp" />
     <ClCompile Include="..\src\level_manager.cpp" />
     <ClCompile Include="..\src\remove_intersection.cpp" />

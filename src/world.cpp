@@ -215,6 +215,8 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
+	for (auto& amb : m_lane_manager.get_amb())
+		amb.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
@@ -265,16 +267,21 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			m_lane_manager.turn_car(direction::EAST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_W) {
-			m_lane_manager.input_create_cars(direction::NORTH);
+			m_lane_manager.add_ambulance(direction::NORTH);
+			//m_lane_manager.input_create_cars(direction::NORTH);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-			m_lane_manager.input_create_cars(direction::WEST);
+			m_lane_manager.add_ambulance(direction::WEST);
+			//m_lane_manager.input_create_cars(direction::WEST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_S) {
-			m_lane_manager.input_create_cars(direction::SOUTH);
+			m_lane_manager.add_ambulance(direction::SOUTH);
+			//m_lane_manager.input_create_cars(direction::SOUTH);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_D) {
-			m_lane_manager.input_create_cars(direction::EAST);
+			m_lane_manager.add_ambulance(direction::EAST);
+
+			//m_lane_manager.input_create_cars(direction::EAST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
 			if (m_remove_intersection.show) {
@@ -308,7 +315,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	// printf("mouse position: %f,%f\n", xpos, ypos);
+	printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

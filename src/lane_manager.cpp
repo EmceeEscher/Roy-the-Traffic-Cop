@@ -1,5 +1,7 @@
 #include "lane_manager.hpp"
 #include "car.hpp"
+#include "ambulance.hpp"
+
 
 
 
@@ -49,6 +51,9 @@ bool LaneManager::update(float ms)
 		// lane_queue returns true if its time has expired.
 		// If this is the case, we should readjust new villains.
 		m_ai->make_villains_decide(m_lanes);
+	}
+	for (int i = 0; i < m_ambulances.size(); i++) {
+		m_ambulances[i].update(ms);
 	}
   
 	spawn_delay -= ms;
@@ -278,6 +283,13 @@ void LaneManager::add_car()
   }
 }
 
+void LaneManager::add_ambulance(direction dir)
+{
+	Ambulance new_amb;
+	new_amb.init(dir);
+	m_ambulances.emplace_back(new_amb);
+}
+
 std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	if (dir == direction::NORTH) {
 		return this->m_lanes[direction::NORTH]->get_cars();
@@ -291,6 +303,10 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	else if (dir == direction::SOUTH) {
 		return this->m_lanes[direction::SOUTH]->get_cars();
 	}
+}
+
+std::deque<Ambulance> LaneManager::get_amb() const {
+	return m_ambulances;
 }
 
 void LaneManager::turn_car(direction dir)
