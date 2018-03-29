@@ -154,8 +154,6 @@ public:
 
 	float get_collision_spin(int hit_triangle);
 
-	void spinout();
-
 	void change_color();
 
 	bool is_hit();

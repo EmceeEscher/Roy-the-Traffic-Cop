@@ -300,7 +300,7 @@ void Car::update(float ms)
 			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
 				m_velocity.x += m_acceleration.x;
 				m_velocity.y += m_acceleration.y;
-				m_rotation += m_spin_amount * PI / 18;
+				m_rotation += m_spin_amount * PI / 100;
 			} else {
 				m_velocity.x = 0.f;
 				m_velocity.y = 0.f;
