@@ -191,6 +191,7 @@ private:
 	bool m_at_intersection;
 	float car_tex_x0; //specifies near x offset of the indicated car texture
 	float m_spin_amount;
+	float spin_slow_time;
 
 
 	// Level associated variables
