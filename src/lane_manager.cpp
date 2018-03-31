@@ -1,6 +1,6 @@
 #include "lane_manager.hpp"
 #include "car.hpp"
-#include "ambulance.hpp"
+#include "warning.hpp"
 
 
 
@@ -285,7 +285,7 @@ void LaneManager::add_car()
 
 void LaneManager::add_ambulance(direction dir)
 {
-	Ambulance new_amb;
+	Warning new_amb;
 	new_amb.init(dir);
 	m_ambulances.emplace_back(new_amb);
 }
@@ -305,7 +305,7 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	}
 }
 
-std::deque<Ambulance> LaneManager::get_amb() const {
+std::deque<Warning> LaneManager::get_amb() const {
 	return m_ambulances;
 }
 

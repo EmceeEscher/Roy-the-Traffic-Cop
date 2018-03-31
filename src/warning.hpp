@@ -4,14 +4,14 @@
 #include "lane.hpp"
 #include <vector>
 
-class Ambulance : public Renderable
+class Warning : public Renderable
 {
 	static Texture warning_texture;
 public:
-	Ambulance();
-	~Ambulance();
+	Warning();
+	~Warning();
 	// Creates all the associated render resources and default transform
-	bool init();
+	bool init(direction dir);
 
 	// clears symbol on game reset
 	void reset();

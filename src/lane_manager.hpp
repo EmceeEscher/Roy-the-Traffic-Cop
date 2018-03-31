@@ -5,7 +5,7 @@
 #include "car.hpp"
 #include "direction.hpp"
 #include "car_type.hpp"
-#include "ambulance.hpp"
+#include "warning.hpp"
 
 #include <map>
 #include <string>
@@ -43,7 +43,7 @@ public:
 
 	std::deque<Car> get_cars_in_lane(direction dir);
 
-	std::deque<Ambulance> get_amb() const;
+	std::deque<Warning> get_amb() const;
 
     // Will tell the first car in the lane in direction dir to turn
     void turn_car(direction dir);
@@ -67,7 +67,7 @@ public:
 
 	std::map<direction, Lane*> m_lanes;
 
-	std::deque<Ambulance> m_ambulances; // Cars in the lane
+	std::deque<Warning> m_ambulances; // Cars in the lane
 
 
 private:
