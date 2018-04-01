@@ -123,6 +123,7 @@ bool World::init(vec2 screen)
 	m_coin_icon.init();
 	m_display_screen.init();
 	m_level_manager.init();
+	m_ambulance.init(); //actual ambulance, probably will not want to call it here
 	return m_traffic_cop.init();
 }
 
@@ -215,14 +216,16 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
-	for (auto& amb : m_lane_manager.get_amb())
+	for (auto& amb : m_lane_manager.get_amb()) //confusing that amb is actually the warning sign, may need to change how this works
 		amb.draw(projection_2D);
+	m_ambulance.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
+	
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -315,7 +318,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	printf("mouse position: %f,%f\n", xpos, ypos);
+	//printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

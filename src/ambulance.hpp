@@ -6,10 +6,8 @@
 
 class Ambulance : public Renderable
 {
-	static Texture warning_texture;
+	static Texture ambulance_texture;
 public:
-	Ambulance();
-	~Ambulance();
 	// Creates all the associated render resources and default transform
 	bool init();
 
@@ -31,13 +29,10 @@ public:
 	bool show;
 
 private:
-	std::map<direction, vec2> warning_coords;
-	unsigned int warning_counter;
 	direction m_dir;
 	float m_prev_time;
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 	float m_rotation; // in radians
 	float m_original_rot;
-
 };

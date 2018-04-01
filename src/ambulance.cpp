@@ -1,15 +1,7 @@
 #include "ambulance.hpp"
-Ambulance::Ambulance() :
-	warning_counter(0)
-{
-
-}
-
-Ambulance::~Ambulance()
-{
-
-}
-
+#include <vector>
+#include <algorithm>
+Texture Ambulance::ambulance_texture;
 
 bool Ambulance::init()
 {
@@ -18,8 +10,10 @@ std::vector<uint16_t> indices;
 
 // Reads the ambulance mesh from a file, which contains a list of vertices, textures, and indices
 FILE* mesh_file = fopen(mesh_path("ambulance.mesh"), "r");
-if (mesh_file == nullptr)
-return false;
+if (mesh_file == nullptr) return false;
+
+//load texture
+ambulance_texture.load_from_file(textures_path("Ambulance.png"));
 
 // Reading vertices and texture
 size_t num_vertices;
@@ -56,7 +50,7 @@ gl_flush_errors();
 // Vertex Buffer creation
 glGenBuffers(1, &mesh.vbo);
 glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
 // Index Buffer creation
 glGenBuffers(1, &mesh.ibo);
@@ -69,25 +63,28 @@ if (gl_has_errors())
 return false;
 
 // Loading shaders
-if (!effect.load_from_file(shader_path("colored.vs.glsl"), shader_path("colored.fs.glsl")))
+if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
 return false;
 
 // Setting initial values
-m_scale.x = 1;
-m_scale.y = 1;
-m_position = { 50.f, 100.f }; //TODO: SET THIS
+m_scale.x = 13;
+m_scale.y = 13;
+m_position = { 550.f, 550.f }; //TODO: SET THIS
 m_rotation = 0.f; //TODO: SET THIS
 
 return true;
 }
 
+
+//TODO: Some update function
+
 void Ambulance::draw(const mat3& projection)
 {
 
 	transform_begin();
-	transform_scale(m_scale);
 	transform_translate(m_position);
 	transform_rotate(m_rotation);
+	transform_scale(m_scale);
 	transform_end();
 
 	// Setting shaders
@@ -117,16 +114,15 @@ void Ambulance::draw(const mat3& projection)
 
 	// Enabling and binding texture to slot 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, car_texture.id);
+	glBindTexture(GL_TEXTURE_2D, ambulance_texture.id);
 
 	// Setting uniform values to the currently bound program
 	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	//float color[3] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, m_color);
+	float color[3] = { 1.f, 1.f, 1.f };
+	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 42, GL_UNSIGNED_SHORT, nullptr);
 }
-
 
