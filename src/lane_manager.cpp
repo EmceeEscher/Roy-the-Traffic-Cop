@@ -52,8 +52,11 @@ bool LaneManager::update(float ms)
 		// If this is the case, we should readjust new villains.
 		m_ai->make_villains_decide(m_lanes);
 	}
-	for (int i = 0; i < m_ambulances.size(); i++) {
-		m_ambulances[i].update(ms);
+	for (int i = 0; i < m_warning.size(); i++) {
+		m_warning[i].update(ms);
+	}
+	for (int i = 0; i < m_ambulance.size(); i++) {
+		m_ambulance[i].update(ms);
 	}
   
 	spawn_delay -= ms;
@@ -285,9 +288,12 @@ void LaneManager::add_car()
 
 void LaneManager::add_ambulance(direction dir)
 {
-	Warning new_amb;
-	new_amb.init(dir);
-	m_ambulances.emplace_back(new_amb);
+	Warning new_warning;
+	new_warning.init(dir);
+	m_warning.emplace_back(new_warning);
+	Ambulance new_ambulance;
+	new_ambulance.init(dir);
+	m_ambulance.emplace_back(new_ambulance);
 }
 
 std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
@@ -305,8 +311,12 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	}
 }
 
-std::deque<Warning> LaneManager::get_amb() const {
-	return m_ambulances;
+std::deque<Warning> LaneManager::get_warning() const {
+	return m_warning;
+}
+
+std::deque<Ambulance> LaneManager::get_ambulance() const {
+	return m_ambulance;
 }
 
 void LaneManager::turn_car(direction dir)
