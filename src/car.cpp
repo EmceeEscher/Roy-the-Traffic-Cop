@@ -298,7 +298,7 @@ void Car::update(float ms)
 		//TODO WHAT HAPPENS WHEN THE CAR HAS BEEN IN A COLLISION
 		//The car has been in a collision
 		else {
-			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
+			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y) > 10.f) {
 				m_velocity.x += m_acceleration.x;
 				m_velocity.y += m_acceleration.y;
 				m_rotation += m_spin_amount * PI / spin_slow_time;
