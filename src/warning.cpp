@@ -82,6 +82,7 @@ bool Warning::init(direction dir)
 	m_dir = dir;
 	m_position = warning_coords[dir];
 	m_prev_time = 0.f;
+	amb_init = false;
 	//m_rotation = 0.f;
 
 	return true;
@@ -100,6 +101,9 @@ void Warning::update(float ms)
 			show = !show;
 			m_prev_time = 0.f;
 		}
+	}
+	else {
+		amb_init = true;
 	}
 	//TOOD Initialize amb here? or set flag in order to intialize a ambulance somewhere else.
 	

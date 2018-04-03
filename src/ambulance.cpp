@@ -91,6 +91,11 @@ m_scale.x = 13;
 m_scale.y = 13;
 m_position = m_amb_coords[dir];
 m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
+
+ // The position (0,0) corresponds to the center of the texture
+m_wr = ambulance_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
+//m_hr = car_texture.height * 0.5;
+m_hr = 22.00000f; //ignoring mirrors
 m_lane = dir;
 								  
 // Initialization of variables that will be influenced by levels
@@ -123,31 +128,36 @@ void Ambulance::set_level(int level) {
 }
 
 
-void Ambulance::update(float ms) {
-	if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
-		m_velocity.x += m_acceleration.x;
-		m_velocity.y += m_acceleration.y;
-	}
-	else if (m_velocity.x < 0.f) {
-		m_velocity.x = 0.f;
-	}
-	else if (m_velocity.x > m_max_speed) {
-		m_velocity.x = m_max_speed;
-	}
+void Ambulance::update(float ms, bool init) {
+//TODO Temporary comment for testing purposes
+//	if (init) {
+		if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+			m_velocity.x += m_acceleration.x;
+			m_velocity.y += m_acceleration.y;
+		}
+		else if (m_velocity.x < 0.f) {
+			m_velocity.x = 0.f;
+		}
+		else if (m_velocity.x > m_max_speed) {
+			m_velocity.x = m_max_speed;
+		}
 
-	//For Y position in North Lane
-	if (m_velocity.y > 0.f && m_velocity.y < m_max_speed) {
-		m_velocity.y += m_acceleration.y;
-	}
-	else if (m_velocity.y < 0.f) {
-		m_velocity.y = 0.f;
-	}
-	else if (m_velocity.y > m_max_speed) {
-		m_velocity.y = m_max_speed;
-	}
-	//printf("%f", m_velocity.x);
-	vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
-	move(m_displacement);
+		//For Y position in North Lane
+		if (m_velocity.y > 0.f && m_velocity.y < m_max_speed) {
+			m_velocity.y += m_acceleration.y;
+		}
+		else if (m_velocity.y < 0.f) {
+			m_velocity.y = 0.f;
+		}
+		else if (m_velocity.y > m_max_speed) {
+			m_velocity.y = m_max_speed;
+		}
+		//printf("%f", m_velocity.x);
+		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
+		move(m_displacement);
+//	}
+
+	//TODO
 	//if (t >= 0.f && t <= 1.f)
 	//{
 	//	turn(t);
@@ -389,4 +399,32 @@ int Ambulance::binomialCoefficient(int n, int k)
 		result /= i;
 	}
 	return result;
+}
+
+//bounding box inputs go in order: bottom left, bottom right, top right, top left
+rect_bounding_box Ambulance::get_bounding_box() {
+	// I use negative rotation because I did the math assuming
+	// counterclockwise was positive but instead clockwise is positive.
+	// Also need to remember that positive y is downward
+
+	vec2 bottom_left = {
+		(m_position.x - m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
+		(m_position.y + m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
+	};
+	vec2 bottom_right = {
+		(m_position.x + m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
+		(m_position.y - m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
+	};
+	vec2 top_right = {
+		(m_position.x + m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
+		(m_position.y - m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
+	};
+	vec2 top_left = {
+		(m_position.x - m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
+		(m_position.y + m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
+	};
+
+	rect_bounding_box bounding_box = { bottom_left, bottom_right, top_right, top_left };
+
+	return bounding_box;
 }

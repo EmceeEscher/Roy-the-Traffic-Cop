@@ -17,7 +17,7 @@ public:
 	// clears symbol on game reset
 	void reset();
 
-	void update(float ms);
+	void update(float ms, bool init);
 
 	// Releases all associated resources
 	void destroy();
@@ -43,6 +43,8 @@ public:
 
 	int binomialCoefficient(int n, int k);
 
+	rect_bounding_box get_bounding_box();
+
 	bool show;
 
 private:
@@ -58,7 +60,8 @@ private:
 	vec2 m_turn_pivot;
 	vec2 m_turn_start_pos;
 	direction m_desired_direction;
-
+	float m_wr; //half width of amb texture
+	float m_hr; //half height of amb texture
 
 	int m_level = 1;
 	vec2 m_acceleration;

@@ -30,6 +30,7 @@ public:
 
 	bool show;
 
+	bool amb_init;
 private:
 	std::map<direction, vec2> warning_coords;
 	unsigned int warning_counter;
