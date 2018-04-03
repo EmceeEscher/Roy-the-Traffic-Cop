@@ -154,8 +154,6 @@ public:
 
 	float get_collision_spin(int hit_triangle);
 
-	void spinout();
-
 	void change_color();
 
 	bool is_hit();
@@ -193,6 +191,7 @@ private:
 	bool m_at_intersection;
 	float car_tex_x0; //specifies near x offset of the indicated car texture
 	float m_spin_amount;
+	float spin_slow_time;
 
 
 	// Level associated variables
