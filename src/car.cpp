@@ -157,6 +157,7 @@ bool Car::init(bool isVillain)
 	m_at_intersection = false;
 	m_spin_amount = 0.f;
 	m_turn_placard = new Placard(m_position, m_rotation);
+	spin_slow_time = 18.f;
 
 	m_color[0] = 1.f;
 	m_color[1] = 1.f;
@@ -297,10 +298,11 @@ void Car::update(float ms)
 		//TODO WHAT HAPPENS WHEN THE CAR HAS BEEN IN A COLLISION
 		//The car has been in a collision
 		else {
-			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y > 10.f)) {
+			if (sqrt(m_velocity.x * m_velocity.x + m_velocity.y * m_velocity.y) > 10.f) {
 				m_velocity.x += m_acceleration.x;
 				m_velocity.y += m_acceleration.y;
-				m_rotation += m_spin_amount * PI / 18;
+				m_rotation += m_spin_amount * PI / spin_slow_time;
+				spin_slow_time += 0.4;
 			} else {
 				m_velocity.x = 0.f;
 				m_velocity.y = 0.f;
