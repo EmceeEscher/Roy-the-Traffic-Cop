@@ -122,25 +122,6 @@ bool LaneManager::intersection_collision_check() {
 			}
 		}
 		//Ambulance check
-		for (int k = 0; k < m_ambulance.size(); k++) {
-			Ambulance ambulance = m_ambulance[k];
-			rect_bounding_box second_bb = ambulance.get_bounding_box();
-			LaneManager::collisionTuple collision_triangles = { -1, -1 };
-			// First car is victim
-			if (first_car->check_collision(second_bb.bottom_left)
-				|| first_car->check_collision(second_bb.bottom_right)
-				|| first_car->check_collision(second_bb.top_right)
-				|| first_car->check_collision(second_bb.top_left)) {
-				collision_occurring = true;
-				//collision_triangles = mesh_collision_check(second_car, first_car);
-				int victim_triangle = collision_triangles.victim_index;
-				//int attacker_triangle = collision_triangles.attacker_index;
-				if (victim_triangle != -1) {
-					first_car->collided(victim_triangle);
-					//second_car->collided(attacker_triangle);
-				}
-			}
-		}
 	}
 	return collision_occurring;
 }
@@ -309,14 +290,15 @@ void LaneManager::add_car()
 
 void LaneManager::add_ambulance(direction dir)
 {
-	if (m_warning.size() == 0) {
+//TODO for testing purposes
+//	if (m_warning.size() == 0) {
 		Warning new_warning;
 		new_warning.init(dir);
 		m_warning.emplace_back(new_warning);
 		Ambulance new_ambulance;
 		new_ambulance.init(dir);
 		m_ambulance.emplace_back(new_ambulance);
-	}
+//	}
 }
 
 std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {

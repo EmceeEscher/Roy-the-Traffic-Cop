@@ -91,11 +91,6 @@ m_scale.x = 13;
 m_scale.y = 13;
 m_position = m_amb_coords[dir];
 m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
-
- // The position (0,0) corresponds to the center of the texture
-m_wr = ambulance_texture.width * 0.5 / 8.f; //8 cars in sprite sheet
-//m_hr = car_texture.height * 0.5;
-m_hr = 22.00000f; //ignoring mirrors
 m_lane = dir;
 								  
 // Initialization of variables that will be influenced by levels
@@ -109,12 +104,9 @@ else {
 	m_acceleration = { ACC, .0f };
 }
 m_max_speed = 180.f;
-t = 0.f;
-stopping_distance = 117.f;
-stopping_distance_scale = 0.f;
-t_scale = 1.f;
 return true;
 }
+
 void Ambulance::set_level(int level) {
 	if (level >= 1)
 		m_level = level;
@@ -124,7 +116,7 @@ void Ambulance::set_level(int level) {
 	t_scale = t_scale + m_level * 0.1f;
 	m_velocity = { m_velocity.x * scale, m_velocity.y * scale };
 	m_max_speed = m_max_speed * scale;
-	stopping_distance = stopping_distance * scale;
+//	stopping_distance = stopping_distance * scale;
 }
 
 
@@ -155,18 +147,7 @@ void Ambulance::update(float ms, bool init) {
 		//printf("%f", m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
-//	}
-
-	//TODO
-	//if (t >= 0.f && t <= 1.f)
-	//{
-	//	turn(t);
-	//	t += 0.01f*t_scale;
-	//	update_rotation_on_turn(t);
-	//}
 }
-
-//TODO: Some update function
 
 void Ambulance::draw(const mat3& projection)
 {
@@ -234,197 +215,8 @@ void Ambulance::set_rotation(float radians)
 	//m_turn_placard->set_rotation(m_rotation);
 }
 
-void Ambulance::update_rotation_on_turn(float t)
-{
-	//float current_rot = m_rotation;
-	char turn = calculate_turn_dir(m_lane, m_desired_direction);
-	float angle;
-	if (turn == 'l')
-	{
-		angle = -0.5f * PI;
-	}
-	else if (turn == 'r')
-	{
-		angle = 0.5 * PI;
-	}
-	else
-		angle = 0.f;
-	//printf("%f\n", m_rotation);
-	set_rotation(m_original_rot + t * angle);
-}
 
-void Ambulance::turn(float t)
-{
-	//printf("turning\n");
-	vec2 p = { 0.f, 0.f };
-	std::vector<vec2> controlPoints;
-	if (calculate_turn_dir(m_lane, m_desired_direction) == 'l')
-	{
-		//printf("turning left\n");
-		controlPoints.push_back(m_turn_start_pos);
-		controlPoints.push_back(m_turn_pivot);
-		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, (0.5f * PI)));
-	}
-	else if (calculate_turn_dir(m_lane, m_desired_direction) == 'r')
-	{
-		controlPoints.push_back(m_turn_start_pos);
-		controlPoints.push_back(m_turn_pivot);
-		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, (-0.5f * PI)));
-	}
-	else
-	{
-		controlPoints.push_back(m_turn_start_pos);
-		controlPoints.push_back(m_turn_start_pos);
-		controlPoints.push_back(find_end_point(m_turn_start_pos, m_turn_pivot, PI));
-	}
-	int m = controlPoints.size() - 1;
-	for (int i = 0; i <= m; i++) {
-		// m choose i
-		int coef = binomialCoefficient(m, i);
-		// Bernstein Polynomial
-		float bern = coef * pow(t, i) * pow((1 - t), (m - i));
-		vec2 cp = controlPoints[i];
-		p.x = p.x + (cp.x * bern);
-		p.y = p.y + (cp.y * bern);
-	}
-	//printf("endpoint.x: %f\n", controlPoints[2].x);
-	//printf("endpoint.y: %f\n", controlPoints[2].y);
-	set_position(p);
-}
 void Ambulance::set_position(vec2 position)
 {
 	m_position = position;
-}
-
-vec2 Ambulance::find_end_point(vec2 p1, vec2 p2, float angle)
-{
-	float s = sin(angle);
-	float c = cos(angle);
-	vec2 p3 = { 0.f, 0.f };
-
-	p3.x = c * (p1.x - p2.x) - s * (p1.y - p2.y) + p2.x;
-	p3.y = s * (p1.x - p2.x) + c * (p1.y - p2.y) + p2.y;
-
-	return p3;
-}
-char Ambulance::calculate_turn_dir(direction lane_dir, direction desired_dir)
-{
-	switch (lane_dir)
-	{
-	case direction::EAST:
-		if (desired_dir == direction::NORTH)
-		{
-			m_turn_pivot = { 550.f, 450.f };
-			return 'r';
-		}
-		else if (desired_dir == direction::SOUTH)
-		{
-			m_turn_pivot = { 450.f, 450.f };
-			return 'l';
-		}
-		else
-		{
-			//Change
-			m_turn_pivot = { 530.f, 445.f };
-			return 's';
-		}
-		break;
-	case direction::WEST:
-		if (desired_dir == direction::NORTH)
-		{
-			m_turn_pivot = { 540.f, 550.f };
-			return 'l';
-		}
-		else if (desired_dir == direction::SOUTH)
-		{
-			m_turn_pivot = { 470.f, 550.f };
-			return 'r';
-		}
-		else
-		{
-			//Change
-			m_turn_pivot = { 470.f, 537.f };
-			return 's';
-		}
-		break;
-	case direction::SOUTH:
-		if (desired_dir == direction::EAST)
-		{
-			m_turn_pivot = { 540.f, 550.f };
-			return 'r';
-		}
-		else if (desired_dir == direction::WEST)
-		{
-			m_turn_pivot = { 540.f, 435.f };
-			return 'l';
-		}
-		else
-		{
-			//Change
-			m_turn_pivot = { 550.f, 530.f };
-			return 's';
-		}
-		break;
-	case direction::NORTH:
-		if (desired_dir == direction::WEST)
-		{
-			m_turn_pivot = { 450.f, 450.f };
-			return 'r';
-		}
-		else if (desired_dir == direction::EAST)
-		{
-			//Change
-			m_turn_pivot = { 450.f, 540.f };
-			return 'l';
-		}
-		else
-		{
-			//Change
-			m_turn_pivot = { 450.f, 470.f };
-			return 's';
-		}
-		break;
-	default:
-		printf("hitting default\n");
-		return 's';
-		break;
-	}
-}
-int Ambulance::binomialCoefficient(int n, int k)
-{
-	int result = 1;
-	for (int i = 1; i <= k; ++i)
-	{
-		result *= n - (k - i);
-		result /= i;
-	}
-	return result;
-}
-
-//bounding box inputs go in order: bottom left, bottom right, top right, top left
-rect_bounding_box Ambulance::get_bounding_box() {
-	// I use negative rotation because I did the math assuming
-	// counterclockwise was positive but instead clockwise is positive.
-	// Also need to remember that positive y is downward
-
-	vec2 bottom_left = {
-		(m_position.x - m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
-	};
-	vec2 bottom_right = {
-		(m_position.x + m_wr * cos(-m_rotation) + m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) + m_hr * cos(-m_rotation))
-	};
-	vec2 top_right = {
-		(m_position.x + m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
-		(m_position.y - m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
-	};
-	vec2 top_left = {
-		(m_position.x - m_wr * cos(-m_rotation) - m_hr * sin(-m_rotation)),
-		(m_position.y + m_wr * sin(-m_rotation) - m_hr * cos(-m_rotation))
-	};
-
-	rect_bounding_box bounding_box = { bottom_left, bottom_right, top_right, top_left };
-
-	return bounding_box;
 }
