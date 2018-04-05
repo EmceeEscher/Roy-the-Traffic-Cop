@@ -6,7 +6,7 @@ bool LevelManager::init()
 	game_level = 1;
 	is_game_over = false;
 	year = 2018;
-	required_points = 30;
+	required_points = 20;
 	return true;
 }
 
