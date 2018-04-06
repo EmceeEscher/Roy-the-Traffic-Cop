@@ -25,86 +25,88 @@ Ambulance::~Ambulance()
 }
 bool Ambulance::init(direction dir)
 {
-std::vector<TexturedVertex> vertices;
-std::vector<uint16_t> indices;
+	std::vector<uint16_t> indices;
 
-// Reads the ambulance mesh from a file, which contains a list of vertices, textures, and indices
-FILE* mesh_file = fopen(mesh_path("ambulance.mesh"), "r");
-if (mesh_file == nullptr) return false;
+	// Reads the ambulance mesh from a file, which contains a list of vertices, textures, and indices
+	FILE* mesh_file = fopen(mesh_path("ambulance.mesh"), "r");
+	if (mesh_file == nullptr) return false;
 
-//load texture
-ambulance_texture.load_from_file(textures_path("Ambulance.png"));
+	//load texture
+	ambulance_texture.load_from_file(textures_path("Ambulance.png"));
 
-// Reading vertices and texture
-size_t num_vertices;
-fscanf(mesh_file, "%zu\n", &num_vertices);
-for (size_t i = 0; i < num_vertices; ++i)
-{
-float x, y, z;
-float u, v;
-fscanf(mesh_file, "%f %f %f %f %f \n", &x, &y, &z, &u, &v);
-TexturedVertex vertex;
-vertex.position = { x, y, z };
-vertex.texcoord = { u, v };
-vertices.push_back(vertex);
-}
+	m_wr = ambulance_texture.width * 0.5;
+	m_hr = ambulance_texture.height * 0.5;
 
-// Reading associated indices
-size_t num_indices;
-fscanf(mesh_file, "%zu\n", &num_indices);
-for (size_t i = 0; i < num_indices; ++i)
-{
-int idx[3];
-fscanf(mesh_file, "%d %d %d\n", idx, idx + 1, idx + 2);
-indices.push_back((uint16_t)idx[0]);
-indices.push_back((uint16_t)idx[1]);
-indices.push_back((uint16_t)idx[2]);
-}
+	// Reading vertices and texture
+	size_t num_vertices;
+	fscanf(mesh_file, "%zu\n", &num_vertices);
+	for (size_t i = 0; i < num_vertices; ++i)
+	{
+		float x, y, z;
+		float u, v;
+		fscanf(mesh_file, "%f %f %f %f %f \n", &x, &y, &z, &u, &v);
+		TexturedVertex vertex;
+		vertex.position = { x, y, z };
+		vertex.texcoord = { u, v };
+		amb_vertices.push_back(vertex);
+	}
 
-// Done reading
-fclose(mesh_file);
+	// Reading associated indices
+	size_t num_indices;
+	fscanf(mesh_file, "%zu\n", &num_indices);
+	for (size_t i = 0; i < num_indices; ++i)
+	{
+		int idx[3];
+		fscanf(mesh_file, "%d %d %d\n", idx, idx + 1, idx + 2);
+		indices.push_back((uint16_t)idx[0]);
+		indices.push_back((uint16_t)idx[1]);
+		indices.push_back((uint16_t)idx[2]);
+	}
 
-// Clearing errors
-gl_flush_errors();
+	// Done reading
+	fclose(mesh_file);
 
-// Vertex Buffer creation
-glGenBuffers(1, &mesh.vbo);
-glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+	// Clearing errors
+	gl_flush_errors();
 
-// Index Buffer creation
-glGenBuffers(1, &mesh.ibo);
-glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
+	// Vertex Buffer creation
+	glGenBuffers(1, &mesh.vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * amb_vertices.size(), amb_vertices.data(), GL_STATIC_DRAW);
 
-// Vertex Array (Container for Vertex + Index buffer)
-glGenVertexArrays(1, &mesh.vao);
-if (gl_has_errors())
-return false;
+	// Index Buffer creation
+	glGenBuffers(1, &mesh.ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
-// Loading shaders
-if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
-return false;
+	// Vertex Array (Container for Vertex + Index buffer)
+	glGenVertexArrays(1, &mesh.vao);
+	if (gl_has_errors())
+		return false;
 
-// Setting initial values
-m_scale.x = 13;
-m_scale.y = 13;
-m_position = m_amb_coords[dir];
-m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
-m_lane = dir;
-								  
-// Initialization of variables that will be influenced by levels
-m_level = 1;
-if (dir == direction::NORTH || dir == direction::SOUTH) {
-	m_velocity = { .0f, 15.0f };
-	m_acceleration = { .0f, ACC };
-}
-else {
-	m_velocity = { 15.0f, .0f };
-	m_acceleration = { ACC, .0f };
-}
-m_max_speed = 180.f;
-return true;
+	// Loading shaders
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+		return false;
+
+	// Setting initial values
+	m_scale.x = 13;
+	m_scale.y = 13;
+	m_position = m_amb_coords[dir];
+	m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
+	m_lane = dir;
+
+	// Initialization of variables that will be influenced by levels
+	m_level = 1;
+	if (dir == direction::NORTH || dir == direction::SOUTH) {
+		m_velocity = { .0f, 15.0f };
+		m_acceleration = { .0f, ACC };
+	}
+	else {
+		m_velocity = { 15.0f, .0f };
+		m_acceleration = { ACC, .0f };
+	}
+	m_max_speed = 180.f;
+	return true;
 }
 
 void Ambulance::set_level(int level) {
@@ -207,7 +209,7 @@ void Ambulance::move(vec2 off)
 		m_position.x -= off.x;
 		m_position.y -= off.y;
 	}
-	
+
 }
 void Ambulance::set_rotation(float radians)
 {
@@ -219,4 +221,39 @@ void Ambulance::set_rotation(float radians)
 void Ambulance::set_position(vec2 position)
 {
 	m_position = position;
+}
+
+rect_bounding_box Ambulance::get_bounding_box() {
+	vec2 bottom_left = {
+		(m_position.x - m_wr * cos(m_rotation) + m_hr * sin(m_rotation)),
+		(m_position.y - m_wr * sin(m_rotation) - m_hr * cos(m_rotation))
+	};
+
+	vec2 bottom_right = {
+		(m_position.x + m_wr * cos(m_rotation) + m_hr * sin(m_rotation)),
+		(m_position.y + m_wr * sin(m_rotation) - m_hr * cos(m_rotation))
+	};
+
+	vec2 top_right = {
+		(m_position.x + m_wr * cos(m_rotation) - m_hr * sin(m_rotation)),
+		(m_position.y + m_wr * sin(m_rotation) + m_hr * cos(m_rotation))
+	};
+
+	vec2 top_left = {
+		(m_position.x - m_wr * cos(m_rotation) - m_hr * sin(m_rotation)),
+		(m_position.y - m_wr * sin(m_rotation) + m_hr * cos(m_rotation))
+	};
+
+	rect_bounding_box bounding_box = {bottom_left, bottom_right, top_right, top_left};
+
+	return bounding_box;
+}
+
+vec2 Ambulance::get_vertex_pos(int index) {
+	vec2 vertex = {
+		(m_position.x + amb_vertices[index].position.x * cos(m_rotation) - amb_vertices[index].position.y * sin(m_rotation)),
+		(m_position.y + amb_vertices[index].position.x * sin(m_rotation) + amb_vertices[index].position.y * cos(m_rotation))
+	};
+
+	return vertex;
 }

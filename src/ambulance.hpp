@@ -15,16 +15,14 @@ public:
 	void set_level(int level);
 
 	// clears symbol on game reset
-	void reset();
+	// void reset();
 
 	void update(float ms, bool init);
 
 	// Releases all associated resources
-	void destroy();
+	//void destroy();
 
-	void set_position(vec2 position);
-
-	void set_lane(direction dir);
+	//void set_lane(direction dir);
 
 	// Renders
 	void draw(const mat3& projection)override;
@@ -33,23 +31,29 @@ public:
 
 	void set_rotation(float radians);
 
-	void update_rotation_on_turn(float t);
+	void set_position(vec2 position);
 
-	void turn(float t);
+	vec2 get_vertex_pos(int index);
 
-	vec2 find_end_point(vec2 p1, vec2 p2, float angle);
+	//void update_rotation_on_turn(float t);
 
-	char calculate_turn_dir(direction lane_dir, direction desired_dir);
+	//void turn(float t);
 
-	int binomialCoefficient(int n, int k);
+	//vec2 find_end_point(vec2 p1, vec2 p2, float angle);
+
+	//char calculate_turn_dir(direction lane_dir, direction desired_dir);
+
+	//int binomialCoefficient(int n, int k);
 
 	rect_bounding_box get_bounding_box();
 
-	bool show;
+	//bool show;
 
 private:
 	std::map<direction, vec2> m_amb_coords;
 	std::map<direction, float> m_amb_rotation;
+	std::vector<TexturedVertex> amb_vertices;
+	
 	direction m_dir;
 	float m_prev_time;
 	vec2 m_position; // Window coordinates

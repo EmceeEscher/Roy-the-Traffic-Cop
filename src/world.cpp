@@ -160,7 +160,7 @@ bool World::update(float elapsed_ms)
 
 		m_traffic_cop.update(elapsed_ms);
 		m_game_timer.advance_time(elapsed_ms);
-		
+
 		m_lane_manager.update(elapsed_ms);
 		m_remove_intersection.update(elapsed_ms, this->hit_count());
 		m_score_display.update_score(m_points);
@@ -215,7 +215,7 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
-	for (auto& warning : m_lane_manager.get_warning()) 
+	for (auto& warning : m_lane_manager.get_warning())
 		warning.draw(projection_2D);
 	for (auto& ambulance : m_lane_manager.get_ambulance())
 		ambulance.draw(projection_2D);
@@ -225,7 +225,7 @@ void World::draw()
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
-	
+
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -318,7 +318,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	printf("mouse position: %f,%f\n", xpos, ypos);
+	//printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

@@ -6,7 +6,7 @@
 
 
 bool LaneManager::init(AI ai)
-{  
+{
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -59,7 +59,7 @@ bool LaneManager::update(float ms)
 	for (int i = 0; i < m_ambulance.size(); i++) {
 		m_ambulance[i].update(ms,amb_init);
 	}
-  
+
 	spawn_delay -= ms;
 	add_car();
 	intersection_collision_check();
@@ -122,6 +122,23 @@ bool LaneManager::intersection_collision_check() {
 			}
 		}
 		//Ambulance check
+
+		for (int k = 0; k < m_ambulance.size(); k++) {
+			Ambulance* curr_amb = &m_ambulance[k];
+			rect_bounding_box amb_bb = curr_amb->get_bounding_box();
+			if (first_car->check_collision(amb_bb.bottom_left)
+				|| first_car->check_collision(amb_bb.bottom_right)
+				|| first_car->check_collision(amb_bb.top_right)
+				|| first_car->check_collision(amb_bb.top_left)) {
+					collision_occurring = true;
+					fprintf(stderr, "hit a car with the ambulance!\n");
+					int victim_triangle = amb_collision_check(first_car, curr_amb);
+					fprintf(stderr, "victim triangle: %d\n", victim_triangle);
+					if (victim_triangle != -1) {
+						first_car->collided(victim_triangle);
+					}
+				}
+		}
 	}
 	return collision_occurring;
 }
@@ -273,6 +290,148 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 		vic_counter++;
 	}
 	return collisionTriangles;
+}
+
+int LaneManager::amb_collision_check(Car* victim_car, Ambulance* amb) {
+	Car::Triangle victim_triangles[14];
+
+	victim_triangles[0].a = victim_car->get_vertex_pos(0);
+	victim_triangles[0].b = victim_car->get_vertex_pos(1);
+	victim_triangles[0].c = victim_car->get_vertex_pos(2);
+
+	victim_triangles[1].a = victim_car->get_vertex_pos(1);
+	victim_triangles[1].b = victim_car->get_vertex_pos(3);
+	victim_triangles[1].c = victim_car->get_vertex_pos(2);
+
+	victim_triangles[2].a = victim_car->get_vertex_pos(0);
+	victim_triangles[2].b = victim_car->get_vertex_pos(4);
+	victim_triangles[2].c = victim_car->get_vertex_pos(1);
+
+	victim_triangles[3].a = victim_car->get_vertex_pos(1);
+	victim_triangles[3].b = victim_car->get_vertex_pos(10);
+	victim_triangles[3].c = victim_car->get_vertex_pos(3);
+
+	victim_triangles[4].a = victim_car->get_vertex_pos(3);
+	victim_triangles[4].b = victim_car->get_vertex_pos(10);
+	victim_triangles[4].c = victim_car->get_vertex_pos(12);
+
+	victim_triangles[5].a = victim_car->get_vertex_pos(1);
+	victim_triangles[5].b = victim_car->get_vertex_pos(4);
+	victim_triangles[5].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[6].a = victim_car->get_vertex_pos(4);
+	victim_triangles[6].b = victim_car->get_vertex_pos(11);
+	victim_triangles[6].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[7].a = victim_car->get_vertex_pos(5);
+	victim_triangles[7].b = victim_car->get_vertex_pos(12);
+	victim_triangles[7].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[8].a = victim_car->get_vertex_pos(10);
+	victim_triangles[8].b = victim_car->get_vertex_pos(6);
+	victim_triangles[8].c = victim_car->get_vertex_pos(5);
+
+	victim_triangles[9].a = victim_car->get_vertex_pos(11);
+	victim_triangles[9].b = victim_car->get_vertex_pos(9);
+	victim_triangles[9].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[10].a = victim_car->get_vertex_pos(10);
+	victim_triangles[10].b = victim_car->get_vertex_pos(9);
+	victim_triangles[10].c = victim_car->get_vertex_pos(6);
+
+	victim_triangles[11].a = victim_car->get_vertex_pos(5);
+	victim_triangles[11].b = victim_car->get_vertex_pos(6);
+	victim_triangles[11].c = victim_car->get_vertex_pos(7);
+
+	victim_triangles[12].a = victim_car->get_vertex_pos(6);
+	victim_triangles[12].b = victim_car->get_vertex_pos(8);
+	victim_triangles[12].c = victim_car->get_vertex_pos(7);
+
+	victim_triangles[13].a = victim_car->get_vertex_pos(6);
+	victim_triangles[13].b = victim_car->get_vertex_pos(9);
+	victim_triangles[13].c = victim_car->get_vertex_pos(8);
+
+	Car::Triangle amb_triangles[14];
+
+	amb_triangles[0].a = amb->get_vertex_pos(0);
+	amb_triangles[0].b = amb->get_vertex_pos(1);
+	amb_triangles[0].c = amb->get_vertex_pos(2);
+
+	amb_triangles[1].a = amb->get_vertex_pos(1);
+	amb_triangles[1].b = amb->get_vertex_pos(3);
+	amb_triangles[1].c = amb->get_vertex_pos(2);
+
+	amb_triangles[2].a = amb->get_vertex_pos(0);
+	amb_triangles[2].b = amb->get_vertex_pos(4);
+	amb_triangles[2].c = amb->get_vertex_pos(1);
+
+	amb_triangles[3].a = amb->get_vertex_pos(1);
+	amb_triangles[3].b = amb->get_vertex_pos(10);
+	amb_triangles[3].c = amb->get_vertex_pos(3);
+
+	amb_triangles[4].a = amb->get_vertex_pos(3);
+	amb_triangles[4].b = amb->get_vertex_pos(10);
+	amb_triangles[4].c = amb->get_vertex_pos(12);
+
+	amb_triangles[5].a = amb->get_vertex_pos(1);
+	amb_triangles[5].b = amb->get_vertex_pos(4);
+	amb_triangles[5].c = amb->get_vertex_pos(10);
+
+	amb_triangles[6].a = amb->get_vertex_pos(4);
+	amb_triangles[6].b = amb->get_vertex_pos(11);
+	amb_triangles[6].c = amb->get_vertex_pos(10);
+
+	amb_triangles[7].a = amb->get_vertex_pos(5);
+	amb_triangles[7].b = amb->get_vertex_pos(12);
+	amb_triangles[7].c = amb->get_vertex_pos(10);
+
+	amb_triangles[8].a = amb->get_vertex_pos(10);
+	amb_triangles[8].b = amb->get_vertex_pos(6);
+	amb_triangles[8].c = amb->get_vertex_pos(5);
+
+	amb_triangles[9].a = amb->get_vertex_pos(11);
+	amb_triangles[9].b = amb->get_vertex_pos(9);
+	amb_triangles[9].c = amb->get_vertex_pos(10);
+
+	amb_triangles[10].a = amb->get_vertex_pos(10);
+	amb_triangles[10].b = amb->get_vertex_pos(9);
+	amb_triangles[10].c = amb->get_vertex_pos(6);
+
+	amb_triangles[11].a = amb->get_vertex_pos(5);
+	amb_triangles[11].b = amb->get_vertex_pos(6);
+	amb_triangles[11].c = amb->get_vertex_pos(7);
+
+	amb_triangles[12].a = amb->get_vertex_pos(6);
+	amb_triangles[12].b = amb->get_vertex_pos(8);
+	amb_triangles[12].c = amb->get_vertex_pos(7);
+
+	amb_triangles[13].a = amb->get_vertex_pos(6);
+	amb_triangles[13].b = amb->get_vertex_pos(9);
+	amb_triangles[13].c = amb->get_vertex_pos(8);
+
+	// Determine victim_car's triangle coordinates
+	// Determine which corner of first_car bounding box hit second_car bounding box
+	// For each triangle, check if impact corner is inside
+	// Depending on which triangle gets hit first, call different collision responses on victim_car
+
+	int vic_counter = 0;
+	int attack_counter;
+	for (Car::Triangle victim_tri : victim_triangles) {
+		attack_counter = 0;
+		for (Car::Triangle amb_tri : amb_triangles) {
+			if (victim_car->check_mesh_collision(amb_tri.a, victim_tri)
+				|| victim_car->check_mesh_collision(amb_tri.b, victim_tri)
+				|| victim_car->check_mesh_collision(amb_tri.c, victim_tri)) {
+					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
+					return vic_counter;
+				}
+				attack_counter++;
+		}
+		vic_counter++;
+	}
+
+	//no collision between triangles, just bounding boxes
+	return -1;
 }
 
 void LaneManager::add_car()

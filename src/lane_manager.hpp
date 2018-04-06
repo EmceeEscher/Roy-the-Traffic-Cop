@@ -22,21 +22,21 @@ public:
 	const float VillainSpawnProbability = 0.25; // We may want to make this level dependent in the future. Revise when levels are added.
 
 
-    //initializes 4 empty lanes
-    //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
-    bool init(AI ai);
+  //initializes 4 empty lanes
+  //(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
+  bool init(AI ai);
 
-    // Releases instance
-    void destroy();
+  // Releases instance
+  void destroy();
 
 	// resets all lanes and internal variables
 	void reset();
 
-    // Moves the game ahead by ms milliseconds
-    bool update(float ms);
+  // Moves the game ahead by ms milliseconds
+  bool update(float ms);
 
-    // Will try to add a car that will be frustrating for player
-    void add_car();
+  // Will try to add a car that will be frustrating for player
+  void add_car();
 
 	void add_ambulance(direction dir);
 
@@ -48,9 +48,8 @@ public:
 
 	std::deque<Ambulance> get_ambulance() const;
 
-
-    // Will tell the first car in the lane in direction dir to turn
-    void turn_car(direction dir);
+  // Will tell the first car in the lane in direction dir to turn
+  void turn_car(direction dir);
 
 	void input_create_cars(direction dir);
 
@@ -63,22 +62,24 @@ public:
 	// Will return true if any cars in the process of turning are colliding
 	bool intersection_collision_check();
 
-	// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision. 
+	// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision.
 	LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
+
+	int amb_collision_check(Car* victim_car, Ambulance* amb);
 
 	// clears all crashed cars out of intersection
 	void clear_intersection();
 
 	std::map<direction, Lane*> m_lanes;
 
-	std::deque<Warning> m_warning; 
+	std::deque<Warning> m_warning;
 
 	std::deque<Ambulance> m_ambulance;
 
 
 private:
-    float const m_time_per_action = 5000;
-    float m_time_remaining;
+  float const m_time_per_action = 5000;
+  float m_time_remaining;
 	AI* m_ai;
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
