@@ -162,7 +162,7 @@ bool World::update(float elapsed_ms)
 		m_game_timer.advance_time(elapsed_ms);
 		
 		m_lane_manager.update(elapsed_ms, game_level);
-		m_remove_intersection.update(elapsed_ms, this->hit_count());
+		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
 		return true;
@@ -285,7 +285,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			if (m_remove_intersection.show) {
 				m_remove_intersection.increment();
 			}
-			if (m_remove_intersection.m_press == 10) {
+			if (m_remove_intersection.m_press == game_level) {
 				m_lane_manager.clear_intersection();
 			}
 		}

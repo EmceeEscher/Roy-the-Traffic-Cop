@@ -18,7 +18,7 @@ public:
 	// clears symbol on game reset
 	void reset();
 
-	void update(float ms, int hit_count);
+	void update(float ms, int hit_count, int game_level);
 
 	// Releases all associated resources
 	void destroy();
