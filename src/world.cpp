@@ -219,7 +219,6 @@ void World::draw()
 		warning.draw(projection_2D);
 	for (auto& ambulance : m_lane_manager.get_ambulance())
 		ambulance.draw(projection_2D);
-	m_ambulance.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
