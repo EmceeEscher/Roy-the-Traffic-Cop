@@ -29,7 +29,7 @@ void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms) {
 			//endless mode
 			game_level = 11;
 		}
-		required_points += game_level * 20;
+		required_points += game_level * 10;
 		year = game_time.year;
 	}
 }
