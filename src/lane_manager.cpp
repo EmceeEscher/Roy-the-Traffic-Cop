@@ -268,8 +268,13 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 
 void LaneManager::add_car()
 {
-  std::map<direction, Lane*>::iterator it = m_lanes.begin();
-  std::advance(it, rand()%4);
+	std::map<direction, Lane*>::iterator it = m_lanes.begin();
+	if (game_level == 1) {
+		std::advance(it, rand() % 3);
+	}
+	else {
+		std::advance(it, rand() % 4);
+	}
   {
     if (!it->second->is_lane_full() && spawn_delay < 0)
     {
