@@ -151,7 +151,7 @@ bool World::update(float elapsed_ms)
 	game_level = m_level_manager.get_level();
 	is_game_over = m_level_manager.get_game_over();
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
-	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms);
+	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
 
 	if (!is_game_paused && !show_start_splash) {
 		int w, h;
@@ -161,8 +161,8 @@ bool World::update(float elapsed_ms)
 		m_traffic_cop.update(elapsed_ms);
 		m_game_timer.advance_time(elapsed_ms);
 		
-		m_lane_manager.update(elapsed_ms);
-		m_remove_intersection.update(elapsed_ms, this->hit_count());
+		m_lane_manager.update(elapsed_ms, game_level);
+		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
 		return true;
@@ -239,6 +239,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		show_start_splash = !show_start_splash;
 		Mix_PlayMusic(m_game_music, -1);
 	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_E && show_start_splash) { //start endless mode with E
+		show_start_splash = !show_start_splash;
+		Mix_PlayMusic(m_game_music, -1);
+		m_level_manager.set_endless_mode();
+	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_P && !show_start_splash) { //pause anytime with P
 		is_game_paused = !is_game_paused;
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
@@ -280,7 +285,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			if (m_remove_intersection.show) {
 				m_remove_intersection.increment();
 			}
-			if (m_remove_intersection.m_press == 10) {
+			if (m_remove_intersection.m_press == game_level) {
 				m_lane_manager.clear_intersection();
 			}
 		}
@@ -302,6 +307,7 @@ void World::reset_game() {
 
 	Mix_PlayMusic(m_background_music, -1);
 
+	is_game_over = false;
 	is_game_paused = false;
 	show_start_splash = true;
 }
