@@ -37,7 +37,7 @@ void LaneManager::reset()
 	spawn_delay = 0;
 }
 
-bool LaneManager::update(float ms)
+bool LaneManager::update(float ms, int level)
 {
 
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars

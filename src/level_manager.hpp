@@ -24,6 +24,9 @@ public:
 
 	// Return total points required for next level
 	int get_next_level_point_req();
+	
+	// Set game to endless mode
+	void set_endless_mode();
 
 
 private:

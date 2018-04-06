@@ -3,7 +3,7 @@
 
 bool LevelManager::init()
 {
-	game_level = 1;
+	game_level = 1; //level 11 is endless mode
 	is_game_over = false;
 	year = 2018;
 	required_points = 20;
@@ -22,9 +22,11 @@ void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms) {
 			is_game_over = true;
 		}
 		else if (game_level <= 10) {
+			//progress game
 			game_level += 1;
 		}
 		else {
+			//endless mode
 			game_level = 11;
 		}
 		required_points += game_level * 20;
@@ -42,5 +44,9 @@ bool LevelManager::get_game_over() {
 
 int LevelManager::get_next_level_point_req() {
 	return required_points;
+}
+
+void LevelManager::set_endless_mode() {
+	game_level = 11;
 }
 

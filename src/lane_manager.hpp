@@ -31,7 +31,7 @@ public:
 	void reset();
 
     // Moves the game ahead by ms milliseconds
-    bool update(float ms);
+    bool update(float ms, int level);
 
     // Will try to add a car that will be frustrating for player
     void add_car();

@@ -161,7 +161,7 @@ bool World::update(float elapsed_ms)
 		m_traffic_cop.update(elapsed_ms);
 		m_game_timer.advance_time(elapsed_ms);
 		
-		m_lane_manager.update(elapsed_ms);
+		m_lane_manager.update(elapsed_ms, game_level);
 		m_remove_intersection.update(elapsed_ms, this->hit_count());
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
@@ -238,6 +238,11 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_G && show_start_splash) { //start game with G
 		show_start_splash = !show_start_splash;
 		Mix_PlayMusic(m_game_music, -1);
+	}
+	if (action == GLFW_PRESS && key == GLFW_KEY_E && show_start_splash) { //start endless mode with E
+		show_start_splash = !show_start_splash;
+		Mix_PlayMusic(m_game_music, -1);
+		m_level_manager.set_endless_mode();
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_P && !show_start_splash) { //pause anytime with P
 		is_game_paused = !is_game_paused;
