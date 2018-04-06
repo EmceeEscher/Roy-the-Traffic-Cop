@@ -106,6 +106,9 @@ public:
 	// Return if in or beyond intersection
 	bool is_in_beyond_intersec();
 
+	// returns true if car is intersection or has made it through
+	bool is_turning_or_turned();
+
 	// Starts the color change of the placard
 	void start_timer(float max_time);
 
@@ -174,7 +177,7 @@ private:
 	float m_rotation; // in radians
 	float m_original_rot;
 	size_t m_num_indices; // passed to glDrawElements
-	
+
 	bool m_can_move;
 	bool m_is_villain;
 	vec2 m_displacement;
@@ -203,6 +206,6 @@ private:
 	float stopping_distance;
 	float stopping_distance_scale;
 	float t_scale;
-  
+
 	Mix_Chunk* m_crash;
 };

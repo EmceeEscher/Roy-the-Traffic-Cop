@@ -62,10 +62,12 @@ public:
 	// Will return true if any cars in the process of turning are colliding
 	bool intersection_collision_check();
 
+	bool ambulance_collision_check();
+	
 	// Doesn't need boolean return. If intersection_collision_check() is true, there must be a mesh collision.
 	LaneManager::collisionTuple mesh_collision_check(Car* first_car, Car* second_car);
 
-	int amb_collision_check(Car* victim_car, Ambulance* amb);
+	int amb_mesh_collision_check(Car* victim_car, Ambulance* amb);
 
 	// clears all crashed cars out of intersection
 	void clear_intersection();

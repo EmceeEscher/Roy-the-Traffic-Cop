@@ -63,6 +63,7 @@ bool LaneManager::update(float ms)
 	spawn_delay -= ms;
 	add_car();
 	intersection_collision_check();
+	ambulance_collision_check();
 	return true;
 }
 
@@ -76,7 +77,7 @@ bool LaneManager::intersection_collision_check() {
 			Car* car;
 			for (int i = 0; i < curr_cars.size(); i++) {
 				car = &(curr_cars[i]);
-				if (car->is_in_beyond_intersec()) {
+				if (car->is_turning_or_turned()) {
 					cars_in_intersec.push_back(car);
 				}
 			}
@@ -121,23 +122,52 @@ bool LaneManager::intersection_collision_check() {
 				}
 			}
 		}
-		//Ambulance check
+	}
+	return collision_occurring;
+}
 
-		for (int k = 0; k < m_ambulance.size(); k++) {
-			Ambulance* curr_amb = &m_ambulance[k];
+bool LaneManager::ambulance_collision_check() {
+	std::vector<Car*> turning_cars;
+	bool collision_occurring = false;
+
+	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		std::deque<Car> &curr_cars = it->second->m_cars;
+		if (curr_cars.size() > 0) {
+			Car* car;
+			for (int i = 0; i < curr_cars.size(); i++) {
+				car = &(curr_cars[i]);
+				if (car->is_turning_or_turned()) {
+					turning_cars.push_back(car);
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < turning_cars.size(); i++) {
+		Car* first_car = turning_cars[i];
+		rect_bounding_box first_bb = first_car->get_bounding_box();
+
+		//Ambulance check
+		for (int j = 0; j < m_ambulance.size(); j++) {
+			Ambulance* curr_amb = &m_ambulance[j];
 			rect_bounding_box amb_bb = curr_amb->get_bounding_box();
 			if (first_car->check_collision(amb_bb.bottom_left)
 				|| first_car->check_collision(amb_bb.bottom_right)
 				|| first_car->check_collision(amb_bb.top_right)
-				|| first_car->check_collision(amb_bb.top_left)) {
+				|| first_car->check_collision(amb_bb.top_left)
+				|| curr_amb->check_collision(first_bb.bottom_left)
+				|| curr_amb->check_collision(first_bb.bottom_right)
+				|| curr_amb->check_collision(first_bb.top_right)
+				|| curr_amb->check_collision(first_bb.top_left)) {
 					collision_occurring = true;
-					int victim_triangle = amb_collision_check(first_car, curr_amb);
+					int victim_triangle = amb_mesh_collision_check(first_car, curr_amb);
 					if (victim_triangle != -1) {
 						first_car->collided(victim_triangle);
 					}
 				}
 		}
 	}
+
 	return collision_occurring;
 }
 
@@ -286,7 +316,7 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 	return collisionTriangles;
 }
 
-int LaneManager::amb_collision_check(Car* victim_car, Ambulance* amb) {
+int LaneManager::amb_mesh_collision_check(Car* victim_car, Ambulance* amb) {
 	Car::Triangle victim_triangles[14];
 
 	victim_triangles[0].a = victim_car->get_vertex_pos(0);

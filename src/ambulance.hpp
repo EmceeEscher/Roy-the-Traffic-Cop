@@ -47,6 +47,12 @@ public:
 
 	rect_bounding_box get_bounding_box();
 
+	// returns true if the given test_vertex is inside the car's bounding box
+	bool check_collision(vec2 test_vertex);
+
+	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
+	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
+
 	//bool show;
 
 private:
@@ -57,7 +63,7 @@ private:
 	direction m_dir;
 	float m_prev_time;
 	vec2 m_position; // Window coordinates
-	vec2 m_scale; 
+	vec2 m_scale;
 	float m_rotation; // in radians
 	float m_original_rot;
 	direction m_lane;
