@@ -30,6 +30,8 @@ Lane::~Lane()
 
 void Lane::clear_lane() {
 	m_cars.clear();
+	car_is_honking = false;
+	Mix_HaltChannel(-1);
 }
 
 int Lane::get_lane_num()const

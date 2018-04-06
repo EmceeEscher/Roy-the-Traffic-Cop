@@ -307,6 +307,7 @@ void World::reset_game() {
 
 	Mix_PlayMusic(m_background_music, -1);
 
+	is_game_over = false;
 	is_game_paused = false;
 	show_start_splash = true;
 }
