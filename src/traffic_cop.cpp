@@ -55,7 +55,7 @@ bool TrafficCop::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("cop.vs.glsl"), shader_path("textured.fs.glsl")))
 		return false;
 
 	// Setting initial values, scale is negative to make it face the opposite way
@@ -63,9 +63,7 @@ bool TrafficCop::init()
 	m_scale.x = 1.0;
 	m_scale.y = 1.0;
 	m_position = { 500.f, 500.f};
-	grow_shrink_time = 3000.f;
-	max_grow_shrink_time = 3000.f;
-	grow = true;
+	grow_shrink_time = 0.f;
 
 	return true;
 }
@@ -83,23 +81,7 @@ void TrafficCop::destroy()
 }
 
 void TrafficCop::update(float ms) {
-	float interpolation_val = (max_grow_shrink_time - grow_shrink_time) / max_grow_shrink_time * 0.002;
-	if (grow) {
-		grow_shrink_time -= ms;
-		m_scale.x += interpolation_val;
-		m_scale.y += interpolation_val;
-		if (m_scale.x > 1.2f || m_scale.y > 1.2f) {
-			grow = false;
-		};
-	}
-	else if (!grow){
-		grow_shrink_time += ms;
-		m_scale.x -= interpolation_val;
-		m_scale.y -= interpolation_val;
-		if (m_scale.x < 1.05 || m_scale.y < 1.05) {
-			grow = true;
-		};
-	}
+	grow_shrink_time += ms/5000;
 }
 
 void TrafficCop::draw(const mat3& projection)
@@ -121,6 +103,7 @@ void TrafficCop::draw(const mat3& projection)
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+	GLint time_uloc = glGetUniformLocation(effect.program, "time");
 
 	// Setting vertices and indices
 	glBindVertexArray(mesh.vao);
@@ -144,6 +127,7 @@ void TrafficCop::draw(const mat3& projection)
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniform1f(time_uloc, grow_shrink_time);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
