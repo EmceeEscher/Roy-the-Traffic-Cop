@@ -251,8 +251,10 @@ rect_bounding_box Ambulance::get_bounding_box() {
 
 vec2 Ambulance::get_vertex_pos(int index) {
 	vec2 vertex = {
-		(m_position.x + amb_vertices[index].position.x * cos(m_rotation) - amb_vertices[index].position.y * sin(m_rotation)),
-		(m_position.y + amb_vertices[index].position.x * sin(m_rotation) + amb_vertices[index].position.y * cos(m_rotation))
+		(m_position.x + amb_vertices[index].position.x * m_scale.x * cos(m_rotation)
+									- amb_vertices[index].position.y * m_scale.y * sin(m_rotation)),
+		(m_position.y + amb_vertices[index].position.x * m_scale.x * sin(m_rotation)
+									+ amb_vertices[index].position.y * m_scale.y * cos(m_rotation))
 	};
 
 	return vertex;

@@ -131,9 +131,7 @@ bool LaneManager::intersection_collision_check() {
 				|| first_car->check_collision(amb_bb.top_right)
 				|| first_car->check_collision(amb_bb.top_left)) {
 					collision_occurring = true;
-					fprintf(stderr, "hit a car with the ambulance!\n");
 					int victim_triangle = amb_collision_check(first_car, curr_amb);
-					fprintf(stderr, "victim triangle: %d\n", victim_triangle);
 					if (victim_triangle != -1) {
 						first_car->collided(victim_triangle);
 					}
@@ -274,13 +272,9 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 	for (Car::Triangle victim_tri : victim_triangles) {
 		attack_counter = 0;
 		for (Car::Triangle attacker_tri : attacker_triangles) {
-			//printf("Victim Triangle %i (%f, %f) (%f,%f) (%f,%f) Point hitting (%f, %f) \n", vic_counter, victim_tri.a.x, victim_tri.a.y, victim_tri.b.x, victim_tri.b.y, victim_tri.c.x, victim_tri.c.y, attacker_tri.a.x, attacker_tri.a.y);
-			//printf("Both cars inIntersection? Victim: %i Attacker: %i\n", victim_car->is_in_beyond_intersec(), attacker_car->is_in_beyond_intersec());
-			if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
+		if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.b, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
-					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
-					//Sleep(1000);
 					collisionTriangles.victim_index = vic_counter;
 					collisionTriangles.attacker_index = attack_counter;
 					return collisionTriangles;
@@ -410,7 +404,7 @@ int LaneManager::amb_collision_check(Car* victim_car, Ambulance* amb) {
 	amb_triangles[13].c = amb->get_vertex_pos(8);
 
 	// Determine victim_car's triangle coordinates
-	// Determine which corner of first_car bounding box hit second_car bounding box
+	// Determine which corner of first_car bounding box hit ambulance bounding box
 	// For each triangle, check if impact corner is inside
 	// Depending on which triangle gets hit first, call different collision responses on victim_car
 
@@ -422,7 +416,6 @@ int LaneManager::amb_collision_check(Car* victim_car, Ambulance* amb) {
 			if (victim_car->check_mesh_collision(amb_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(amb_tri.b, victim_tri)
 				|| victim_car->check_mesh_collision(amb_tri.c, victim_tri)) {
-					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
 					return vic_counter;
 				}
 				attack_counter++;

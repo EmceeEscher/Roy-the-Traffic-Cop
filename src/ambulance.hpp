@@ -53,11 +53,11 @@ private:
 	std::map<direction, vec2> m_amb_coords;
 	std::map<direction, float> m_amb_rotation;
 	std::vector<TexturedVertex> amb_vertices;
-	
+
 	direction m_dir;
 	float m_prev_time;
 	vec2 m_position; // Window coordinates
-	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
+	vec2 m_scale; 
 	float m_rotation; // in radians
 	float m_original_rot;
 	direction m_lane;
