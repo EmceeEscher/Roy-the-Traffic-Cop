@@ -4,24 +4,24 @@
 Texture Placard::placard_texture;
 
 Placard::Placard(vec2 parent_position, float parent_rotation){
-  if (!placard_texture.is_valid()) {
-    if (!placard_texture.load_from_file(textures_path("SignSheetv2.png"))) {
-      fprintf(stderr, "Failed to load sign texture!\n");
-      //return false;
-    }
-  }
+	if (!placard_texture.is_valid()) {
+	if (!placard_texture.load_from_file(textures_path("SignSheetv2.png"))) {
+		fprintf(stderr, "Failed to load sign texture!\n");
+		//return false;
+	}
+	}
 
-  // The position (0,0) corresponds to the center of the texture
-  m_wr = placard_texture.width * 0.5;
-  m_hr = placard_texture.height * 0.5;
+	// The position (0,0) corresponds to the center of the texture
+	m_wr = placard_texture.width * 0.5;
+	m_hr = placard_texture.height * 0.5;
 
-  m_sprite_width = placard_texture.width / 4;
+	m_sprite_width = placard_texture.width / 4;
 
-  //initialize the map telling which section of the spritesheet to show
-  m_texture_coords[turn_direction::STRAIGHT] = {0.f, 0.25f};
-  m_texture_coords[turn_direction::RIGHT] = {0.25f, 0.5f};
-  m_texture_coords[turn_direction::LEFT] = {0.5f, 0.75f};
-  m_texture_coords[turn_direction::EMERGENCY] = {0.75f, 1.f};
+	//initialize the map telling which section of the spritesheet to show
+	m_texture_coords[turn_direction::STRAIGHT] = {0.f, 0.25f};
+	m_texture_coords[turn_direction::RIGHT] = {0.25f, 0.5f};
+	m_texture_coords[turn_direction::LEFT] = {0.5f, 0.75f};
+	m_texture_coords[turn_direction::EMERGENCY] = {0.75f, 1.f};
 
 
   //for setting the array below: x refers to the left boundary of the sprite,
@@ -64,13 +64,11 @@ Placard::Placard(vec2 parent_position, float parent_rotation){
     fprintf(stderr, "Failed to load shaders for signs!\n");
 		//return false;
 
-  m_scale = {1.f, 1.f};
-  m_rotation = parent_rotation + PI / 2;
-  m_position = parent_position;
-  m_position.x = m_position.x + sin(m_rotation) * m_offset_from_parent;
-  m_position.y = m_position.y + cos(m_rotation) * m_offset_from_parent;
-
-  // fprintf(stderr, "Successfully created placard!\n");
+	m_scale = {1.f, 1.f};
+	m_rotation = parent_rotation + PI / 2;
+	m_position = parent_position;
+	m_position.x = m_position.x + sin(m_rotation) * m_offset_from_parent;
+	m_position.y = m_position.y + cos(m_rotation) * m_offset_from_parent;
 }
 
 // Releases all graphics resources
@@ -78,7 +76,7 @@ Placard::~Placard()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+	glDeleteVertexArrays(1, &mesh.vao);
 
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
