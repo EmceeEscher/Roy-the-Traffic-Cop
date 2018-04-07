@@ -712,8 +712,9 @@ void LaneManager::clear_intersection() {
 void LaneManager::clear_offscreen_ambulances() {
 	for (int i = m_ambulance.size() - 1; i >= 0; i--) {
 		if (ambulance_delete(m_ambulance[i].get_position())) {
-			fprintf(stderr, "erasing an ambulance\n");
+			m_ambulance[i].destroy();
 			m_ambulance.erase(m_ambulance.begin() + i);
+			m_warning[i].destroy();
 			m_warning.erase(m_warning.begin() + i);
 		}
 	}

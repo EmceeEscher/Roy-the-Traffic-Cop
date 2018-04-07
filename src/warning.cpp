@@ -109,10 +109,9 @@ void Warning::update(float ms)
 
 void Warning::destroy()
 {
-	fprintf(stderr, "deleting warning graphics\n");
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+	glDeleteVertexArrays(1, &mesh.vao);
 
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);

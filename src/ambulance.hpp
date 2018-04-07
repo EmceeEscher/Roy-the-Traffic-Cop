@@ -13,6 +13,9 @@ public:
 	// Creates all the associated render resources and default transform
 	bool init(direction dir);
 
+	// Frees graphics resources
+	void destroy();
+
 	void set_level(int level);
 
 	// clears symbol on game reset
@@ -32,6 +35,7 @@ public:
 
 	void set_position(vec2 position);
 
+	// Gets the coordinates of a specific vertex (indexing is identical to car class)
 	vec2 get_vertex_pos(int index);
 
 	rect_bounding_box get_bounding_box();
@@ -39,9 +43,12 @@ public:
 	// returns true if the given test_vertex is inside the car's bounding box
 	bool check_collision(vec2 test_vertex);
 
-	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
+	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) <= 0
+	// (not sure why it's negative here, think it's because of difference in bounding_box)
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
 
+	// Returns true if the warning has stopped flashing and the ambulance has started moving
+	// (LaneManager will only check collisions for ambulances that have this set to true)
 	bool is_moving();
 
 	vec2 get_position() const;

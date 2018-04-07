@@ -3,7 +3,7 @@
 #include <algorithm>
 
 #define PI 3.14159265
-#define ACC 4.0f
+#define ACC 8.0f
 
 
 Texture Ambulance::ambulance_texture;
@@ -116,8 +116,18 @@ bool Ambulance::init(direction dir)
 		m_velocity = { -15.0f, .0f };
 		m_acceleration = { -ACC, .0f };
 	}
-	m_max_speed = 180.f;
+	m_max_speed = 540.f;
 	return true;
+}
+
+void Ambulance::destroy() {
+	glDeleteBuffers(1, &mesh.vbo);
+	glDeleteBuffers(1, &mesh.ibo);
+	glDeleteVertexArrays(1, &mesh.vao);
+
+	glDeleteShader(effect.vertex);
+	glDeleteShader(effect.fragment);
+	glDeleteShader(effect.program);
 }
 
 void Ambulance::set_level(int level) {
