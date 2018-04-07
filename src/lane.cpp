@@ -29,6 +29,9 @@ Lane::~Lane()
 }
 
 void Lane::clear_lane() {
+	for (int i = 0; i < m_cars.size(); i++) {
+		m_cars[i].destroy();
+	}
 	m_cars.clear();
 	car_is_honking = false;
 	Mix_HaltChannel(-1);
