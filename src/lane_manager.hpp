@@ -93,6 +93,7 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
 	float spawn_delay;
+	float spawn_delay_amb;
 	int game_level;
 
 };
