@@ -27,7 +27,7 @@ public:
 	int get_next_level_point_req();
 	
 	// Set game to endless mode
-	void set_endless_mode();
+	void set_endless_mode(LaneManager lane_manager);
 
 
 private:
