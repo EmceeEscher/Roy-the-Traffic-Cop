@@ -23,8 +23,6 @@ public:
 
 	void set_position(vec2 position);
 
-	void set_lane(direction dir);
-
 	// Renders
 	void draw(const mat3& projection)override;
 

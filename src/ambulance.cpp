@@ -97,13 +97,21 @@ bool Ambulance::init(direction dir)
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
-	if (dir == direction::NORTH || dir == direction::SOUTH) {
+	if (dir == direction::NORTH) {
 		m_velocity = { .0f, 15.0f };
 		m_acceleration = { .0f, ACC };
 	}
-	else {
+	else if (dir == direction::SOUTH) {
+		m_velocity = { .0f, -15.0f };
+		m_acceleration = { .0f, -ACC };
+	}
+	else if (dir == direction::WEST) {
 		m_velocity = { 15.0f, .0f };
 		m_acceleration = { ACC, .0f };
+	}
+	else {
+		m_velocity = { -15.0f, .0f };
+		m_acceleration = { -ACC, .0f };
 	}
 	m_max_speed = 180.f;
 	return true;
@@ -124,31 +132,42 @@ void Ambulance::set_level(int level) {
 
 void Ambulance::update(float ms, bool init) {
 //TODO Temporary comment for testing purposes
-//	if (init) {
-		if (m_velocity.x > 0 && m_velocity.x < m_max_speed) {
+	if (init) {
+		if (abs(m_velocity.x) > 0 && abs(m_velocity.x) < m_max_speed) {
 			m_velocity.x += m_acceleration.x;
-			m_velocity.y += m_acceleration.y;
 		}
-		else if (m_velocity.x < 0.f) {
+		else if (abs(m_velocity.x) < 0.01f) {
 			m_velocity.x = 0.f;
 		}
-		else if (m_velocity.x > m_max_speed) {
-			m_velocity.x = m_max_speed;
+		else if (abs(m_velocity.x) > m_max_speed) {
+			if (m_velocity.x > 0.0f) {
+				m_velocity.x = m_max_speed;
+			}
+			else {
+				m_velocity.x = -m_max_speed;
+			}
+			
 		}
 
 		//For Y position in North Lane
-		if (m_velocity.y > 0.f && m_velocity.y < m_max_speed) {
+		if (abs(m_velocity.y) > 0.f && abs(m_velocity.y) < m_max_speed) {
 			m_velocity.y += m_acceleration.y;
 		}
-		else if (m_velocity.y < 0.f) {
+		else if (abs(m_velocity.y) < 0.f) {
 			m_velocity.y = 0.f;
 		}
-		else if (m_velocity.y > m_max_speed) {
-			m_velocity.y = m_max_speed;
+		else if (abs(m_velocity.y) > m_max_speed) {
+			if (m_velocity.y > 0.0f) {
+				m_velocity.y = m_max_speed;
+			}
+			else {
+				m_velocity.y = -m_max_speed;
+			}
 		}
 		//printf("%f", m_velocity.x);
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
+	}
 }
 
 void Ambulance::draw(const mat3& projection)
@@ -201,20 +220,13 @@ void Ambulance::draw(const mat3& projection)
 
 void Ambulance::move(vec2 off)
 {
-	if (m_lane == direction::WEST || m_lane == direction::NORTH) {
-		m_position.x += off.x;
-		m_position.y += off.y;
-	}
-	if (m_lane == direction::EAST || m_lane == direction::SOUTH) {
-		m_position.x -= off.x;
-		m_position.y -= off.y;
-	}
-
+	m_position.x += off.x;
+	m_position.y += off.y;
 }
+
 void Ambulance::set_rotation(float radians)
 {
 	m_rotation = radians;
-	//m_turn_placard->set_rotation(m_rotation);
 }
 
 
