@@ -161,8 +161,6 @@ public:
 
 	bool is_hit();
 
-	// useful debug method for testing car's turn placard direction
-	turn_direction get_placard_direction();
 	// Used for setting level variables for cars at generation
 	void set_level(int level);
 

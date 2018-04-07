@@ -9,6 +9,7 @@ class Ambulance : public Renderable
 public:
 	Ambulance();
 	~Ambulance();
+
 	// Creates all the associated render resources and default transform
 	bool init(direction dir);
 
@@ -22,8 +23,6 @@ public:
 	// Releases all associated resources
 	//void destroy();
 
-	//void set_lane(direction dir);
-
 	// Renders
 	void draw(const mat3& projection)override;
 
@@ -35,16 +34,6 @@ public:
 
 	vec2 get_vertex_pos(int index);
 
-	//void update_rotation_on_turn(float t);
-
-	//void turn(float t);
-
-	//vec2 find_end_point(vec2 p1, vec2 p2, float angle);
-
-	//char calculate_turn_dir(direction lane_dir, direction desired_dir);
-
-	//int binomialCoefficient(int n, int k);
-
 	rect_bounding_box get_bounding_box();
 
 	// returns true if the given test_vertex is inside the car's bounding box
@@ -55,7 +44,7 @@ public:
 
 	bool is_moving();
 
-	//bool show;
+	vec2 get_position() const;
 
 private:
 	std::map<direction, vec2> m_amb_coords;

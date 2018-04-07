@@ -64,6 +64,7 @@ bool LaneManager::update(float ms)
 	add_car();
 	intersection_collision_check();
 	ambulance_collision_check();
+	clear_offscreen_ambulances();
 	return true;
 }
 
@@ -706,4 +707,34 @@ void LaneManager::clear_intersection() {
 			}
 		}
 	}
+}
+
+void LaneManager::clear_offscreen_ambulances() {
+	for (int i = m_ambulance.size() - 1; i >= 0; i--) {
+		if (ambulance_delete(m_ambulance[i].get_position())) {
+			fprintf(stderr, "erasing an ambulance\n");
+			m_ambulance.erase(m_ambulance.begin() + i);
+			m_warning.erase(m_warning.begin() + i);
+		}
+	}
+}
+
+bool LaneManager::ambulance_delete(vec2 pos) {
+	if (pos.x > 1200) {
+		printf("ambulance destroy east\n");
+		return true;
+	}
+	if (pos.x < -200) {
+		printf("ambulance destroy west\n");
+		return true;
+	}
+	if (pos.y < -200) {
+		printf("ambulance destroy north\n");
+		return true;
+	}
+	if (pos.y > 1200) {
+		printf("ambulance destroy south\n");
+		return true;
+	}
+	return false;
 }

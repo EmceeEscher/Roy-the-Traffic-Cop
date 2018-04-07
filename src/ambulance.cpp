@@ -19,10 +19,12 @@ Ambulance::Ambulance()
 	m_amb_rotation[direction::SOUTH] = 3.0*PI / 2.0;
 	m_amb_rotation[direction::EAST] = PI;
 }
+
 Ambulance::~Ambulance()
 {
 
 }
+
 bool Ambulance::init(direction dir)
 {
 	std::vector<uint16_t> indices;
@@ -127,12 +129,11 @@ void Ambulance::set_level(int level) {
 	t_scale = t_scale + m_level * 0.1f;
 	m_velocity = { m_velocity.x * scale, m_velocity.y * scale };
 	m_max_speed = m_max_speed * scale;
-//	stopping_distance = stopping_distance * scale;
 }
 
 
 void Ambulance::update(float ms, bool init) {
-//TODO Temporary comment for testing purposes
+
 	if (init) {
 		m_has_started_moving = true;
 		if (abs(m_velocity.x) > 0 && abs(m_velocity.x) < m_max_speed) {
@@ -166,7 +167,7 @@ void Ambulance::update(float ms, bool init) {
 				m_velocity.y = -m_max_speed;
 			}
 		}
-		//printf("%f", m_velocity.x);
+	
 		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
 		move(m_displacement);
 	}
@@ -295,4 +296,9 @@ bool Ambulance::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 
 bool Ambulance::is_moving() {
 	return m_has_started_moving;
+}
+
+vec2 Ambulance::get_position()const
+{
+	return m_position;
 }
