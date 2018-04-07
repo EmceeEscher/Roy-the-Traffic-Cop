@@ -151,14 +151,15 @@ bool LaneManager::ambulance_collision_check() {
 		for (int j = 0; j < m_ambulance.size(); j++) {
 			Ambulance* curr_amb = &m_ambulance[j];
 			rect_bounding_box amb_bb = curr_amb->get_bounding_box();
-			if (first_car->check_collision(amb_bb.bottom_left)
+			if (curr_amb->is_moving() && 
+				(first_car->check_collision(amb_bb.bottom_left)
 				|| first_car->check_collision(amb_bb.bottom_right)
 				|| first_car->check_collision(amb_bb.top_right)
 				|| first_car->check_collision(amb_bb.top_left)
 				|| curr_amb->check_collision(first_bb.bottom_left)
 				|| curr_amb->check_collision(first_bb.bottom_right)
 				|| curr_amb->check_collision(first_bb.top_right)
-				|| curr_amb->check_collision(first_bb.top_left)) {
+				|| curr_amb->check_collision(first_bb.top_left))) {
 					collision_occurring = true;
 					int victim_triangle = amb_mesh_collision_check(first_car, curr_amb);
 					if (victim_triangle != -1) {

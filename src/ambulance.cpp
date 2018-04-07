@@ -94,6 +94,7 @@ bool Ambulance::init(direction dir)
 	m_position = m_amb_coords[dir];
 	m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
 	m_lane = dir;
+	m_has_started_moving = false;
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
@@ -133,6 +134,7 @@ void Ambulance::set_level(int level) {
 void Ambulance::update(float ms, bool init) {
 //TODO Temporary comment for testing purposes
 	if (init) {
+		m_has_started_moving = true;
 		if (abs(m_velocity.x) > 0 && abs(m_velocity.x) < m_max_speed) {
 			m_velocity.x += m_acceleration.x;
 		}
@@ -289,4 +291,8 @@ bool Ambulance::check_implicit(vec2 P1, vec2 P2, vec2 Ptest) {
 	float C = P1.y * P2.x - P2.y * P1.x;
 	float result = A * Ptest.x + B * Ptest.y + C;
 	return result <= 0.f;
+}
+
+bool Ambulance::is_moving() {
+	return m_has_started_moving;
 }

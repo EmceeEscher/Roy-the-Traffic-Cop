@@ -53,6 +53,8 @@ public:
 	// creates an implicit line equation using P1 and P2, and then returns true if F(Ptest) >= 0
 	bool check_implicit(vec2 P1, vec2 P2, vec2 Ptest);
 
+	bool is_moving();
+
 	//bool show;
 
 private:
@@ -72,6 +74,7 @@ private:
 	direction m_desired_direction;
 	float m_wr; //half width of amb texture
 	float m_hr; //half height of amb texture
+	bool m_has_started_moving;
 
 	int m_level = 1;
 	vec2 m_acceleration;
