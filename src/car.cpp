@@ -185,9 +185,11 @@ void Car::destroy()
 {
 	delete m_turn_placard;
 
+	this->release_audio_res();
+
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+	glDeleteVertexArrays(1, &mesh.vao);
 
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);

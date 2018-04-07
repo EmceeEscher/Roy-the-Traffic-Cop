@@ -37,6 +37,7 @@ void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms, L
 		else {
 			//endless mode
 			game_level = 11;
+
 		}
 
 		lane_manager.update_lane_villain_probability(VillainSpawnProbability);
@@ -57,7 +58,9 @@ int LevelManager::get_next_level_point_req() {
 	return required_points;
 }
 
-void LevelManager::set_endless_mode() {
+void LevelManager::set_endless_mode(LaneManager lane_manager) {
 	game_level = 11;
+	VillainSpawnProbability = 0.30;
+	lane_manager.update_lane_villain_probability(VillainSpawnProbability);
 }
 

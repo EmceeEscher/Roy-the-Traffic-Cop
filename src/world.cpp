@@ -248,7 +248,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	if (action == GLFW_PRESS && key == GLFW_KEY_E && show_start_splash) { //start endless mode with E
 		show_start_splash = !show_start_splash;
 		Mix_PlayMusic(m_game_music, -1);
-		m_level_manager.set_endless_mode();
+		m_level_manager.set_endless_mode(m_lane_manager);
 	}
 	if (action == GLFW_PRESS && key == GLFW_KEY_P && !show_start_splash) { //pause anytime with P
 		is_game_paused = !is_game_paused;
