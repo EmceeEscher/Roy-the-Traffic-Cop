@@ -50,7 +50,7 @@ public:
 	bool update(float ms);
 
 	// Adds the given car to the back of the lineup
-	void add_car(carType type);
+	void add_car(carType type, int game_level);
 
 	// Removes the car at the front of the lane
 	void turn_car();
@@ -69,6 +69,11 @@ public:
 
 	std::deque<Car> m_cars; // Cars in the lane
 
+	// Determine car's level depending on game level
+	int determine_car_level_speed(int game_level);
+
+	// Set the Lane's villain spawn probability
+	void set_villain_probability(float prob);
 
 private:
 	float lanes_rot[4];

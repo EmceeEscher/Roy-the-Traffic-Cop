@@ -20,6 +20,7 @@ bool LaneManager::init(AI ai)
   m_ai = &ai;
   srand(time(NULL));
   spawn_delay = 0;
+  game_level = 1;
 
   return true;
 }
@@ -39,9 +40,12 @@ void LaneManager::reset()
 	spawn_delay = 0;
 }
 
-bool LaneManager::update(float ms)
+bool LaneManager::update(float ms, int level)
 {
 	bool amb_init = false;
+
+	game_level = level;
+
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars
 
 	if (lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms) ||
@@ -52,6 +56,7 @@ bool LaneManager::update(float ms)
 		// If this is the case, we should readjust new villains.
 		m_ai->make_villains_decide(m_lanes);
 	}
+
 	for (int i = 0; i < m_warning.size(); i++) {
 		m_warning[i].update(ms);
 		amb_init = m_warning[i].amb_init;
@@ -461,12 +466,17 @@ int LaneManager::amb_mesh_collision_check(Car* victim_car, Ambulance* amb) {
 
 void LaneManager::add_car()
 {
-  std::map<direction, Lane*>::iterator it = m_lanes.begin();
-  std::advance(it, rand()%4);
+	std::map<direction, Lane*>::iterator it = m_lanes.begin();
+	if (game_level == 1) {
+		std::advance(it, rand() % 3);
+	}
+	else {
+		std::advance(it, rand() % 4);
+	}
   {
     if (!it->second->is_lane_full() && spawn_delay < 0)
     {
-      it->second->add_car(carType::REGULAR);
+      it->second->add_car(carType::REGULAR, game_level);
 	  spawn_delay = rand() % 600 + 200.f;
     }
   }
@@ -518,7 +528,7 @@ void LaneManager::turn_car(direction dir)
 //Temporary manual input to test before implementation of AI
 
 void LaneManager::input_create_cars(direction dir) {
-	m_lanes[dir]->add_car(carType::REGULAR);
+	m_lanes[dir]->add_car(carType::REGULAR, game_level);
 }
 
 bool LaneManager::car_delete(vec2 pos) {
@@ -738,4 +748,10 @@ bool LaneManager::ambulance_delete(vec2 pos) {
 		return true;
 	}
 	return false;
+}
+
+void LaneManager::update_lane_villain_probability(float probability) {
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->set_villain_probability(probability);
+	}
 }

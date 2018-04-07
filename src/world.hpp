@@ -75,6 +75,7 @@ private:
 	// Game over status
 	bool is_game_over;
 
+	// Game level
 	int game_level;
 
 	//total points required to get to next level

@@ -91,7 +91,7 @@ void RemoveIntersection::reset() {
 	m_press = 0;
 }
 
-void RemoveIntersection::update(float ms, int hit_count)
+void RemoveIntersection::update(float ms, int hit_count, int game_level)
 {
 	m_prev_time += ms;
 	if (m_prev_time >=0 && m_prev_time < 150) {
@@ -107,7 +107,7 @@ void RemoveIntersection::update(float ms, int hit_count)
 	if (hit_count > 0) {
 		show = true;
 	}
-	if (m_press == 10) {
+	if (m_press == game_level) {
 		show = false;
 		m_press = 0;
 	}

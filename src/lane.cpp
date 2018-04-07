@@ -30,6 +30,8 @@ Lane::~Lane()
 
 void Lane::clear_lane() {
 	m_cars.clear();
+	car_is_honking = false;
+	Mix_HaltChannel(-1);
 }
 
 int Lane::get_lane_num()const
@@ -74,7 +76,7 @@ bool Lane::update(float ms)
 	return true;
 }
 
-void Lane::add_car(carType type)
+void Lane::add_car(carType type, int level)
 {
 	//timer will still run even if there are no cars in line, so need to reset it
 	//when adding to an empty lane
@@ -115,6 +117,8 @@ void Lane::add_car(carType type)
 				new_car.set_original_rotation(3.0*PI / 2.0);
 				new_car.set_lane(direction::SOUTH);
 			}
+			
+			new_car.set_level(determine_car_level_speed(level));
 			new_car.generate_desired_direction();
 			m_cars.emplace_back(new_car);
 			if (m_cars.size() == 1) {
@@ -123,7 +127,17 @@ void Lane::add_car(carType type)
 		}
 	}
 }
-
+int Lane::determine_car_level_speed(int level) {
+	if (level <= 2) {
+		return 1;
+	}
+	else if (level <= 6) {
+		return 2;
+	}
+	else {
+		return 3;
+	}
+}
 void Lane::turn_car()
 {
 	//TODO Bug where references only the front car until it is popped out of screen.
@@ -187,4 +201,8 @@ void Lane::erase_first_car()
 
 void Lane::set_car_direction(direction dir, int car_index) {
 	m_cars[car_index].set_desired_direction(dir);
+}
+
+void Lane::set_villain_probability(float prob) {
+	m_villain_spawn_probability = prob;
 }

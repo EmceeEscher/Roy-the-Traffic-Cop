@@ -19,8 +19,7 @@ public:
 		int attacker_index;
 		int victim_index;
 	};
-	const float VillainSpawnProbability = 0.25; // We may want to make this level dependent in the future. Revise when levels are added.
-
+	float VillainSpawnProbability = 0.0; // We may want to make this level dependent in the future. Revise when levels are added.
 
 	//initializes 4 empty lanes
 	//(TODO: pass desired number/type of lanes as parameter? or write a different init function per level?)
@@ -32,8 +31,8 @@ public:
 	// resets all lanes and internal variables
 	void reset();
 
-	// Moves the game ahead by ms milliseconds
-	bool update(float ms);
+    // Moves the game ahead by ms milliseconds
+    bool update(float ms, int level);
 
 	// Will try to add a car that will be frustrating for player
 	void add_car();
@@ -83,6 +82,10 @@ public:
 
 	bool ambulance_delete(vec2 pos);
 
+	// Set the villian Spawn probability depending on level;
+	void update_lane_villain_probability(float probability);
+
+
 private:
 	float const m_time_per_action = 5000;
 	float m_time_remaining;
@@ -90,5 +93,6 @@ private:
 	std::map<direction, vec2> m_lane_coords;
 	unsigned int m_points;
 	float spawn_delay;
+	int game_level;
 
 };
