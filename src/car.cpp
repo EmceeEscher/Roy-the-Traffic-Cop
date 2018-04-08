@@ -140,7 +140,7 @@ bool Car::init(bool isVillain)
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("texturedWithHeadlight.fs.glsl")))
 		return false;
 
 	// Setting initial values, scale is negative to make it face the opposite way
@@ -162,6 +162,9 @@ bool Car::init(bool isVillain)
 	m_color[0] = 1.f;
 	m_color[1] = 1.f;
 	m_color[2] = 1.f;
+
+	m_headlight_timer = 0.f;
+	m_is_headlight_on = true;
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
@@ -214,6 +217,11 @@ void Car::set_level(int level) {
 void Car::update(float ms)
 {
 	m_turn_placard->update(m_position, ms);
+	m_headlight_timer += ms;
+	if (m_headlight_timer > 1000) {
+		m_headlight_timer = 0.f;
+		m_is_headlight_on = !m_is_headlight_on;
+	}
 
 	// TODO: Implement Update Car [Theo, Mason]
 	if (m_in_beyond_intersection == false)
@@ -362,6 +370,34 @@ void Car::draw(const mat3& projection)
 	//float color[3] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, m_color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+
+	// Getting info for the headlights
+	GLint turn_direction_uloc = glGetUniformLocation(effect.program, "turn_direction");
+	GLint headlight_on_uloc = glGetUniformLocation(effect.program, "headlight_on");
+	//START OF TEST FS CODE (replace with actual logic)
+	int turn_direction_int = 0;
+	switch (get_turn_direction()) {
+		case turn_direction::LEFT:
+			turn_direction_int = 1;
+			break;
+		case turn_direction::RIGHT:
+			turn_direction_int = 2;
+			break;
+		default:
+			break;
+	}
+	glUniform1i(turn_direction_uloc, turn_direction_int);
+	if (turn_direction_int == 0) { //car is going straight, headlights shouldn't blink
+		m_is_headlight_on = true;
+	}
+	if (m_is_headlight_on) {
+		glUniform1i(headlight_on_uloc, 1);
+	}
+	else {
+		glUniform1i(headlight_on_uloc, 0);
+	}
+	
+	//END OF TEST FS CODE
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 42, GL_UNSIGNED_SHORT, nullptr);
