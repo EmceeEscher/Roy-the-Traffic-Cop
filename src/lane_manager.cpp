@@ -68,10 +68,10 @@ bool LaneManager::update(float ms, int level)
 
 	spawn_delay -= ms;
 	if (game_level >= 4) {
-		//spawn_delay_amb -= ms;
+		spawn_delay_amb -= ms;
 	}
 	add_car();
-	//add_ambulance(direction(rand() % 4));
+	add_ambulance(direction(rand() % 4));
 	intersection_collision_check();
 	ambulance_collision_check();
 	clear_offscreen_ambulances();
@@ -489,7 +489,7 @@ void LaneManager::add_car()
 
 void LaneManager::add_ambulance(direction dir)
 {
-	//if (m_warning.size() == 0 && spawn_delay_amb < 0 && game_level >= 4) {
+	if (m_warning.size() == 0 && spawn_delay_amb < 0 && game_level >= 4) {
 		Warning new_warning;
 		new_warning.init(dir);
 		m_warning.emplace_back(new_warning);
@@ -497,7 +497,7 @@ void LaneManager::add_ambulance(direction dir)
 		new_ambulance.init(dir);
 		m_ambulance.emplace_back(new_ambulance);
 		spawn_delay_amb = rand() % 3000 + 100000.f / game_level;
-	//}
+	}
 }
 
 std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
