@@ -386,11 +386,15 @@ void Car::draw(const mat3& projection)
 		default:
 			break;
 	}
-	glUniform1i(turn_direction_uloc, turn_direction_int);
 
+	if (m_turned) { //should just have straight headlights after turning (no blinker)
+		turn_direction_int = 0;
+	}
 	if (turn_direction_int == 0) { //car is going straight, headlights shouldn't blink
 		m_is_headlight_on = true;
 	}
+
+	glUniform1i(turn_direction_uloc, turn_direction_int);
 	if (m_is_headlight_on) {
 		glUniform1i(headlight_on_uloc, 1);
 	}
