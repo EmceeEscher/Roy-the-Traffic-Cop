@@ -374,7 +374,7 @@ void Car::draw(const mat3& projection)
 	// Getting info for the headlights
 	GLint turn_direction_uloc = glGetUniformLocation(effect.program, "turn_direction");
 	GLint headlight_on_uloc = glGetUniformLocation(effect.program, "headlight_on");
-	//START OF TEST FS CODE (replace with actual logic)
+	
 	int turn_direction_int = 0;
 	switch (get_turn_direction()) {
 		case turn_direction::LEFT:
@@ -387,6 +387,7 @@ void Car::draw(const mat3& projection)
 			break;
 	}
 	glUniform1i(turn_direction_uloc, turn_direction_int);
+
 	if (turn_direction_int == 0) { //car is going straight, headlights shouldn't blink
 		m_is_headlight_on = true;
 	}
@@ -396,8 +397,6 @@ void Car::draw(const mat3& projection)
 	else {
 		glUniform1i(headlight_on_uloc, 0);
 	}
-	
-	//END OF TEST FS CODE
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 42, GL_UNSIGNED_SHORT, nullptr);

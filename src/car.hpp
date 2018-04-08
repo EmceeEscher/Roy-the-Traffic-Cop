@@ -205,6 +205,5 @@ private:
 	float stopping_distance;
 	float stopping_distance_scale;
 	float t_scale;
-
 	Mix_Chunk* m_crash;
 };

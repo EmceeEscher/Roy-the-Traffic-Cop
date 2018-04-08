@@ -12,8 +12,8 @@ uniform int headlight_on; //0 = off, 1 = on
 layout(location = 0) out  vec4 color;
 
 bool is_in_y_range(float y_coord) {
-	return ((y_coord < 0.3 && y_coord > 0.2 && (turn_direction == 0 || turn_direction == 2)) 
-		 || (y_coord > 0.7 && y_coord < 0.8 && (turn_direction == 0 || turn_direction == 1)));
+	return ((y_coord < 0.3 && y_coord > 0.2 && (turn_direction == 0 || turn_direction == 2))   //right headlight should turn on for straight and right
+		 || (y_coord > 0.7 && y_coord < 0.8 && (turn_direction == 0 || turn_direction == 1))); //left headlight should turn on for straight and left
 }
 
 void main()
