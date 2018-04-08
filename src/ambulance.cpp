@@ -12,7 +12,7 @@ Ambulance::Ambulance()
 {
 	m_amb_coords[direction::NORTH] = { 550.f,-110.f };
 	m_amb_coords[direction::WEST] = { -110.f,440.f };
-	m_amb_coords[direction::SOUTH] = { 449.f,1100.f };
+	m_amb_coords[direction::SOUTH] = { 450.f,1100.f };
 	m_amb_coords[direction::EAST] = { 1170.f,545.f };
 	m_amb_rotation[direction::NORTH] = PI / 2;
 	m_amb_rotation[direction::WEST] = 0.f;
@@ -95,28 +95,16 @@ bool Ambulance::init(direction dir)
 	m_scale.y = 13;
 	m_position = m_amb_coords[dir];
 	m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
+	m_original_rot = m_amb_rotation[dir];
 	m_lane = dir;
 	m_has_started_moving = false;
+	initialize_pivots();
+	t = 0.f;
+	phase = 1;
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
-	if (dir == direction::NORTH) {
-		m_velocity = { .0f, 15.0f };
-		m_acceleration = { .0f, ACC };
-	}
-	else if (dir == direction::SOUTH) {
-		m_velocity = { .0f, -15.0f };
-		m_acceleration = { .0f, -ACC };
-	}
-	else if (dir == direction::WEST) {
-		m_velocity = { 15.0f, .0f };
-		m_acceleration = { ACC, .0f };
-	}
-	else {
-		m_velocity = { -15.0f, .0f };
-		m_acceleration = { -ACC, .0f };
-	}
-	m_max_speed = 540.f;
+
 	return true;
 }
 
@@ -135,51 +123,25 @@ void Ambulance::set_level(int level) {
 		m_level = level;
 	else
 		m_level = 1;
-	float scale = 1 + (m_level - 1)*5.f / 100.f;
 	t_scale = t_scale + m_level * 0.1f;
-	m_velocity = { m_velocity.x * scale, m_velocity.y * scale };
-	m_max_speed = m_max_speed * scale;
 }
 
 
 void Ambulance::update(float ms, bool init) {
 
 	if (init) {
-		m_has_started_moving = true;
-		if (abs(m_velocity.x) > 0 && abs(m_velocity.x) < m_max_speed) {
-			m_velocity.x += m_acceleration.x;
+		if (t >= 0.f && t <= 1.f)
+		{
+			turn(t);
+			t += 0.01f;
+			update_rotation_on_turn(t);
 		}
-		else if (abs(m_velocity.x) < 0.01f) {
-			m_velocity.x = 0.f;
+		else
+		{
+			m_original_rot = m_rotation;
+			t = 0.f;
+			phase++;
 		}
-		else if (abs(m_velocity.x) > m_max_speed) {
-			if (m_velocity.x > 0.0f) {
-				m_velocity.x = m_max_speed;
-			}
-			else {
-				m_velocity.x = -m_max_speed;
-			}
-			
-		}
-
-		//For Y position in North Lane
-		if (abs(m_velocity.y) > 0.f && abs(m_velocity.y) < m_max_speed) {
-			m_velocity.y += m_acceleration.y;
-		}
-		else if (abs(m_velocity.y) < 0.f) {
-			m_velocity.y = 0.f;
-		}
-		else if (abs(m_velocity.y) > m_max_speed) {
-			if (m_velocity.y > 0.0f) {
-				m_velocity.y = m_max_speed;
-			}
-			else {
-				m_velocity.y = -m_max_speed;
-			}
-		}
-	
-		vec2 m_displacement = { m_velocity.x * (ms / 1000), m_velocity.y * (ms / 1000) };
-		move(m_displacement);
 	}
 }
 
@@ -311,4 +273,126 @@ bool Ambulance::is_moving() {
 vec2 Ambulance::get_position()const
 {
 	return m_position;
+}
+
+int Ambulance::binomialCoefficient(int n, int k)
+{
+	int result = 1;
+	for (int i = 1; i <= k; ++i)
+	{
+		result *= n - (k - i);
+		result /= i;
+	}
+	return result;
+}
+
+void Ambulance::initialize_pivots()
+{
+	switch (m_lane)
+	{
+	case direction::EAST:
+		m_start = m_amb_coords[direction::EAST];
+		m_pivot1 = { 600.f,545.f };
+		m_pivot2 = { 500.f,545.f };
+		m_pivot3 = { 500.f,500.f };
+		m_pivot4 = { 500.f,440.f };
+		m_pivot5 = { 400.f,440.f };
+		m_end = m_amb_coords[direction::WEST];
+		break;
+	case direction::WEST:
+		m_start = m_amb_coords[direction::WEST];
+		m_pivot1 = { 400.f, 440.f };
+		m_pivot2 = { 500.f, 440.f };
+		m_pivot3 = { 500.f,500.f };
+		m_pivot4 = { 500.f, 545.f };
+		m_pivot5 = { 600.f, 545.f };
+		m_end = m_amb_coords[direction::EAST];
+		break;
+	case direction::SOUTH:
+		m_start = m_amb_coords[direction::SOUTH];
+		m_pivot1 = { 450.f,575.f };
+		m_pivot2 = { 450.f,500.f };
+		m_pivot3 = { 500.f,500.f };
+		m_pivot4 = { 550.f,500.f };
+		m_pivot5 = { 550.f,385.f };
+		m_end = m_amb_coords[direction::NORTH];
+		break;
+	case direction::NORTH:
+		m_start = m_amb_coords[direction::NORTH];
+		m_pivot1 = { 550.f,385.f };
+		m_pivot2 = { 550.f,500.f };
+		m_pivot3 = { 500.f,500.f };
+		m_pivot4 = { 450.f,500.f };
+		m_pivot5 = { 450.f,575.f };
+		m_end = m_amb_coords[direction::SOUTH];
+		break;
+
+	default:
+		break;
+	}
+}
+
+void Ambulance::turn(float t)
+{
+	//printf("turning\n");
+	vec2 p = { 0.f, 0.f };
+	std::vector<vec2> controlPoints;
+	if (phase == 1)
+	{
+		controlPoints.push_back(m_start);
+		controlPoints.push_back(m_pivot1);
+	}
+	else if (phase == 2)
+	{
+		controlPoints.push_back(m_pivot1);
+		controlPoints.push_back(m_pivot2);
+		controlPoints.push_back(m_pivot3);
+	}
+	else if (phase == 3)
+	{
+		controlPoints.push_back(m_pivot3);
+		controlPoints.push_back(m_pivot4);
+		controlPoints.push_back(m_pivot5);
+	}
+	else if (phase == 4)
+	{
+		controlPoints.push_back(m_pivot5);
+		controlPoints.push_back(m_end);
+	}
+	else
+	{
+		controlPoints.push_back(m_end);
+	}
+
+	int m = controlPoints.size() - 1;
+	for (int i = 0; i <= m; i++) {
+		// m choose i
+		int coef = binomialCoefficient(m, i);
+		// Bernstein Polynomial
+		float bern = coef * pow(t, i) * pow((1 - t), (m - i));
+		vec2 cp = controlPoints[i];
+		p.x = p.x + (cp.x * bern);
+		p.y = p.y + (cp.y * bern);
+	}
+
+	set_position(p);
+}
+
+
+void Ambulance::update_rotation_on_turn(float t)
+{
+	//float current_rot = m_rotation;
+	float angle;
+	if (phase == 3)
+	{
+		angle = -0.5f * PI;
+	}
+	else if (phase == 2)
+	{
+		angle = 0.5f * PI;
+	}
+	else
+		angle = 0.f;
+	//printf("%f\n", m_rotation);
+	set_rotation(m_original_rot + t * angle);
 }

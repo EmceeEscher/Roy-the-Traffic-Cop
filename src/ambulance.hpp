@@ -53,6 +53,11 @@ public:
 
 	vec2 get_position() const;
 
+	void initialize_pivots();
+	int binomialCoefficient(int n, int k);
+	void turn(float t);
+	void update_rotation_on_turn(float t);
+
 private:
 	std::map<direction, vec2> m_amb_coords;
 	std::map<direction, float> m_amb_rotation;
@@ -80,4 +85,14 @@ private:
 	float stopping_distance;
 	float stopping_distance_scale;
 	float t_scale;
+
+	// Variables for ambulance movement
+	int phase;
+	vec2 m_start;
+	vec2 m_pivot1;
+	vec2 m_pivot2;
+	vec2 m_pivot3;
+	vec2 m_pivot4;
+	vec2 m_pivot5;
+	vec2 m_end;
 };
