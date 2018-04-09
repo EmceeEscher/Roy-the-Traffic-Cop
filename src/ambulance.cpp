@@ -134,9 +134,10 @@ void Ambulance::set_level(int level) {
 
 
 void Ambulance::update(float ms, bool init) {
-	printf("%f,%f\n", get_position().x, get_position().y);
+
 
 	if (init) {
+		m_has_started_moving = true;
 		if (t >= 0.f && t <= 1.f)
 		{
 			turn(t);
