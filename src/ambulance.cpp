@@ -14,6 +14,12 @@ Ambulance::Ambulance()
 	m_amb_coords[direction::WEST] = { -110.f,440.f };
 	m_amb_coords[direction::SOUTH] = { 450.f,1100.f };
 	m_amb_coords[direction::EAST] = { 1170.f,545.f };
+
+	m_amb_pivots[direction::NORTH] = { 550.f,-300.f };
+	m_amb_pivots[direction::WEST] = { -300.f,440.f };
+	m_amb_pivots[direction::SOUTH] = { 450.f,1300.f };
+	m_amb_pivots[direction::EAST] = { 1300.f,545.f };
+
 	m_amb_rotation[direction::NORTH] = PI / 2;
 	m_amb_rotation[direction::WEST] = 0.f;
 	m_amb_rotation[direction::SOUTH] = 3.0*PI / 2.0;
@@ -128,6 +134,7 @@ void Ambulance::set_level(int level) {
 
 
 void Ambulance::update(float ms, bool init) {
+	printf("%f,%f\n", get_position().x, get_position().y);
 
 	if (init) {
 		if (t >= 0.f && t <= 1.f)
@@ -297,7 +304,7 @@ void Ambulance::initialize_pivots()
 		m_pivot3 = { 500.f,500.f };
 		m_pivot4 = { 500.f,440.f };
 		m_pivot5 = { 400.f,440.f };
-		m_end = m_amb_coords[direction::WEST];
+		m_end = m_amb_pivots[direction::WEST];
 		break;
 	case direction::WEST:
 		m_start = m_amb_coords[direction::WEST];
@@ -306,7 +313,7 @@ void Ambulance::initialize_pivots()
 		m_pivot3 = { 500.f,500.f };
 		m_pivot4 = { 500.f, 545.f };
 		m_pivot5 = { 600.f, 545.f };
-		m_end = m_amb_coords[direction::EAST];
+		m_end = m_amb_pivots[direction::EAST];
 		break;
 	case direction::SOUTH:
 		m_start = m_amb_coords[direction::SOUTH];
@@ -315,7 +322,7 @@ void Ambulance::initialize_pivots()
 		m_pivot3 = { 500.f,500.f };
 		m_pivot4 = { 550.f,500.f };
 		m_pivot5 = { 550.f,385.f };
-		m_end = m_amb_coords[direction::NORTH];
+		m_end = m_amb_pivots[direction::NORTH];
 		break;
 	case direction::NORTH:
 		m_start = m_amb_coords[direction::NORTH];
@@ -324,7 +331,7 @@ void Ambulance::initialize_pivots()
 		m_pivot3 = { 500.f,500.f };
 		m_pivot4 = { 450.f,500.f };
 		m_pivot5 = { 450.f,575.f };
-		m_end = m_amb_coords[direction::SOUTH];
+		m_end = m_amb_pivots[direction::SOUTH];
 		break;
 
 	default:

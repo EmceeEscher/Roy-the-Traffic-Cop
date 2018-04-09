@@ -60,6 +60,7 @@ public:
 
 private:
 	std::map<direction, vec2> m_amb_coords;
+	std::map<direction, vec2> m_amb_pivots;
 	std::map<direction, float> m_amb_rotation;
 	std::vector<TexturedVertex> amb_vertices;
 
