@@ -142,7 +142,7 @@ void Ambulance::update(float ms, bool init) {
 		{
 			turn(t);
 			if (phase == 2 || phase == 3) {
-				t += 0.03f;
+				t += 0.04f;
 			}
 			else {
 				t += 0.01f;
