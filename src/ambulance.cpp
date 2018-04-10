@@ -141,7 +141,12 @@ void Ambulance::update(float ms, bool init) {
 		if (t >= 0.f && t <= 1.f)
 		{
 			turn(t);
-			t += 0.01f;
+			if (phase == 2 || phase == 3) {
+				t += 0.03f;
+			}
+			else {
+				t += 0.01f;
+			}
 			update_rotation_on_turn(t);
 		}
 		else
@@ -301,37 +306,37 @@ void Ambulance::initialize_pivots()
 	case direction::EAST:
 		m_start = m_amb_coords[direction::EAST];
 		m_pivot1 = { 600.f,545.f };
-		m_pivot2 = { 500.f,545.f };
-		m_pivot3 = { 500.f,500.f };
-		m_pivot4 = { 500.f,440.f };
-		m_pivot5 = { 400.f,440.f };
+		m_pivot2 = { 550.f,522.f };
+		m_pivot3 = { 450.f,470.f };
+		m_pivot4 = { 400.f,450.f };
+		m_pivot5 = { 330.f,440.f };
 		m_end = m_amb_pivots[direction::WEST];
 		break;
 	case direction::WEST:
 		m_start = m_amb_coords[direction::WEST];
 		m_pivot1 = { 400.f, 440.f };
-		m_pivot2 = { 500.f, 440.f };
-		m_pivot3 = { 500.f,500.f };
-		m_pivot4 = { 500.f, 545.f };
-		m_pivot5 = { 600.f, 545.f };
+		m_pivot2 = { 450.f, 470.f };
+		m_pivot3 = { 550.f,530.f };
+		m_pivot4 = { 575.f, 538.f };
+		m_pivot5 = { 700.f, 545.f };
 		m_end = m_amb_pivots[direction::EAST];
 		break;
 	case direction::SOUTH:
 		m_start = m_amb_coords[direction::SOUTH];
 		m_pivot1 = { 450.f,575.f };
-		m_pivot2 = { 450.f,500.f };
-		m_pivot3 = { 500.f,500.f };
-		m_pivot4 = { 550.f,500.f };
-		m_pivot5 = { 550.f,385.f };
+		m_pivot2 = { 475.f,538.f };
+		m_pivot3 = { 510.f,460.f };
+		m_pivot4 = { 525.f,400.f };
+		m_pivot5 = { 550.f,330.f };
 		m_end = m_amb_pivots[direction::NORTH];
 		break;
 	case direction::NORTH:
 		m_start = m_amb_coords[direction::NORTH];
 		m_pivot1 = { 550.f,385.f };
-		m_pivot2 = { 550.f,500.f };
-		m_pivot3 = { 500.f,500.f };
-		m_pivot4 = { 450.f,500.f };
-		m_pivot5 = { 450.f,575.f };
+		m_pivot2 = { 525.f,443.f };
+		m_pivot3 = { 475.f,538.f };
+		m_pivot4 = { 460.f,553.f };
+		m_pivot5 = { 450.f,600.f };
 		m_end = m_amb_pivots[direction::SOUTH];
 		break;
 
@@ -393,11 +398,11 @@ void Ambulance::update_rotation_on_turn(float t)
 	float angle;
 	if (phase == 3)
 	{
-		angle = -0.5f * PI;
+		angle = -0.2f* PI;
 	}
 	else if (phase == 2)
 	{
-		angle = 0.5f * PI;
+		angle = 0.2f * PI;
 	}
 	else
 		angle = 0.f;
