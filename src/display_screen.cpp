@@ -5,11 +5,33 @@
 // stlib
 #include <vector>
 #include <algorithm>
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+FT_Library library;
+FT_Face face;
+bool error;
 
 Texture DisplayScreen::splash_screens;
 
 bool DisplayScreen::init()
 {
+	error = FT_Init_FreeType(&library);
+	if (error) {
+		printf("FT_Init_FreeType error");
+	}
+	error = FT_New_Face(library,
+		"../data/fonts/arial.ttf",
+		0,
+		&face);
+	if (error == FT_Err_Unknown_File_Format)
+	{
+		printf("the font file could be opened and read, but it appears that its font format is unsupported");
+	}
+	else if (error)
+	{
+		printf("another error code means that the font file could not be opened or read, or that it is broken");
+	}
 	// Load shared texture
 	splash_screens.load_from_file(textures_path("SplashScreens.png"));
 
