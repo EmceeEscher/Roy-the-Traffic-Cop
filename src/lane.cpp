@@ -34,6 +34,7 @@ void Lane::clear_lane() {
 	}
 	m_cars.clear();
 	car_is_honking = false;
+	m_time_remaining = MaxTimePerCar;
 	Mix_HaltChannel(-1);
 }
 
