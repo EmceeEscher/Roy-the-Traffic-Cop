@@ -123,6 +123,8 @@ bool World::init(vec2 screen)
 	m_coin_icon.init();
 	m_display_screen.init();
 	m_level_manager.init();
+	m_high_scores.init();
+
 	return m_traffic_cop.init();
 }
 
@@ -150,6 +152,11 @@ bool World::update(float elapsed_ms)
 	m_req_points_next_level = m_level_manager.get_next_level_point_req();
 	game_level = m_level_manager.get_level();
 	is_game_over = m_level_manager.get_game_over();
+
+	if (is_game_over) {
+		m_high_scores.check_score_and_insert(m_points);
+	}
+
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
 
