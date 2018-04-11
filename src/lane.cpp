@@ -166,6 +166,9 @@ void Lane::turn_car()
 					}
 					Mix_PlayChannel(-1, m_car_rev, 0);
 					car_is_honking = false;
+					if (index + 1 < m_cars.size()) {
+						m_cars[index + 1].start_timer(MaxTimePerCar);
+					}
 				}
 			}
 
@@ -178,12 +181,11 @@ void Lane::turn_car()
 					}
 					Mix_PlayChannel(-1, m_car_rev, 0);
 					car_is_honking = false;
+					if (index + 1 < m_cars.size()) {
+						m_cars[index + 1].start_timer(MaxTimePerCar);
+					}
 				}
 			}
-		}
-
-		if (index + 1 < m_cars.size()) {
-			m_cars[index + 1].start_timer(MaxTimePerCar);
 		}
 	}
 }
