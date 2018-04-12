@@ -7,6 +7,7 @@
 #include "background.hpp"
 #include "car.hpp"
 #include "game_timer.hpp"
+#include "high_scores.hpp"
 #include "lane_manager.hpp"
 #include "lane.hpp"
 #include "direction.hpp"
@@ -92,10 +93,9 @@ private:
 	Coin m_coin_icon;
 	DisplayScreen m_display_screen;
 	LevelManager m_level_manager;
-
 	Ambulance m_ambulance;
+	HighScores m_high_scores;
 
-  
 	float lanes_rot[4];
 
 	vec2 lanes[4];

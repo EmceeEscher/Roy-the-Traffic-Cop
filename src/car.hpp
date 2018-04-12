@@ -193,6 +193,8 @@ private:
 	float m_spin_amount;
 	float spin_slow_time;
 
+	float m_headlight_timer;
+	bool m_is_headlight_on;
 
 	// Level associated variables
 	int m_level = 1;
@@ -203,6 +205,6 @@ private:
 	float stopping_distance;
 	float stopping_distance_scale;
 	float t_scale;
-
+  
 	Mix_Chunk* m_crash;
 };
