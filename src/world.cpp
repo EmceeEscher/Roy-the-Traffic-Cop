@@ -292,7 +292,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			if (m_remove_intersection.show) {
 				m_remove_intersection.increment();
 			}
-			if (m_remove_intersection.m_press == game_level) {
+			if (m_remove_intersection.m_press == 5) {
 				m_lane_manager.clear_intersection();
 			}
 		}
