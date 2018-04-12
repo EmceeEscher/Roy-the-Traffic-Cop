@@ -166,7 +166,7 @@ bool World::update(float elapsed_ms)
 		vec2 screen = { (float)w, (float)h };
 
 		m_traffic_cop.update(elapsed_ms);
-		m_game_timer.advance_time(elapsed_ms);
+		m_game_timer.advance_time(elapsed_ms, game_level);
 		
 		m_lane_manager.update(elapsed_ms, game_level);
 		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
@@ -311,6 +311,7 @@ void World::reset_game() {
 	m_game_timer.reset();
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
+	m_display_screen.reset();
 
 	Mix_PlayMusic(m_background_music, -1);
 

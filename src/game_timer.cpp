@@ -587,8 +587,14 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	}
 }
 
-void GameTimer::advance_time(float real_time_seconds_elapsed)
+void GameTimer::advance_time(float real_time_seconds_elapsed, int level)
 {
+	if (level == 1 || level == 2) {
+		timer_speed = 966;
+	}
+	else {
+		timer_speed = 805;
+	}
 	const int game_sec_per_ms = timer_speed; 
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms); 
@@ -665,3 +671,4 @@ void GameTimer::draw(const mat3& projection) {
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 144, GL_UNSIGNED_SHORT, nullptr);
 }
+

@@ -6,7 +6,7 @@ bool LevelManager::init()
 	game_level = 1; //level 11 is endless mode
 	is_game_over = false;
 	year = 2018;
-	required_points = 20;
+	required_points = 15;
 	VillainSpawnProbability = 0;
 	max_time_per_car = 10000;
 	ambulance_enabled = false;
@@ -26,7 +26,7 @@ void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms, L
 		if (points < required_points) {
 			is_game_over = true;
 		}
-		else if (game_level <= 10) {
+		else if (game_level < 10) {
 			//progress game
 			game_level += 1;
 			if (game_level < 7) {
@@ -36,16 +36,16 @@ void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms, L
 			}
 			lane_manager.update_lane_villain_probability(VillainSpawnProbability);
 		}
-		else {
-			//endless mode
-			game_level = 11;
-
-		}
 		if (max_time_per_car > 6650) {
 			max_time_per_car -= 150;
+			lane_manager.update_lane_max_time_per_car(max_time_per_car);
 		}
-		lane_manager.update_lane_max_time_per_car(max_time_per_car);
-		required_points += game_level * 10;
+		if (game_level != 11) {
+			required_points += game_level * 10; 
+		}
+		else {
+			required_points += 30;
+		}
 		year = game_time.year;
 	}
 }
@@ -64,6 +64,7 @@ int LevelManager::get_next_level_point_req() {
 
 void LevelManager::set_endless_mode(LaneManager lane_manager) {
 	game_level = 11;
+	required_points = 30;
 	VillainSpawnProbability = 0.30;
 	lane_manager.update_lane_villain_probability(VillainSpawnProbability);
 	max_time_per_car = 6500;

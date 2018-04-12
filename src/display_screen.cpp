@@ -169,3 +169,10 @@ void DisplayScreen::draw(const mat3& projection)
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 	}
 }
+
+void DisplayScreen::reset() {
+	draw_splash = true;
+	display_duration = 1500.f;
+	start_countdown = false;
+	prev_level = 0;
+}
