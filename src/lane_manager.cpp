@@ -7,6 +7,10 @@
 
 bool LaneManager::init(AI ai)
 {
+	SDL_Init(SDL_INIT_AUDIO);
+	m_siren = Mix_LoadWAV(audio_path("ambulanceSiren.wav"));
+	Mix_VolumeChunk(m_siren, 20);
+
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -23,12 +27,20 @@ bool LaneManager::init(AI ai)
   spawn_delay_amb = 0;
   game_level = 1;
 
+  siren_sounding = false;
+  siren_fading = false;
+  siren_channel = 0;
+  siren_timer = 0;
+
   return true;
 }
 
 void LaneManager::destroy()
 {
   m_lanes.clear();
+  if (m_siren != nullptr) {
+	  Mix_FreeChunk(m_siren);
+  }
 }
 
 void LaneManager::reset()
@@ -75,6 +87,16 @@ bool LaneManager::update(float ms, int level)
 	intersection_collision_check();
 	ambulance_collision_check();
 	clear_offscreen_ambulances();
+
+	if (siren_sounding) {
+		siren_timer += ms;
+	}
+	if (!siren_fading && siren_timer > 6500) {
+		siren_sounding = false;
+		siren_timer = 0;
+		Mix_FadeOutChannel(siren_channel, 3000);
+		siren_fading = true;
+	}
 	return true;
 }
 
@@ -496,7 +518,12 @@ void LaneManager::add_ambulance(direction dir)
 		Ambulance new_ambulance;
 		new_ambulance.init(dir);
 		m_ambulance.emplace_back(new_ambulance);
-		spawn_delay_amb = rand() % 3000 + 100000.f / game_level;
+		spawn_delay_amb = rand() % 10000 + 100000.f / game_level;
+		if (!siren_sounding) {
+			siren_channel = (Mix_FadeInChannel(-1, m_siren, 0, 10000));
+			siren_sounding = true;
+			siren_fading = false;
+		}
 	}
 }
 

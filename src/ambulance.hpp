@@ -3,9 +3,7 @@
 #include "lane.hpp"
 #include <vector>
 
-#define SDL_MAIN_HANDLED
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
+
 
 class Ambulance : public Renderable
 {
@@ -101,8 +99,4 @@ private:
 	vec2 m_pivot5;
 	vec2 m_end;
 
-	Mix_Chunk* m_siren;
-	bool siren_sounding;
-	bool siren_fading;
-	int siren_channel;
 };

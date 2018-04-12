@@ -11,6 +11,9 @@
 #include <map>
 #include <string>
 
+#define SDL_MAIN_HANDLED
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 class LaneManager
 {
@@ -96,4 +99,9 @@ private:
 	float spawn_delay_amb;
 	int game_level;
 
+	Mix_Chunk* m_siren;
+	bool siren_sounding;
+	bool siren_fading;
+	int siren_channel;
+	float siren_timer;
 };
