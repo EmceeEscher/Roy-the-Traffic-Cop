@@ -101,8 +101,8 @@ bool Ambulance::init(direction dir)
 		return false;
 
 	// Setting initial values
-	m_scale.x = 13;
-	m_scale.y = 13;
+	m_scale.x = 11;
+	m_scale.y = 11;
 	m_position = m_amb_coords[dir];
 	m_rotation = m_amb_rotation[dir]; //TODO: SET THIS
 	m_original_rot = m_amb_rotation[dir];
