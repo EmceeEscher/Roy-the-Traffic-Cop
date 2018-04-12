@@ -220,6 +220,9 @@ void DisplayScreen::draw_bitmap(FT_Bitmap*  bitmap, FT_Int x, FT_Int y)
 	FT_Int  x_max = x + bitmap->width;
 	FT_Int  y_max = y + bitmap->rows;
 
+	int width = 100;
+	int height = 100;
+
 
 	/* for simplicity, we assume that `bitmap->pixel_mode' */
 	/* is `FT_PIXEL_MODE_GRAY' (i.e., not a bitmap font)   */
@@ -229,7 +232,7 @@ void DisplayScreen::draw_bitmap(FT_Bitmap*  bitmap, FT_Int x, FT_Int y)
 		for (j = y, q = 0; j < y_max; j++, q++)
 		{
 			if (i < 0 || j < 0 ||
-				i >= WIDTH || j >= HEIGHT)
+				i >= width || j >= height)
 				continue;
 
 			image[j][i] |= bitmap->buffer[q * bitmap->width + p];
