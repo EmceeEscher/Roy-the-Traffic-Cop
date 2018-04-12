@@ -25,6 +25,12 @@ public:
 	// Set displayed splash screen texture
 	void SetSplashTexLocs(int splash_screen);
 
+	void renderText();
+
+	void textInit();
+
+	void DisplayScreen::draw_bitmap(FT_Bitmap*  bitmap, FT_Int x, FT_Int y);
+
 private:
 	TexturedVertex vertices[4];
 	vec2 m_position; // Window coordinates

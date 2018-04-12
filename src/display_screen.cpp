@@ -16,22 +16,7 @@ Texture DisplayScreen::splash_screens;
 
 bool DisplayScreen::init()
 {
-	error = FT_Init_FreeType(&library);
-	if (error) {
-		printf("FT_Init_FreeType error");
-	}
-	error = FT_New_Face(library,
-		"../data/fonts/arial.ttf",
-		0,
-		&face);
-	if (error == FT_Err_Unknown_File_Format)
-	{
-		printf("the font file could be opened and read, but it appears that its font format is unsupported");
-	}
-	else if (error)
-	{
-		printf("another error code means that the font file could not be opened or read, or that it is broken");
-	}
+	renderText();
 	// Load shared texture
 	splash_screens.load_from_file(textures_path("SplashScreens.png"));
 
@@ -190,5 +175,96 @@ void DisplayScreen::draw(const mat3& projection)
 
 		// Drawing!
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+	}
+}
+
+void DisplayScreen::textInit() {
+	error = FT_Init_FreeType(&library);
+	if (error) {
+		printf("FT_Init_FreeType error");
+	}
+	error = FT_New_Face(library,
+		"../data/fonts/arial.ttf",
+		0,
+		&face);
+	if (error == FT_Err_Unknown_File_Format)
+	{
+		printf("the font file could be opened and read, but it appears that its font format is unsupported");
+	}
+	else if (error)
+	{
+		printf("another error code means that the font file could not be opened or read, or that it is broken");
+	}
+	error = FT_Set_Char_Size(
+		face,
+		0,
+		16 * 64,
+		1000,
+		1000
+	);
+	if (error) {
+		printf("set_char_size error");
+	}
+	error = FT_Set_Pixel_Sizes(
+		face,   /* handle to face object */
+		0,      /* pixel_width           */
+		16);   /* pixel_height          */
+	if (error) {
+		printf("set_pixel_sizes");
+	}
+}
+
+void DisplayScreen::draw_bitmap(FT_Bitmap*  bitmap, FT_Int x, FT_Int y)
+{
+	FT_Int  i, j, p, q;
+	FT_Int  x_max = x + bitmap->width;
+	FT_Int  y_max = y + bitmap->rows;
+
+
+	/* for simplicity, we assume that `bitmap->pixel_mode' */
+	/* is `FT_PIXEL_MODE_GRAY' (i.e., not a bitmap font)   */
+
+	for (i = x, p = 0; i < x_max; i++, p++)
+	{
+		for (j = y, q = 0; j < y_max; j++, q++)
+		{
+			if (i < 0 || j < 0 ||
+				i >= WIDTH || j >= HEIGHT)
+				continue;
+
+			image[j][i] |= bitmap->buffer[q * bitmap->width + p];
+		}
+	}
+}
+
+void DisplayScreen::renderText() {
+	textInit();
+
+	FT_GlyphSlot slot = face->glyph;
+	int pen_x, pen_y, n;
+
+	pen_x = 300;
+	pen_y = 200;
+
+	char* text = "theosintent";
+
+	for (n = 0; n < strlen(text); n++) {
+		FT_UInt glyph_index;
+		glyph_index = FT_Get_Char_Index(face, text[n]);
+		error = FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT);
+		if (error) {
+			printf("Glyph load error. continue");
+		}
+		error = FT_Render_Glyph(face->glyph, FT_RENDER_MODE_NORMAL);
+		if (error) {
+			printf("render_glyph error. continue");
+		}
+
+		my_draw_bitmap(&slot->bitmap,
+			pen_x + slot->bitmap_left,
+			pen_y - slot->bitmap_top);
+
+		pen_x += slot->advance.x >> 6;
+		pen_y += slot->advance.y >> 6;
 	}
 }
