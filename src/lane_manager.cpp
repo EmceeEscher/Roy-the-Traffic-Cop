@@ -270,6 +270,9 @@ void LaneManager::add_car()
 {
 	std::map<direction, Lane*>::iterator it = m_lanes.begin();
 	if (game_level == 1) {
+		std::advance(it, rand() > RAND_MAX/2? 1:3);
+	}
+	else if (game_level == 2) {
 		std::advance(it, rand() % 3);
 	}
 	else {
