@@ -167,7 +167,6 @@ public:
 	// Release audio resources
 	void release_audio_res();
 
-
 private:
 	float m_color[3];
 	vec2 m_position; // Window coordinates

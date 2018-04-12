@@ -33,6 +33,10 @@ Ambulance::~Ambulance()
 
 bool Ambulance::init(direction dir)
 {
+	SDL_Init(SDL_INIT_AUDIO);
+	m_siren = Mix_LoadWAV(audio_path("ambulanceSiren.wav"));
+	Mix_VolumeChunk(m_siren, 20);
+
 	std::vector<uint16_t> indices;
 
 	// Reads the ambulance mesh from a file, which contains a list of vertices, textures, and indices
@@ -107,6 +111,9 @@ bool Ambulance::init(direction dir)
 	initialize_pivots();
 	t = 0.f;
 	phase = 1;
+	siren_sounding = false;
+	siren_fading = false;
+	siren_channel = 0;
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
@@ -115,6 +122,9 @@ bool Ambulance::init(direction dir)
 }
 
 void Ambulance::destroy() {
+	if (m_siren != nullptr) {
+		Mix_FreeChunk(m_siren);
+	}
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
 	glDeleteVertexArrays(1, &mesh.vao);
@@ -135,7 +145,10 @@ void Ambulance::set_level(int level) {
 
 void Ambulance::update(float ms, bool init) {
 
-
+	if (!siren_sounding) {
+		siren_channel = (Mix_FadeInChannel(-1, m_siren, 0, 8000));
+		siren_sounding = true;
+	}
 	if (init) {
 		m_has_started_moving = true;
 		if (t >= 0.f && t <= 1.f)
@@ -151,6 +164,10 @@ void Ambulance::update(float ms, bool init) {
 		}
 		else
 		{
+			if (!siren_fading) {
+				Mix_FadeOutChannel(siren_channel, 3000);
+				siren_fading = true;
+			}
 			m_original_rot = m_rotation;
 			t = 0.f;
 			phase++;
