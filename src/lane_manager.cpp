@@ -24,7 +24,7 @@ bool LaneManager::init(AI ai)
   m_ai = &ai;
   srand(time(NULL));
   spawn_delay = 0;
-  spawn_delay_amb = 0;
+  spawn_delay_amb = 5000;
   game_level = 1;
 
   siren_sounding = false;
@@ -79,7 +79,7 @@ bool LaneManager::update(float ms, int level)
 	}
 
 	spawn_delay -= ms;
-	if (game_level >= 4) {
+	if (game_level >= 4 && m_ambulance.size() == 0) {
 		spawn_delay_amb -= ms;
 	}
 	add_car();
@@ -518,7 +518,7 @@ void LaneManager::add_ambulance(direction dir)
 		Ambulance new_ambulance;
 		new_ambulance.init(dir);
 		m_ambulance.emplace_back(new_ambulance);
-		spawn_delay_amb = rand() % 10000 + 100000.f / game_level;
+		spawn_delay_amb = rand() % 10000 + 300000.f/game_level;
 		if (!siren_sounding) {
 			siren_channel = (Mix_FadeInChannel(-1, m_siren, 0, 10000));
 			siren_sounding = true;
@@ -758,6 +758,7 @@ void LaneManager::clear_offscreen_ambulances() {
 			m_ambulance.erase(m_ambulance.begin() + i);
 			m_warning[i].destroy();
 			m_warning.erase(m_warning.begin() + i);
+			Mix_HaltChannel(siren_channel);
 		}
 	}
 }
