@@ -160,7 +160,7 @@ bool World::update(float elapsed_ms)
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
 
-	if (!is_game_paused && !show_start_splash) {
+	if (!is_game_paused && !show_start_splash && !is_game_over) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		vec2 screen = { (float)w, (float)h };

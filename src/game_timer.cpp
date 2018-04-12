@@ -28,8 +28,12 @@ float year_d1_shown_offset;
 float year_d2_shown_offset;
 float year_d3_shown_offset;
 
+float timer_speed; 
+
 bool GameTimer::init()
 {
+	timer_speed = 644.f; 
+
 	struct tm init_time = {0};
 	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
 	init_time.tm_year = 70; // mktime starts from 1900 for some reason
@@ -585,7 +589,7 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 
 void GameTimer::advance_time(float real_time_seconds_elapsed)
 {
-	const int game_sec_per_ms = 644; //sec_in_year/music_length/1000ms
+	const int game_sec_per_ms = timer_speed; 
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms); 
 	m_current_time = mktime(adv_time);
