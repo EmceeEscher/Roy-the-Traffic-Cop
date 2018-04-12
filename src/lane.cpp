@@ -212,3 +212,7 @@ void Lane::set_car_direction(direction dir, int car_index) {
 void Lane::set_villain_probability(float prob) {
 	m_villain_spawn_probability = prob;
 }
+
+void Lane::set_max_time_per_car(float ms) {
+	MaxTimePerCar = ms;
+}

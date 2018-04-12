@@ -509,3 +509,9 @@ void LaneManager::update_lane_villain_probability(float probability) {
 	}
 }
 
+void LaneManager::update_lane_max_time_per_car(float ms) {
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->set_max_time_per_car(ms);
+	}
+}
+

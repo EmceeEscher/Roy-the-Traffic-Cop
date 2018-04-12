@@ -19,7 +19,7 @@ class Lane
 {
 public:
 	const int MaxCarsPerLane = 4;
-	float const MaxTimePerCar = 10000; // Max time before a car will turn
+	float MaxTimePerCar = 10000; // Max time before a car will turn
 
 	// constructor/destructor
 	Lane(direction dir, float villainSpawnProbability);
@@ -74,6 +74,9 @@ public:
 
 	// Set the Lane's villain spawn probability
 	void set_villain_probability(float prob);
+
+	// Set the lane's max time per car
+	void set_max_time_per_car(float ms);
 
 private:
 	float lanes_rot[4];
