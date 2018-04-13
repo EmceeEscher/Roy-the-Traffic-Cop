@@ -1,5 +1,6 @@
 // Header
 #include "weather.hpp"
+#include "time.h"
 
 
 // stlib
@@ -32,15 +33,20 @@ bool Weather::init()
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("weather.fs.glsl")))
 		return false;
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = 1.0;
-	m_scale.y = 1.0;
+	m_scale.x = 1.2;
+	m_scale.y = 1.2;
 	m_position.x = 500;
 	m_position.y = 500;
+	weather_timer = 0;
+	snow_effect_on = false;
+	rain_effect_on = false;
+	heat_effect_on = false;
+	srand(time(NULL));
 	return true;
 }
 
@@ -56,13 +62,29 @@ void Weather::destroy()
 	glDeleteShader(effect.program);
 }
 
-void Weather::update(float ms) {
-	SetWeatherTexLocs(0);
+void Weather::update(float ms, int level, CurrentTime game_time) {
+
+	if (level >= 3) {
+		weather_timer += ms / 1000.f;
+
+	}
+	else {
+		SetWeatherTexLocs(0);
+	}
 }
 
 void Weather::SetWeatherTexLocs(int weather_locs) {
 	// weather_locs: 
-	float texture_locs[] = { 0.f,1.f };
+	float texture_locs[] = { 
+		0.f,       //0, no weather
+		1.f / 8.f, //1, dusk
+		2.f / 8.f, //2, overcast
+		3.f / 8.f, //3, misty morning
+		4.f / 8.f, //4, night
+		5.f / 8.f, //5, dawn
+		6.f / 8.f, //6, white clouds part 1
+		7.f / 8.f, //7, white clouds part 2
+		8.f / 8.f, }; 
 
 	vertices[0].texcoord = { texture_locs[weather_locs], 1.f };//top left
 	vertices[1].texcoord = { texture_locs[weather_locs + 1], 1.f };//top right
@@ -77,11 +99,11 @@ void Weather::SetWeatherTexLocs(int weather_locs) {
 
 	// Vertex Buffer creation
 	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 4, vertices, GL_DYNAMIC_DRAW);
 
 	// Index Buffer creation
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 6, indices, GL_DYNAMIC_DRAW);
 }
 
 void Weather::draw(const mat3& projection)
@@ -102,6 +124,7 @@ void Weather::draw(const mat3& projection)
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+	GLint weather_time_loc = glGetUniformLocation(effect.program, "weather_time");
 
 	// Setting vertices and indices
 	glBindVertexArray(mesh.vao);
@@ -111,6 +134,7 @@ void Weather::draw(const mat3& projection)
 	// Input data location as in the vertex buffer
 	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
 	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
+
 	glEnableVertexAttribArray(in_position_loc);
 	glEnableVertexAttribArray(in_texcoord_loc);
 	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
@@ -125,10 +149,15 @@ void Weather::draw(const mat3& projection)
 	float color[] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniform1f(weather_time_loc, weather_timer);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);		
 }
 
 void Weather::reset() {
+	weather_timer = 0;
+	snow_effect_on = false;
+	rain_effect_on = false;
+	heat_effect_on = false;
 }

@@ -9,9 +9,6 @@ bool LevelManager::init()
 	required_points = 15;
 	VillainSpawnProbability = 0;
 	max_time_per_car = 10000;
-	ambulance_enabled = false;
-	weather_enabled = false;
-	four_lanes_enabled = false;
 	return true;
 }
 

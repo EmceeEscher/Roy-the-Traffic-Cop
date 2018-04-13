@@ -10,6 +10,7 @@
 
 #define PI 3.14159265
 #define OFF_SCREEN 1000
+int cnt = 1;
 
 // Same as static in c, local to compilation unit
 namespace
@@ -173,7 +174,7 @@ bool World::update(float elapsed_ms)
 		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
-		m_weather.update(elapsed_ms);
+		m_weather.update(elapsed_ms, game_level, m_game_timer.get_current_time());
 		return true;
 	}
 }
@@ -299,6 +300,12 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 				m_lane_manager.clear_intersection();
 			}
 		}
+
+		// Weather debugging
+		if (action == GLFW_PRESS && key == GLFW_KEY_Z) {
+			m_weather.SetWeatherTexLocs(fmod(cnt, 7));
+			cnt++;
+		}
 	}
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
 	{
@@ -315,7 +322,7 @@ void World::reset_game() {
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
 	m_display_screen.reset();
-	//m_weather.reset() TO IMPLEMENT
+	//m_weather.reset() TODO: IMPLEMENT
 
 	Mix_PlayMusic(m_background_music, -1);
 

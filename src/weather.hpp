@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "weather.hpp"
+#include "game_timer.hpp"
 
 using std::string;
 
@@ -20,7 +21,7 @@ public:
 	void draw(const mat3& projection)override;
 
 	// update
-	void update(float ms);
+	void update(float ms, int game_level, CurrentTime game_time);
 
 	// Set displayed splash screen texture
 	void SetWeatherTexLocs(int weather_loc);
@@ -28,8 +29,19 @@ public:
 	// Reset display screen values;
 	void reset();
 
+	// which sky should it be? dusk/dawn/night etc
+	void determine_sky();
+
+	// which shader effect to use? heat/snow/rain
+	void determine_condition();
+
 private:
 	TexturedVertex vertices[4];
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
+
+	float weather_timer;
+	bool snow_effect_on;
+	bool rain_effect_on;
+	bool heat_effect_on;
 };
