@@ -99,4 +99,6 @@ private:
 	vec2 m_pivot5;
 	vec2 m_end;
 
+	float flash_time;
+
 };

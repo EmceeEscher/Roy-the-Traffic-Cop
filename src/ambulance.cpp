@@ -8,6 +8,7 @@
 
 Texture Ambulance::ambulance_texture;
 
+
 Ambulance::Ambulance()
 {
 	m_amb_coords[direction::NORTH] = { 550.f,-110.f };
@@ -93,7 +94,7 @@ bool Ambulance::init(direction dir)
 		return false;
 
 	// Loading shaders
-	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("ambulance.fs.glsl")))
 		return false;
 
 	// Setting initial values
@@ -107,6 +108,7 @@ bool Ambulance::init(direction dir)
 	initialize_pivots();
 	t = 0.f;
 	phase = 1;
+	flash_time = 0.f;
 
 	// Initialization of variables that will be influenced by levels
 	m_level = 1;
@@ -134,6 +136,7 @@ void Ambulance::set_level(int level) {
 
 
 void Ambulance::update(float ms, bool init) {
+	flash_time += ms;
 	if (init) {
 		m_has_started_moving = true;
 		if (t >= 0.f && t <= 1.f)
@@ -176,6 +179,7 @@ void Ambulance::draw(const mat3& projection)
 	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
 	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
 	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
+	GLint time_uloc = glGetUniformLocation(effect.program, "time");
 
 	// Setting car_vertices and indices
 	glBindVertexArray(mesh.vao);
@@ -199,6 +203,7 @@ void Ambulance::draw(const mat3& projection)
 	float color[3] = { 1.f, 1.f, 1.f };
 	glUniform3fv(color_uloc, 1, color);
 	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+	glUniform1f(time_uloc, flash_time);
 
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 42, GL_UNSIGNED_SHORT, nullptr);
