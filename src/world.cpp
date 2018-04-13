@@ -160,13 +160,13 @@ bool World::update(float elapsed_ms)
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
 
-	if (!is_game_paused && !show_start_splash) {
+	if (!is_game_paused && !show_start_splash && !is_game_over) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		vec2 screen = { (float)w, (float)h };
 
 		m_traffic_cop.update(elapsed_ms);
-		m_game_timer.advance_time(elapsed_ms);
+		m_game_timer.advance_time(elapsed_ms, game_level);
 		
 		m_lane_manager.update(elapsed_ms, game_level);
 		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
@@ -292,7 +292,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			if (m_remove_intersection.show) {
 				m_remove_intersection.increment();
 			}
-			if (m_remove_intersection.m_press == game_level) {
+			if (m_remove_intersection.m_press == 5) {
 				m_lane_manager.clear_intersection();
 			}
 		}
@@ -311,6 +311,7 @@ void World::reset_game() {
 	m_game_timer.reset();
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
+	m_display_screen.reset();
 
 	Mix_PlayMusic(m_background_music, -1);
 

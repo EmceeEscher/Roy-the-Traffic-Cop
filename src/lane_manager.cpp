@@ -32,6 +32,7 @@ void LaneManager::reset()
 {
 	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
 		it->second->clear_lane();
+		it->second->set_villain_probability(0);
 	}
 	m_time_remaining = m_time_per_action;
 	m_points = 0;
@@ -270,7 +271,10 @@ void LaneManager::add_car()
 {
 	std::map<direction, Lane*>::iterator it = m_lanes.begin();
 	if (game_level == 1) {
-		std::advance(it, rand() % 3);
+		std::advance(it, rand() > RAND_MAX/2? 1:3);
+	}
+	else if (game_level == 2) {
+		std::advance(it, rand() % 3 + 1);
 	}
 	else {
 		std::advance(it, rand() % 4);
@@ -503,6 +507,12 @@ void LaneManager::clear_intersection() {
 void LaneManager::update_lane_villain_probability(float probability) {
 	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
 		it->second->set_villain_probability(probability);
+	}
+}
+
+void LaneManager::update_lane_max_time_per_car(float ms) {
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->set_max_time_per_car(ms);
 	}
 }
 

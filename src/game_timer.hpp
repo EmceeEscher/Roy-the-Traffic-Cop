@@ -33,7 +33,7 @@ public:
 	CurrentTime get_current_time();
 
 	// Advances the current in-game time by the appropriate amount of time for the clock tick
-	void advance_time(float real_time_seconds_elapsed);
+	void advance_time(float real_time_seconds_elapsed, int level);
 
 	// Split and set Date digits for texture offset
 	void SplitSetDateDigits(int day, gt_tracker* gt_day, 

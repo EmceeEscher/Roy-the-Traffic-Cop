@@ -17,7 +17,6 @@ bool DisplayScreen::init()
 	float wr = splash_screens.width * 0.5;
 	float hr = splash_screens.height * 0.5;
 	float indiv_splash_width = 500.f;
-	float splash_uv = splash_screens.width / 500.f;
 
 	vertices[0].position = { -indiv_splash_width / 2, +hr, 0.f };
 	vertices[1].position = { +indiv_splash_width / 2, +hr, 0.f };
@@ -43,7 +42,7 @@ bool DisplayScreen::init()
 	m_position.x = 500;
 	m_position.y = 500;
 	draw_splash = true;
-	display_duration = 1000.f;
+	display_duration = 1500.f;
 	start_countdown = false;
 	prev_level = 0;
 
@@ -90,7 +89,7 @@ void DisplayScreen::update(bool paused, bool show_start, bool game_over, int lev
 		if (display_duration <= 0 && draw_splash) {
 			draw_splash = false;
 			start_countdown = false;
-			display_duration = 1000.f;
+			display_duration = 1500.f;
 		}
 	}
 
@@ -169,4 +168,11 @@ void DisplayScreen::draw(const mat3& projection)
 		// Drawing!
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 	}
+}
+
+void DisplayScreen::reset() {
+	draw_splash = true;
+	display_duration = 1500.f;
+	start_countdown = false;
+	prev_level = 0;
 }

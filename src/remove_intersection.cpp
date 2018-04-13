@@ -108,7 +108,7 @@ void RemoveIntersection::update(float ms, int hit_count, int game_level)
 	if (hit_count > 0) {
 		show = true;
 	}
-	if (m_press == game_level) {
+	if (m_press == 5) {
 		show = false;
 		m_press = 0;
 	}
