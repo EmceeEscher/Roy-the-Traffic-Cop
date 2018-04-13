@@ -30,16 +30,18 @@ public:
 	void reset();
 
 	// which sky should it be? dusk/dawn/night etc
-	void determine_sky();
+	void determine_sky(int game_month);
 
 	// which shader effect to use? heat/snow/rain
-	void determine_condition();
+	void determine_condition(int game_month);
 
 private:
 	TexturedVertex vertices[4];
 	vec2 m_position; // Window coordinates
 	vec2 m_scale; // 1.f in each dimension. 1.f is as big as the associated texture
 
+
+	int game_month;
 	float weather_timer;
 	bool snow_effect_on;
 	bool rain_effect_on;

@@ -47,6 +47,7 @@ bool Weather::init()
 	rain_effect_on = false;
 	heat_effect_on = false;
 	srand(time(NULL));
+	game_month = 0; 
 	return true;
 }
 
@@ -63,9 +64,13 @@ void Weather::destroy()
 }
 
 void Weather::update(float ms, int level, CurrentTime game_time) {
-
 	if (level >= 3) {
 		weather_timer += ms / 1000.f;
+		if (game_month != game_time.month) {
+			game_month = game_time.month;
+			determine_sky();
+			determine_condition();
+		}
 
 	}
 	else {
@@ -73,7 +78,25 @@ void Weather::update(float ms, int level, CurrentTime game_time) {
 	}
 }
 
+void Weather::determine_sky() {
+	//10% chance night time regardless of month
+	if (rand() % 10 == 0) {
+		SetWeatherTexLocs(4);
+	}
+	else if ((game_month >= 2 && game_month <= 4) || game_month == 9 || game_month == 10) {
+		//60% overcast for Mar, Apr, May, Oct, Nov 
+		if (rand() % 10 > 3) { 
+			SetWeatherTexLocs(2); 
+		}
+		//40% misty morning
+		else {
+			SetWeatherTexLocs(3);
+		}
+	}
+
+}
 void Weather::SetWeatherTexLocs(int weather_locs) {
+	weather_timer = 0;
 	// weather_locs: 
 	float texture_locs[] = { 
 		0.f,       //0, no weather
@@ -157,6 +180,7 @@ void Weather::draw(const mat3& projection)
 
 void Weather::reset() {
 	weather_timer = 0;
+	game_month = 0;
 	snow_effect_on = false;
 	rain_effect_on = false;
 	heat_effect_on = false;
