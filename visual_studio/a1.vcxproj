@@ -517,6 +517,7 @@
     <ClCompile Include="..\src\remove_intersection.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\score_display.cpp" />
     <ClCompile Include="$(ProjectDir)..\src\coin.cpp" />
+    <ClCompile Include="..\src\weather.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

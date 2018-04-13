@@ -124,6 +124,7 @@ bool World::init(vec2 screen)
 	m_display_screen.init();
 	m_level_manager.init();
 	m_high_scores.init();
+	m_weather.init();
 
 	return m_traffic_cop.init();
 }
@@ -172,6 +173,7 @@ bool World::update(float elapsed_ms)
 		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
+		m_weather.update(elapsed_ms);
 		return true;
 	}
 }
@@ -227,6 +229,7 @@ void World::draw()
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
+	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
 
 	// Presenting
@@ -312,6 +315,7 @@ void World::reset_game() {
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
 	m_display_screen.reset();
+	//m_weather.reset() TO IMPLEMENT
 
 	Mix_PlayMusic(m_background_music, -1);
 
