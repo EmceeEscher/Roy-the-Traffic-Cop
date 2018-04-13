@@ -274,7 +274,7 @@ void LaneManager::add_car()
 		std::advance(it, rand() > RAND_MAX/2? 1:3);
 	}
 	else if (game_level == 2) {
-		std::advance(it, rand() % 3);
+		std::advance(it, rand() % 3 + 1);
 	}
 	else {
 		std::advance(it, rand() % 4);
