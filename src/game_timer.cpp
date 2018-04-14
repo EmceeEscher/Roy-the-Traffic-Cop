@@ -32,8 +32,6 @@ float timer_speed;
 
 bool GameTimer::init()
 {
-	timer_speed = 644.f; 
-
 	struct tm init_time = {0};
 	init_time.tm_mday = DaysAfterUnixDate + 1; //mktime uses 1 based indexing for days
 	init_time.tm_year = 70; // mktime starts from 1900 for some reason
@@ -328,6 +326,7 @@ bool GameTimer::init()
 	m_scale.x = 0.4;
 	m_scale.y = 0.4;
 	m_position = { 860.f, 80.f };
+	timer_speed = 644.f;
 
 	gt_date.digit_0.old_offset = 0.0f;
 	gt_date.digit_0.new_offset = uv * 1;
@@ -593,7 +592,7 @@ void GameTimer::advance_time(float real_time_seconds_elapsed, int level)
 		timer_speed = 966;
 	}
 	else {
-		timer_speed = 805;
+		timer_speed = 750;
 	}
 	const int game_sec_per_ms = timer_speed; 
 	struct tm * adv_time = localtime(&m_current_time);
