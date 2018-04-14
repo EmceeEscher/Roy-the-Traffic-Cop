@@ -88,6 +88,8 @@ public:
 	// Set the villian Spawn probability depending on level;
 	void update_lane_villain_probability(float probability);
 
+	// Set lane's max time per car
+	void update_lane_max_time_per_car(float ms);
 
 private:
 	float const m_time_per_action = 5000;

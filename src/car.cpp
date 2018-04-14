@@ -181,7 +181,8 @@ bool Car::init(bool isVillain)
 
 // Release car audio resources
 void Car::release_audio_res() {
-	Mix_FreeChunk(m_crash);
+	if (m_crash != nullptr)
+		Mix_FreeChunk(m_crash);
 }
 // Releases all graphics resources
 void Car::destroy()
