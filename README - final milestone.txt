@@ -13,7 +13,7 @@ Changes made between milestone 4 (robust play) and final submission:
 	the intersection so it can switch lanes (so it will always be an outgoing lane), but we did this manually instead of using a Bezier curve, because the Bezier
 	curve didn't work very well for the type of turning we wanted to do.
 -Added a high score system. TODO: describe how this works
--Added weather. TODO: describe it
+-Added weather. enabled at level 3 and beyond, adds to game immersion as well as provides some difficulty as weather can be obstructive to placard indicator. 
 -Added headlights to the cars. These lights will blink in the direction the car is going to turn (or will stay on if going straight). This was implemented in the fragment shader.
 -Finetuned our level system. Levels now control number of active lanes, number of points required to progress, duration cars will wait before turning automatically, 
 	probability of villain cars, probability of ambulances, and type of weather. Number of spacebar presses to clear intersection is no longer tied to level.
