@@ -43,11 +43,9 @@ bool Weather::init()
 	m_position.x = 500;
 	m_position.y = 500;
 	weather_timer = 0;
-	snow_effect_on = false;
-	rain_effect_on = false;
-	heat_effect_on = false;
 	srand(time(NULL));
 	game_month = 0; 
+	curr_weather_loc = 0;
 	return true;
 }
 
@@ -69,7 +67,6 @@ void Weather::update(float ms, int level, CurrentTime game_time) {
 		if (game_month != game_time.month) {
 			game_month = game_time.month;
 			determine_sky();
-			determine_condition();
 		}
 
 	}
@@ -81,21 +78,62 @@ void Weather::update(float ms, int level, CurrentTime game_time) {
 void Weather::determine_sky() {
 	//10% chance night time regardless of month
 	if (rand() % 10 == 0) {
-		SetWeatherTexLocs(4);
+		if (curr_weather_loc != 4) SetWeatherTexLocs(4);
+	}
+	//10% dawn night time regardless of month
+	else if (rand() % 10 == 0) {
+		if (curr_weather_loc != 5) SetWeatherTexLocs(5);
+	}
+	//10% dusk night time regardless of month
+	else if (rand() % 10 == 0) {
+		if (curr_weather_loc != 1) SetWeatherTexLocs(1);
 	}
 	else if ((game_month >= 2 && game_month <= 4) || game_month == 9 || game_month == 10) {
 		//60% overcast for Mar, Apr, May, Oct, Nov 
 		if (rand() % 10 > 3) { 
-			SetWeatherTexLocs(2); 
+			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
 		}
-		//40% misty morning
+		//30% misty morning
+		else if (rand() % 10 <= 2){
+			if (curr_weather_loc != 3) SetWeatherTexLocs(3);
+		}
+		//default cloudy skies
 		else {
-			SetWeatherTexLocs(3);
+			if (curr_weather_loc != 6) SetWeatherTexLocs(6);
 		}
 	}
-
+	else if (game_month == 11 || game_month <= 1) {
+		//60% misty morning for Dec, Jan, Feb
+		if (rand() % 10 > 3) {
+			if (curr_weather_loc != 3) SetWeatherTexLocs(3);
+		}
+		//30% cloudy skies
+		else if (rand() % 10 <= 2){
+			if (curr_weather_loc != 6) SetWeatherTexLocs(6);
+		}
+		// default overcast
+		else {
+			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
+		}
+	}
+	else if (game_month >= 5 && game_month <= 8) {
+		//60% no weather for Jun, Jul, Aug, Sept
+		if (rand() % 10 > 3) {
+			if (curr_weather_loc != 0) SetWeatherTexLocs(0);
+		}
+		//30% cloudy skies
+		else if (rand() % 10 <= 2) {
+			if (curr_weather_loc != 7) SetWeatherTexLocs(7);
+		}
+		// deafult overcast
+		else {
+			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
+		}
+	}
 }
+
 void Weather::SetWeatherTexLocs(int weather_locs) {
+	curr_weather_loc = weather_locs;
 	weather_timer = 0;
 	// weather_locs: 
 	float texture_locs[] = { 
@@ -181,7 +219,6 @@ void Weather::draw(const mat3& projection)
 void Weather::reset() {
 	weather_timer = 0;
 	game_month = 0;
-	snow_effect_on = false;
-	rain_effect_on = false;
-	heat_effect_on = false;
+	curr_weather_loc = 0;
+
 }

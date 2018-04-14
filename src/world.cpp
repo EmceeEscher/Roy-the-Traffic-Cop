@@ -301,7 +301,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			}
 		}
 
-		// Weather debugging
+		// Weather debugging, hit Z to cycle between skies
 		if (action == GLFW_PRESS && key == GLFW_KEY_Z) {
 			m_weather.SetWeatherTexLocs(fmod(cnt, 7));
 			cnt++;
@@ -322,7 +322,7 @@ void World::reset_game() {
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
 	m_display_screen.reset();
-	//m_weather.reset() TODO: IMPLEMENT
+	m_weather.reset();
 
 	Mix_PlayMusic(m_background_music, -1);
 
