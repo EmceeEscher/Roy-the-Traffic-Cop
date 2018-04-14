@@ -15,6 +15,6 @@ void main()
 {
 
 		// default scrolling sky
-		color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x + weather_time/800.f, texcoord.y));
+		color = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x + weather_time/1000.f, texcoord.y));
 
 }

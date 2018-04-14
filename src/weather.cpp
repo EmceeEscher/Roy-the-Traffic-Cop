@@ -38,13 +38,14 @@ bool Weather::init()
 
 	// Setting initial values, scale is negative to make it face the opposite way
 	// 1.0 would be as big as the original texture
-	m_scale.x = 1.2;
-	m_scale.y = 1.2;
+	m_scale.x = 1.5;
+	m_scale.y = 1.5;
 	m_position.x = 500;
 	m_position.y = 500;
 	weather_timer = 0;
 	srand(time(NULL));
 	game_month = 0; 
+	check_month = 0;
 	curr_weather_loc = 0;
 	return true;
 }
@@ -54,7 +55,7 @@ void Weather::destroy()
 {
 	glDeleteBuffers(1, &mesh.vbo);
 	glDeleteBuffers(1, &mesh.ibo);
-	glDeleteBuffers(1, &mesh.vao);
+	glDeleteVertexArrays(1, &mesh.vao);
 
 	glDeleteShader(effect.vertex);
 	glDeleteShader(effect.fragment);
@@ -64,11 +65,11 @@ void Weather::destroy()
 void Weather::update(float ms, int level, CurrentTime game_time) {
 	if (level >= 3) {
 		weather_timer += ms / 1000.f;
-		if (game_month != game_time.month) {
+		if (fmod(check_month, 12) == game_time.month) {
 			game_month = game_time.month;
 			determine_sky();
+			check_month = game_time.month + 4;
 		}
-
 	}
 	else {
 		SetWeatherTexLocs(0);
@@ -80,54 +81,32 @@ void Weather::determine_sky() {
 	if (rand() % 10 == 0) {
 		if (curr_weather_loc != 4) SetWeatherTexLocs(4);
 	}
-	//10% dawn night time regardless of month
-	else if (rand() % 10 == 0) {
-		if (curr_weather_loc != 5) SetWeatherTexLocs(5);
-	}
-	//10% dusk night time regardless of month
-	else if (rand() % 10 == 0) {
-		if (curr_weather_loc != 1) SetWeatherTexLocs(1);
-	}
-	else if ((game_month >= 2 && game_month <= 4) || game_month == 9 || game_month == 10) {
-		//60% overcast for Mar, Apr, May, Oct, Nov 
-		if (rand() % 10 > 3) { 
-			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
+	else if (game_month >= 3 && game_month <= 8) {
+		//50% summer 
+		if (rand() % 10 > 4) {
+			if (curr_weather_loc != 1) SetWeatherTexLocs(1);
 		}
-		//30% misty morning
-		else if (rand() % 10 <= 2){
-			if (curr_weather_loc != 3) SetWeatherTexLocs(3);
+		//40% fall 
+		else if (rand() % 10 <= 3) {
+			if (curr_weather_loc != 5) SetWeatherTexLocs(5);
 		}
-		//default cloudy skies
+		// deafult clouds
 		else {
 			if (curr_weather_loc != 6) SetWeatherTexLocs(6);
 		}
 	}
-	else if (game_month == 11 || game_month <= 1) {
-		//60% misty morning for Dec, Jan, Feb
-		if (rand() % 10 > 3) {
+	else if (game_month > 8 && game_month < 3) {
+		//50% winter 
+		if (rand() % 10 > 4) {
 			if (curr_weather_loc != 3) SetWeatherTexLocs(3);
 		}
-		//30% cloudy skies
-		else if (rand() % 10 <= 2){
+		//40% spring 
+		else if (rand() % 10 <= 3) {
+			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
+		}
+		// default clouds
+		else {
 			if (curr_weather_loc != 6) SetWeatherTexLocs(6);
-		}
-		// default overcast
-		else {
-			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
-		}
-	}
-	else if (game_month >= 5 && game_month <= 8) {
-		//60% no weather for Jun, Jul, Aug, Sept
-		if (rand() % 10 > 3) {
-			if (curr_weather_loc != 0) SetWeatherTexLocs(0);
-		}
-		//30% cloudy skies
-		else if (rand() % 10 <= 2) {
-			if (curr_weather_loc != 7) SetWeatherTexLocs(7);
-		}
-		// deafult overcast
-		else {
-			if (curr_weather_loc != 2) SetWeatherTexLocs(2);
 		}
 	}
 }
@@ -138,13 +117,13 @@ void Weather::SetWeatherTexLocs(int weather_locs) {
 	// weather_locs: 
 	float texture_locs[] = { 
 		0.f,       //0, no weather
-		1.f / 8.f, //1, dusk
-		2.f / 8.f, //2, overcast
-		3.f / 8.f, //3, misty morning
+		1.f / 8.f, //1, summer
+		2.f / 8.f, //2, overcast/spring
+		3.f / 8.f, //3, winter
 		4.f / 8.f, //4, night
-		5.f / 8.f, //5, dawn
+		5.f / 8.f, //5, fall
 		6.f / 8.f, //6, white clouds part 1
-		7.f / 8.f, //7, white clouds part 2
+		7.f / 8.f, //7, white clouds part 2, unused
 		8.f / 8.f, }; 
 
 	vertices[0].texcoord = { texture_locs[weather_locs], 1.f };//top left
@@ -220,5 +199,5 @@ void Weather::reset() {
 	weather_timer = 0;
 	game_month = 0;
 	curr_weather_loc = 0;
-
+	check_month = 0;
 }

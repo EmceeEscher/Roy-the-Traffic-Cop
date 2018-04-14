@@ -144,6 +144,7 @@ void World::destroy()
 	m_background.destroy();
 	m_score_display.destroy();
 	m_coin_icon.destroy();
+	m_weather.destroy();
 	glfwDestroyWindow(m_window);
 }
 

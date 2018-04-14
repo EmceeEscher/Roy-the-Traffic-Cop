@@ -47,4 +47,5 @@ private:
 	int game_month;
 	float weather_timer;
 	int curr_weather_loc;
+	int check_month;
 };
