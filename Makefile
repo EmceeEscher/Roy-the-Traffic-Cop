@@ -12,7 +12,7 @@ else
 endif
 
 BIN=Roy-the-Traffic-Cop
-OBJ=$(BIN).o common.o background.o car.o lane.o traffic_cop.o world.o lane_manager.o placard.o ai.o game_timer.o coin.o score_display.o
+OBJ=$(BIN).o common.o background.o car.o lane.o traffic_cop.o world.o lane_manager.o placard.o ai.o game_timer.o coin.o score_display.o display_screen.o level_manager.o remove_intersection.o warning.o ambulance.o
 
 default: build
 
