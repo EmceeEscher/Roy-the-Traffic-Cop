@@ -10,6 +10,7 @@
 
 #define PI 3.14159265
 #define OFF_SCREEN 1000
+int cnt = 1;
 
 // Same as static in c, local to compilation unit
 namespace
@@ -124,6 +125,7 @@ bool World::init(vec2 screen)
 	m_display_screen.init();
 	m_level_manager.init();
 	m_high_scores.init();
+	m_weather.init();
 
 	return m_traffic_cop.init();
 }
@@ -142,6 +144,7 @@ void World::destroy()
 	m_background.destroy();
 	m_score_display.destroy();
 	m_coin_icon.destroy();
+	m_weather.destroy();
 	glfwDestroyWindow(m_window);
 }
 
@@ -160,18 +163,20 @@ bool World::update(float elapsed_ms)
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
 
-	if (!is_game_paused && !show_start_splash) {
+	if (!is_game_paused && !show_start_splash && !is_game_over) {
 		int w, h;
 		glfwGetFramebufferSize(m_window, &w, &h);
 		vec2 screen = { (float)w, (float)h };
 
 		m_traffic_cop.update(elapsed_ms);
-		m_game_timer.advance_time(elapsed_ms);
+		m_game_timer.advance_time(elapsed_ms, game_level);
 		
 		m_lane_manager.update(elapsed_ms, game_level);
 		m_remove_intersection.update(elapsed_ms, this->hit_count(), game_level);
+
 		m_score_display.update_score(m_points);
 		m_coin_icon.update(elapsed_ms);
+		m_weather.update(elapsed_ms, game_level, m_game_timer.get_current_time());
 		return true;
 	}
 }
@@ -222,12 +227,18 @@ void World::draw()
 		car.draw(projection_2D);
 	for (auto& car : m_lane_manager.get_cars_in_lane(direction::SOUTH))
 		car.draw(projection_2D);
+	for (auto& warning : m_lane_manager.get_warning())
+		warning.draw(projection_2D);
+	for (auto& ambulance : m_lane_manager.get_ambulance())
+		ambulance.draw(projection_2D);
 	m_traffic_cop.draw(projection_2D);
 	m_remove_intersection.draw(projection_2D);
 	m_game_timer.draw(projection_2D);
 	m_score_display.draw(projection_2D);
 	m_coin_icon.draw(projection_2D);
+	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
+
 
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -277,24 +288,35 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 			m_lane_manager.turn_car(direction::EAST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_W) {
-			m_lane_manager.input_create_cars(direction::NORTH);
+			m_lane_manager.add_ambulance(direction::NORTH);
+			//m_lane_manager.input_create_cars(direction::NORTH);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_A) {
-			m_lane_manager.input_create_cars(direction::WEST);
+			m_lane_manager.add_ambulance(direction::WEST);
+			//m_lane_manager.input_create_cars(direction::WEST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_S) {
-			m_lane_manager.input_create_cars(direction::SOUTH);
+			m_lane_manager.add_ambulance(direction::SOUTH);
+			//m_lane_manager.input_create_cars(direction::SOUTH);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_D) {
-			m_lane_manager.input_create_cars(direction::EAST);
+			m_lane_manager.add_ambulance(direction::EAST);
+
+			//m_lane_manager.input_create_cars(direction::EAST);
 		}
 		if (action == GLFW_PRESS && key == GLFW_KEY_SPACE) {
 			if (m_remove_intersection.show) {
 				m_remove_intersection.increment();
 			}
-			if (m_remove_intersection.m_press == game_level) {
+			if (m_remove_intersection.m_press == 5) {
 				m_lane_manager.clear_intersection();
 			}
+		}
+
+		// Weather debugging, hit Z to cycle between skies
+		if (action == GLFW_PRESS && key == GLFW_KEY_Z) {
+			m_weather.SetWeatherTexLocs(fmod(cnt, 7));
+			cnt++;
 		}
 	}
 	if (action == GLFW_RELEASE && key == GLFW_KEY_R)
@@ -311,6 +333,8 @@ void World::reset_game() {
 	m_game_timer.reset();
 	m_level_manager.init(); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
+	m_display_screen.reset();
+	m_weather.reset();
 
 	Mix_PlayMusic(m_background_music, -1);
 
@@ -321,7 +345,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	// printf("mouse position: %f,%f\n", xpos, ypos);
+	//printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

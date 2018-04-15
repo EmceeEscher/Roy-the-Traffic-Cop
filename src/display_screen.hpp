@@ -25,6 +25,9 @@ public:
 	// Set displayed splash screen texture
 	void SetSplashTexLocs(int splash_screen);
 
+	// Reset display screen values;
+	void reset();
+
 private:
 	TexturedVertex vertices[4];
 	vec2 m_position; // Window coordinates
