@@ -1,10 +1,16 @@
 #include "lane_manager.hpp"
 #include "car.hpp"
+#include "warning.hpp"
+
 
 
 
 bool LaneManager::init(AI ai)
-{  
+{
+	SDL_Init(SDL_INIT_AUDIO);
+	m_siren = Mix_LoadWAV(audio_path("ambulanceSiren.wav"));
+	Mix_VolumeChunk(m_siren, 20);
+
   m_lanes[direction::NORTH] = new Lane(direction::NORTH, VillainSpawnProbability);
   m_lanes[direction::EAST] = new Lane(direction::EAST, VillainSpawnProbability);
   m_lanes[direction::SOUTH] = new Lane(direction::SOUTH, VillainSpawnProbability);
@@ -18,7 +24,13 @@ bool LaneManager::init(AI ai)
   m_ai = &ai;
   srand(time(NULL));
   spawn_delay = 0;
+  spawn_delay_amb = 5000;
   game_level = 1;
+
+  siren_sounding = false;
+  siren_fading = false;
+  siren_channel = 0;
+  siren_timer = 0;
 
   return true;
 }
@@ -26,12 +38,16 @@ bool LaneManager::init(AI ai)
 void LaneManager::destroy()
 {
   m_lanes.clear();
+  if (m_siren != nullptr) {
+	  Mix_FreeChunk(m_siren);
+  }
 }
 
 void LaneManager::reset()
 {
 	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
 		it->second->clear_lane();
+		it->second->set_villain_probability(0);
 	}
 	m_time_remaining = m_time_per_action;
 	m_points = 0;
@@ -40,7 +56,10 @@ void LaneManager::reset()
 
 bool LaneManager::update(float ms, int level)
 {
+	bool amb_init = false;
+
 	game_level = level;
+
 	//For loop for all the lanes if m_is_is_beyond_intersection is true, then add to vector/list/deque to check for collisions between those cars
 
 	if (lane_queue(m_lanes[direction::NORTH], m_lane_coords[direction::NORTH], ms) ||
@@ -52,9 +71,33 @@ bool LaneManager::update(float ms, int level)
 		m_ai->make_villains_decide(m_lanes);
 	}
 
+	for (int i = 0; i < m_warning.size(); i++) {
+		m_warning[i].update(ms);
+		amb_init = m_warning[i].amb_init;
+	}
+	for (int i = 0; i < m_ambulance.size(); i++) {
+		m_ambulance[i].update(ms,amb_init);
+	}
+
 	spawn_delay -= ms;
+	if (game_level >= 4 && m_ambulance.size() == 0) {
+		spawn_delay_amb -= ms;
+	}
 	add_car();
+	add_ambulance(direction(rand() % 4));
 	intersection_collision_check();
+	ambulance_collision_check();
+	clear_offscreen_ambulances();
+
+	if (siren_sounding) {
+		siren_timer += ms;
+	}
+	if (!siren_fading && siren_timer > 6500) {
+		siren_sounding = false;
+		siren_timer = 0;
+		Mix_FadeOutChannel(siren_channel, 3000);
+		siren_fading = true;
+	}
 	return true;
 }
 
@@ -68,7 +111,7 @@ bool LaneManager::intersection_collision_check() {
 			Car* car;
 			for (int i = 0; i < curr_cars.size(); i++) {
 				car = &(curr_cars[i]);
-				if (car->is_in_beyond_intersec()) {
+				if (car->is_turning_or_turned()) {
 					cars_in_intersec.push_back(car);
 				}
 			}
@@ -114,6 +157,52 @@ bool LaneManager::intersection_collision_check() {
 			}
 		}
 	}
+	return collision_occurring;
+}
+
+bool LaneManager::ambulance_collision_check() {
+	std::vector<Car*> turning_cars;
+	bool collision_occurring = false;
+
+	for(std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		std::deque<Car> &curr_cars = it->second->m_cars;
+		if (curr_cars.size() > 0) {
+			Car* car;
+			for (int i = 0; i < curr_cars.size(); i++) {
+				car = &(curr_cars[i]);
+				if (car->is_turning_or_turned()) {
+					turning_cars.push_back(car);
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < turning_cars.size(); i++) {
+		Car* first_car = turning_cars[i];
+		rect_bounding_box first_bb = first_car->get_bounding_box();
+
+		//Ambulance check
+		for (int j = 0; j < m_ambulance.size(); j++) {
+			Ambulance* curr_amb = &m_ambulance[j];
+			rect_bounding_box amb_bb = curr_amb->get_bounding_box();
+			if (curr_amb->is_moving() && 
+				(first_car->check_collision(amb_bb.bottom_left)
+				|| first_car->check_collision(amb_bb.bottom_right)
+				|| first_car->check_collision(amb_bb.top_right)
+				|| first_car->check_collision(amb_bb.top_left)
+				|| curr_amb->check_collision(first_bb.bottom_left)
+				|| curr_amb->check_collision(first_bb.bottom_right)
+				|| curr_amb->check_collision(first_bb.top_right)
+				|| curr_amb->check_collision(first_bb.top_left))) {
+					collision_occurring = true;
+					int victim_triangle = amb_mesh_collision_check(first_car, curr_amb);
+					if (victim_triangle != -1) {
+						first_car->collided(victim_triangle);
+					}
+				}
+		}
+	}
+
 	return collision_occurring;
 }
 
@@ -248,13 +337,9 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 	for (Car::Triangle victim_tri : victim_triangles) {
 		attack_counter = 0;
 		for (Car::Triangle attacker_tri : attacker_triangles) {
-			//printf("Victim Triangle %i (%f, %f) (%f,%f) (%f,%f) Point hitting (%f, %f) \n", vic_counter, victim_tri.a.x, victim_tri.a.y, victim_tri.b.x, victim_tri.b.y, victim_tri.c.x, victim_tri.c.y, attacker_tri.a.x, attacker_tri.a.y);
-			//printf("Both cars inIntersection? Victim: %i Attacker: %i\n", victim_car->is_in_beyond_intersec(), attacker_car->is_in_beyond_intersec());
-			if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
+		if (victim_car->check_mesh_collision(attacker_tri.a, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.b, victim_tri)
 				|| victim_car->check_mesh_collision(attacker_tri.c, victim_tri)) {
-					printf("triangle vic: %i, attack: %i hit\n", vic_counter, attack_counter);
-					//Sleep(1000);
 					collisionTriangles.victim_index = vic_counter;
 					collisionTriangles.attacker_index = attack_counter;
 					return collisionTriangles;
@@ -266,11 +351,155 @@ LaneManager::collisionTuple LaneManager::mesh_collision_check(Car* attacker_car,
 	return collisionTriangles;
 }
 
+int LaneManager::amb_mesh_collision_check(Car* victim_car, Ambulance* amb) {
+	Car::Triangle victim_triangles[14];
+
+	victim_triangles[0].a = victim_car->get_vertex_pos(0);
+	victim_triangles[0].b = victim_car->get_vertex_pos(1);
+	victim_triangles[0].c = victim_car->get_vertex_pos(2);
+
+	victim_triangles[1].a = victim_car->get_vertex_pos(1);
+	victim_triangles[1].b = victim_car->get_vertex_pos(3);
+	victim_triangles[1].c = victim_car->get_vertex_pos(2);
+
+	victim_triangles[2].a = victim_car->get_vertex_pos(0);
+	victim_triangles[2].b = victim_car->get_vertex_pos(4);
+	victim_triangles[2].c = victim_car->get_vertex_pos(1);
+
+	victim_triangles[3].a = victim_car->get_vertex_pos(1);
+	victim_triangles[3].b = victim_car->get_vertex_pos(10);
+	victim_triangles[3].c = victim_car->get_vertex_pos(3);
+
+	victim_triangles[4].a = victim_car->get_vertex_pos(3);
+	victim_triangles[4].b = victim_car->get_vertex_pos(10);
+	victim_triangles[4].c = victim_car->get_vertex_pos(12);
+
+	victim_triangles[5].a = victim_car->get_vertex_pos(1);
+	victim_triangles[5].b = victim_car->get_vertex_pos(4);
+	victim_triangles[5].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[6].a = victim_car->get_vertex_pos(4);
+	victim_triangles[6].b = victim_car->get_vertex_pos(11);
+	victim_triangles[6].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[7].a = victim_car->get_vertex_pos(5);
+	victim_triangles[7].b = victim_car->get_vertex_pos(12);
+	victim_triangles[7].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[8].a = victim_car->get_vertex_pos(10);
+	victim_triangles[8].b = victim_car->get_vertex_pos(6);
+	victim_triangles[8].c = victim_car->get_vertex_pos(5);
+
+	victim_triangles[9].a = victim_car->get_vertex_pos(11);
+	victim_triangles[9].b = victim_car->get_vertex_pos(9);
+	victim_triangles[9].c = victim_car->get_vertex_pos(10);
+
+	victim_triangles[10].a = victim_car->get_vertex_pos(10);
+	victim_triangles[10].b = victim_car->get_vertex_pos(9);
+	victim_triangles[10].c = victim_car->get_vertex_pos(6);
+
+	victim_triangles[11].a = victim_car->get_vertex_pos(5);
+	victim_triangles[11].b = victim_car->get_vertex_pos(6);
+	victim_triangles[11].c = victim_car->get_vertex_pos(7);
+
+	victim_triangles[12].a = victim_car->get_vertex_pos(6);
+	victim_triangles[12].b = victim_car->get_vertex_pos(8);
+	victim_triangles[12].c = victim_car->get_vertex_pos(7);
+
+	victim_triangles[13].a = victim_car->get_vertex_pos(6);
+	victim_triangles[13].b = victim_car->get_vertex_pos(9);
+	victim_triangles[13].c = victim_car->get_vertex_pos(8);
+
+	Car::Triangle amb_triangles[14];
+
+	amb_triangles[0].a = amb->get_vertex_pos(0);
+	amb_triangles[0].b = amb->get_vertex_pos(1);
+	amb_triangles[0].c = amb->get_vertex_pos(2);
+
+	amb_triangles[1].a = amb->get_vertex_pos(1);
+	amb_triangles[1].b = amb->get_vertex_pos(3);
+	amb_triangles[1].c = amb->get_vertex_pos(2);
+
+	amb_triangles[2].a = amb->get_vertex_pos(0);
+	amb_triangles[2].b = amb->get_vertex_pos(4);
+	amb_triangles[2].c = amb->get_vertex_pos(1);
+
+	amb_triangles[3].a = amb->get_vertex_pos(1);
+	amb_triangles[3].b = amb->get_vertex_pos(10);
+	amb_triangles[3].c = amb->get_vertex_pos(3);
+
+	amb_triangles[4].a = amb->get_vertex_pos(3);
+	amb_triangles[4].b = amb->get_vertex_pos(10);
+	amb_triangles[4].c = amb->get_vertex_pos(12);
+
+	amb_triangles[5].a = amb->get_vertex_pos(1);
+	amb_triangles[5].b = amb->get_vertex_pos(4);
+	amb_triangles[5].c = amb->get_vertex_pos(10);
+
+	amb_triangles[6].a = amb->get_vertex_pos(4);
+	amb_triangles[6].b = amb->get_vertex_pos(11);
+	amb_triangles[6].c = amb->get_vertex_pos(10);
+
+	amb_triangles[7].a = amb->get_vertex_pos(5);
+	amb_triangles[7].b = amb->get_vertex_pos(12);
+	amb_triangles[7].c = amb->get_vertex_pos(10);
+
+	amb_triangles[8].a = amb->get_vertex_pos(10);
+	amb_triangles[8].b = amb->get_vertex_pos(6);
+	amb_triangles[8].c = amb->get_vertex_pos(5);
+
+	amb_triangles[9].a = amb->get_vertex_pos(11);
+	amb_triangles[9].b = amb->get_vertex_pos(9);
+	amb_triangles[9].c = amb->get_vertex_pos(10);
+
+	amb_triangles[10].a = amb->get_vertex_pos(10);
+	amb_triangles[10].b = amb->get_vertex_pos(9);
+	amb_triangles[10].c = amb->get_vertex_pos(6);
+
+	amb_triangles[11].a = amb->get_vertex_pos(5);
+	amb_triangles[11].b = amb->get_vertex_pos(6);
+	amb_triangles[11].c = amb->get_vertex_pos(7);
+
+	amb_triangles[12].a = amb->get_vertex_pos(6);
+	amb_triangles[12].b = amb->get_vertex_pos(8);
+	amb_triangles[12].c = amb->get_vertex_pos(7);
+
+	amb_triangles[13].a = amb->get_vertex_pos(6);
+	amb_triangles[13].b = amb->get_vertex_pos(9);
+	amb_triangles[13].c = amb->get_vertex_pos(8);
+
+	// Determine victim_car's triangle coordinates
+	// Determine which corner of first_car bounding box hit ambulance bounding box
+	// For each triangle, check if impact corner is inside
+	// Depending on which triangle gets hit first, call different collision responses on victim_car
+
+	int vic_counter = 0;
+	int attack_counter;
+	for (Car::Triangle victim_tri : victim_triangles) {
+		attack_counter = 0;
+		for (Car::Triangle amb_tri : amb_triangles) {
+			if (victim_car->check_mesh_collision(amb_tri.a, victim_tri)
+				|| victim_car->check_mesh_collision(amb_tri.b, victim_tri)
+				|| victim_car->check_mesh_collision(amb_tri.c, victim_tri)) {
+					return vic_counter;
+				}
+				attack_counter++;
+		}
+		vic_counter++;
+	}
+
+	//no collision between triangles, just bounding boxes
+	return -1;
+}
+
 void LaneManager::add_car()
 {
 	std::map<direction, Lane*>::iterator it = m_lanes.begin();
 	if (game_level == 1) {
-		std::advance(it, rand() % 3);
+		std::advance(it, rand() > RAND_MAX/2? 1:3);
+	}
+	else if (game_level == 2) {
+		std::advance(it, rand() % 3 + 1);
 	}
 	else {
 		std::advance(it, rand() % 4);
@@ -282,6 +511,24 @@ void LaneManager::add_car()
 	  spawn_delay = rand() % 600 + 200.f;
     }
   }
+}
+
+void LaneManager::add_ambulance(direction dir)
+{
+	if (m_warning.size() == 0 && spawn_delay_amb < 0 && game_level >= 4) {
+		Warning new_warning;
+		new_warning.init(dir);
+		m_warning.emplace_back(new_warning);
+		Ambulance new_ambulance;
+		new_ambulance.init(dir);
+		m_ambulance.emplace_back(new_ambulance);
+		spawn_delay_amb = rand() % 10000 + 300000.f/game_level;
+		if (!siren_sounding) {
+			siren_channel = (Mix_FadeInChannel(-1, m_siren, 0, 10000));
+			siren_sounding = true;
+			siren_fading = false;
+		}
+	}
 }
 
 std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
@@ -297,6 +544,14 @@ std::deque<Car> LaneManager::get_cars_in_lane(direction dir) {
 	else if (dir == direction::SOUTH) {
 		return this->m_lanes[direction::SOUTH]->get_cars();
 	}
+}
+
+std::deque<Warning> LaneManager::get_warning() const {
+	return m_warning;
+}
+
+std::deque<Ambulance> LaneManager::get_ambulance() const {
+	return m_ambulance;
 }
 
 void LaneManager::turn_car(direction dir)
@@ -500,9 +755,47 @@ void LaneManager::clear_intersection() {
 	}
 }
 
+void LaneManager::clear_offscreen_ambulances() {
+	for (int i = m_ambulance.size() - 1; i >= 0; i--) {
+		if (ambulance_delete(m_ambulance[i].get_position())) {
+			m_ambulance[i].destroy();
+			m_ambulance.erase(m_ambulance.begin() + i);
+			m_warning[i].destroy();
+			m_warning.erase(m_warning.begin() + i);
+			Mix_HaltChannel(siren_channel);
+		}
+	}
+}
+
+bool LaneManager::ambulance_delete(vec2 pos) {
+	if (pos.x > 1200) {
+		printf("ambulance destroy east\n");
+		return true;
+	}
+	if (pos.x < -200) {
+		printf("ambulance destroy west\n");
+		return true;
+	}
+	if (pos.y < -200) {
+		printf("ambulance destroy north\n");
+		return true;
+	}
+	if (pos.y > 1200) {
+		printf("ambulance destroy south\n");
+		return true;
+	}
+	return false;
+}
+
 void LaneManager::update_lane_villain_probability(float probability) {
 	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
 		it->second->set_villain_probability(probability);
+	}
+}
+
+void LaneManager::update_lane_max_time_per_car(float ms) {
+	for (std::map<direction, Lane*>::iterator it = m_lanes.begin(); it != m_lanes.end(); it++) {
+		it->second->set_max_time_per_car(ms);
 	}
 }
 

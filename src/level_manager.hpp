@@ -36,6 +36,7 @@ private:
 	int year;
 	int required_points; //minimum amount of cars required to proceed to next level
 	float VillainSpawnProbability; 
+	float max_time_per_car;
 	bool ambulance_enabled;
 	bool weather_enabled;
 	bool four_lanes_enabled;

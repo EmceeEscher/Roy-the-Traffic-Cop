@@ -16,6 +16,8 @@
 #include "coin.hpp"
 #include "display_screen.hpp"
 #include "level_manager.hpp"
+#include "weather.hpp"
+#include "ambulance.hpp"
 
 // stlib
 #include <vector>
@@ -92,7 +94,9 @@ private:
 	Coin m_coin_icon;
 	DisplayScreen m_display_screen;
 	LevelManager m_level_manager;
+	Ambulance m_ambulance;
 	HighScores m_high_scores;
+	Weather m_weather;
 
 	float lanes_rot[4];
 

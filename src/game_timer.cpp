@@ -28,6 +28,8 @@ float year_d1_shown_offset;
 float year_d2_shown_offset;
 float year_d3_shown_offset;
 
+float timer_speed; 
+
 bool GameTimer::init()
 {
 	struct tm init_time = {0};
@@ -324,6 +326,7 @@ bool GameTimer::init()
 	m_scale.x = 0.4;
 	m_scale.y = 0.4;
 	m_position = { 860.f, 80.f };
+	timer_speed = 644.f;
 
 	gt_date.digit_0.old_offset = 0.0f;
 	gt_date.digit_0.new_offset = uv * 1;
@@ -583,9 +586,15 @@ void GameTimer::SplitSetDateDigits(int day, gt_tracker* gt_day, int mon, gt_trac
 	}
 }
 
-void GameTimer::advance_time(float real_time_seconds_elapsed)
+void GameTimer::advance_time(float real_time_seconds_elapsed, int level)
 {
-	const int game_sec_per_ms = 644; //sec_in_year/music_length/1000ms
+	if (level == 1 || level == 2) {
+		timer_speed = 966;
+	}
+	else {
+		timer_speed = 750;
+	}
+	const int game_sec_per_ms = timer_speed; 
 	struct tm * adv_time = localtime(&m_current_time);
 	adv_time->tm_sec += (int)(real_time_seconds_elapsed * game_sec_per_ms); 
 	m_current_time = mktime(adv_time);
@@ -661,3 +670,4 @@ void GameTimer::draw(const mat3& projection) {
 	// Drawing!
 	glDrawElements(GL_TRIANGLES, 144, GL_UNSIGNED_SHORT, nullptr);
 }
+
