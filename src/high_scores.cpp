@@ -94,15 +94,16 @@ bool HighScores::init()
 
 std::vector<int> HighScores::parseDigits(int hs) {
 	std::vector<int> digits = std::vector<int>(3);
-	digits[0] = hs / 100 % 10;
+	digits[0] = hs / 100 % 10; // highest digit
 	digits[1] = hs / 10 % 10;
-	digits[2] = hs % 10;
+	digits[2] = hs % 10; // lowest digit
 
 	return digits;
 }
 
 void HighScores::SetHighScoreLocs() {
 
+	//printf("HIGHSCORES %i, %i, %i \n", m_high_scores[0], m_high_scores[1], m_high_scores[2]);
 	std::vector<int> hs2 = parseDigits(m_high_scores[2]);
 
 	int score_locs_l1_d0 = hs2[2]; //lowest score
