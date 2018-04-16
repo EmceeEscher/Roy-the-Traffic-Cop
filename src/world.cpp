@@ -350,7 +350,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	printf("mouse position: %f,%f\n", xpos, ypos);
+	//printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

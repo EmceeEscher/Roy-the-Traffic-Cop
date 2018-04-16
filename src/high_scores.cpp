@@ -92,20 +92,41 @@ bool HighScores::init()
 	return true;
 }
 
+void HighScores::readScores(std::vector<int> scores) {
+	printf("%i", m_high_scores[0]);
+}
+
+std::vector<int> HighScores::parseDigits(int hs) {
+	std::vector<int> digits = std::vector<int>(3);
+	digits[0] = hs / 100 % 10;
+	digits[1] = hs / 10 % 10;
+	digits[2] = hs % 10;
+
+	return digits;
+}
+
 void HighScores::SetHighScoreLocs() {
 	//TODO: Need to update these with the actual score, need to use a helper function to read in the stream? 
 	//d2, d1, d0 = 789 (press N during game play to trigger game over)
-	int score_locs_l1_d0 = 9; //lowest score
-	int score_locs_l1_d1 = 8; //lowest score
-	int score_locs_l1_d2 = 7; //lowest score
+	//readScores(m_high_scores);
+	//std::vector<int> hs1 = std::vector<int>(3);
+	std::vector<int> hs2 = parseDigits(m_high_scores[2]);
 
-	int score_locs_l2_d0 = 6; //middle score
-	int score_locs_l2_d1 = 5; //middle score
-	int score_locs_l2_d2 = 4; //middle score
+	int score_locs_l1_d0 = hs2[2]; //lowest score
+	int score_locs_l1_d1 = hs2[1]; //lowest score
+	int score_locs_l1_d2 = hs2[0]; //lowest score
 
-	int score_locs_l3_d0 = 3; //high score
-	int score_locs_l3_d1 = 2; //high score
-	int score_locs_l3_d2 = 1; //high score
+	std::vector<int> hs1 = parseDigits(m_high_scores[1]);
+
+	int score_locs_l2_d0 = hs1[2]; //middle score
+	int score_locs_l2_d1 = hs1[1]; //middle score
+	int score_locs_l2_d2 = hs1[0]; //middle score
+
+	std::vector<int> hs0 = parseDigits(m_high_scores[0]);
+
+	int score_locs_l3_d0 = hs0[2]; //high score
+	int score_locs_l3_d1 = hs0[1]; //high score
+	int score_locs_l3_d2 = hs0[0]; //high score
 
 	float texture_locs[] = {
 		0.f,       
