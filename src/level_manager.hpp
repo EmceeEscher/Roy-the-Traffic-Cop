@@ -30,6 +30,8 @@ public:
 	void set_endless_mode(LaneManager lane_manager);
 
 
+	void set_game_over();
+
 private:
 	int game_level;
 	bool is_game_over;

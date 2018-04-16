@@ -154,7 +154,7 @@ bool World::update(float elapsed_ms)
 	m_points = m_lane_manager.points();
 	m_req_points_next_level = m_level_manager.get_next_level_point_req();
 	game_level = m_level_manager.get_level();
-	//is_game_over = m_level_manager.get_game_over();
+	is_game_over = m_level_manager.get_game_over();
 
 	if (is_game_over) {
 		m_high_scores.check_score_and_insert(m_points, is_game_over);
@@ -238,7 +238,9 @@ void World::draw()
 	m_coin_icon.draw(projection_2D);
 	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
-	m_high_scores.draw(projection_2D);
+	if (is_game_over) {
+		m_high_scores.draw(projection_2D);
+	}
 	
 	// Presenting
 	glfwSwapBuffers(m_window);
@@ -268,7 +270,7 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 	}
 	if (!is_game_paused && !show_start_splash) {
 		if (action == GLFW_PRESS && key == GLFW_KEY_N) { //debug, triggers game over
-			is_game_over = true;
+			m_level_manager.set_game_over();
 		}
 		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
 			Mix_PlayChannel(-1, m_roy_whistle, 0);
