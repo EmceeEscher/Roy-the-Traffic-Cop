@@ -61,6 +61,10 @@ int LevelManager::get_next_level_point_req() {
 	return required_points;
 }
 
+void LevelManager::set_game_over() {
+	is_game_over = true;
+}
+
 void LevelManager::set_endless_mode(LaneManager lane_manager) {
 	game_level = 11;
 	required_points = 30;

@@ -112,7 +112,7 @@ bool World::init(vec2 screen)
 
 	is_game_paused = false;
 	show_start_splash = true;
-	is_game_over = false; //TODO: implement game over conditions etc.
+	is_game_over = false; 
 	game_level = 1;
 
 	m_background.init();
@@ -234,8 +234,10 @@ void World::draw()
 	m_coin_icon.draw(projection_2D);
 	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
-
-
+	if (is_game_over) {
+		m_high_scores.draw(projection_2D);
+	}
+	
 	// Presenting
 	glfwSwapBuffers(m_window);
 }
@@ -263,6 +265,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
 	if (!is_game_paused && !show_start_splash) {
+		if (action == GLFW_PRESS && key == GLFW_KEY_N) { //debug, triggers game over
+			m_level_manager.set_game_over();
+		}
 		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
 			Mix_PlayChannel(-1, m_roy_whistle, 0);
 		}

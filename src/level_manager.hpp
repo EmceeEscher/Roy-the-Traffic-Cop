@@ -31,6 +31,8 @@ public:
 	void set_endless_mode(LaneManager lane_manager);
 
 
+	void set_game_over();
+
 private:
 	HighScores m_high_scores;
 	int game_level;
