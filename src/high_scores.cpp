@@ -1,23 +1,6 @@
 #include "high_scores.hpp"
 
 Texture HighScores::hs_tex;
-TexturedVertex2 hs_vertices[36];
-
-float uv_hs;
-float i_w_hs;
-float s_p_hs;
-
-int d0_flip_hs = 0;
-int d1_flip_hs = 0;
-int d2_flip_hs = 0;
-int d3_flip_hs = 0;
-
-gt_tracker gt_final_score;
-
-float d0_shown_offset_hs;
-float d1_shown_offset_hs;
-float d2_shown_offset_hs;
-float d3_shown_offset_hs;
 
 bool HighScores::init()
 {
@@ -31,71 +14,73 @@ bool HighScores::init()
 	{
 		if (!hs_tex.load_from_file(textures_path("numbers.png")))
 		{
-			fprintf(stderr, "Failed to load game timer texture!");
+			fprintf(stderr, "Failed to load game number texture!");
 			return false;
 		}
 	}
 
-	//centre of the texture
-	uv_hs = 100.f / hs_tex.width; //texture uv
-	i_w_hs = hs_tex.width / 10.f; //individual number width
-	s_p_hs = -600.f; //starting position
+	// The position (0,0) corresponds to the center of the texture
+	float wr = hs_tex.width * 0.5;
 	float hr = hs_tex.height * 0.5;
+	float indiv_splash_width = 100.f;
 
-	//year d0 top -- new
-	hs_vertices[0].position = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[1].position = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[2].position = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[3].position = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[0].texcoord = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[1].texcoord  = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[2].texcoord = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
-	hs_vertices[3].texcoord = { s_p_hs + 20.f * i_w_hs, 0  , 0.f };
+	vertices[0].position = { -indiv_splash_width / 2, +hr, 0.f };
+	vertices[1].position = { +indiv_splash_width / 2, +hr, 0.f };
+	vertices[2].position = { +indiv_splash_width / 2, -hr, 0.f };
+	vertices[3].position = { -indiv_splash_width / 2, -hr, 0.f };
+	vertices[4].position = { -indiv_splash_width / 2 + 100, +hr, 0.f };
+	vertices[5].position = { +indiv_splash_width / 2 + 100, +hr, 0.f };
+	vertices[6].position = { +indiv_splash_width / 2 + 100, -hr, 0.f };
+	vertices[7].position = { -indiv_splash_width / 2 + 100, -hr, 0.f };
+	 vertices[8].position = { -indiv_splash_width / 2 + 200, +hr, 0.f };
+	 vertices[9].position = { +indiv_splash_width / 2 + 200, +hr, 0.f };
+	vertices[10].position = { +indiv_splash_width / 2 + 200, -hr, 0.f };
+	vertices[11].position = { -indiv_splash_width / 2 + 200, -hr, 0.f };
+	vertices[12].position = { -indiv_splash_width / 2, +hr-120, 0.f };
+	vertices[13].position = { +indiv_splash_width / 2, +hr-120, 0.f };
+	vertices[14].position = { +indiv_splash_width / 2, -hr-120, 0.f };
+	vertices[15].position = { -indiv_splash_width / 2, -hr-120, 0.f };
+	vertices[16].position = { -indiv_splash_width / 2 + 100, +hr-120, 0.f };
+	vertices[17].position = { +indiv_splash_width / 2 + 100, +hr-120, 0.f };
+	vertices[18].position = { +indiv_splash_width / 2 + 100, -hr-120, 0.f };
+	vertices[19].position = { -indiv_splash_width / 2 + 100, -hr-120, 0.f };
+	vertices[20].position = { -indiv_splash_width / 2 + 200, +hr-120, 0.f };
+	vertices[21].position = { +indiv_splash_width / 2 + 200, +hr-120, 0.f };
+	vertices[22].position = { +indiv_splash_width / 2 + 200, -hr-120, 0.f };
+	vertices[23].position = { -indiv_splash_width / 2 + 200, -hr-120, 0.f };
+	vertices[24].position = { -indiv_splash_width / 2, +hr - 240, 0.f };
+	vertices[25].position = { +indiv_splash_width / 2, +hr - 240, 0.f };
+	vertices[26].position = { +indiv_splash_width / 2, -hr - 240, 0.f };
+	vertices[27].position = { -indiv_splash_width / 2, -hr - 240, 0.f };
+	vertices[28].position = { -indiv_splash_width / 2 + 100, +hr - 240, 0.f };
+	vertices[29].position = { +indiv_splash_width / 2 + 100, +hr - 240, 0.f };
+	vertices[30].position = { +indiv_splash_width / 2 + 100, -hr - 240, 0.f };
+	vertices[31].position = { -indiv_splash_width / 2 + 100, -hr - 240, 0.f };
+	vertices[32].position = { -indiv_splash_width / 2 + 200, +hr - 240, 0.f };
+	vertices[33].position = { +indiv_splash_width / 2 + 200, +hr - 240, 0.f };
+	vertices[34].position = { +indiv_splash_width / 2 + 200, -hr - 240, 0.f };
+	vertices[35].position = { -indiv_splash_width / 2 + 200, -hr - 240, 0.f };
 
-	uint16_t indices[] = {
-		0,3,1,1,3,2,4,7,5,5,7,6,8,11,9,9,11,10,
-		12,15,13,13,15,14,16,19,17,17,19,18,20,23,21,21,23,22,
-		24,27,25,25,27,26,28,31,29,29,30,30,32,35,33,33,35,34
-	};
-
-	// Clearing errors
-	gl_flush_errors();
-
-	// Vertex Buffer creation
 	glGenBuffers(1, &mesh.vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex2) * 36, hs_vertices, GL_STATIC_DRAW);
-
-	// Index Buffer creation
 	glGenBuffers(1, &mesh.ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 54, indices, GL_STATIC_DRAW);
 
 	// Vertex Array (Container for Vertex + Index buffer)
 	glGenVertexArrays(1, &mesh.vao);
+	if (gl_has_errors())
+		return false;
 
 	// Loading shaders
-	effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl"));
+	if (!effect.load_from_file(shader_path("textured.vs.glsl"), shader_path("textured.fs.glsl")))
+		return false;
 
 	// Setting initial values, scale is negative to make it face the opposite way
+	// 1.0 would be as big as the original texture
 	m_scale.x = 0.4;
 	m_scale.y = 0.4;
-	m_position = { 100.f, 80.f };
+	m_position.x = 460;
+	m_position.y = 590;
+	return true;
 
-	gt_final_score.digit_0.old_offset = 0.0f;
-	gt_final_score.digit_0.new_offset = uv_hs * 0;
-	gt_final_score.digit_0.flip = -1;
-	d0_shown_offset_hs = uv_hs * 0;
-
-	gt_final_score.digit_1.old_offset = 0.0f;
-	gt_final_score.digit_1.new_offset = uv_hs * 0;
-	gt_final_score.digit_1.flip = -1;
-	d1_shown_offset_hs = uv_hs * 0;
-
-	gt_final_score.digit_2.old_offset = 0.0f;
-	gt_final_score.digit_2.new_offset = uv_hs * 0;
-	gt_final_score.digit_2.flip = -1;
-	d2_shown_offset_hs = uv_hs * 0;
 
 	int i = 0;
 	while (std::getline(infile, line))
@@ -107,14 +92,102 @@ bool HighScores::init()
 	return true;
 }
 
+void HighScores::SetHighScoreLocs() {
+	//TODO: Need to update these with the actual score, need to use a helper function to read in the stream? 
+	//d2, d1, d0 = 789 (press N during game play to trigger game over)
+	int score_locs_l1_d0 = 9; //lowest score
+	int score_locs_l1_d1 = 8; //lowest score
+	int score_locs_l1_d2 = 7; //lowest score
+
+	int score_locs_l2_d0 = 6; //middle score
+	int score_locs_l2_d1 = 5; //middle score
+	int score_locs_l2_d2 = 4; //middle score
+
+	int score_locs_l3_d0 = 3; //high score
+	int score_locs_l3_d1 = 2; //high score
+	int score_locs_l3_d2 = 1; //high score
+
+	float texture_locs[] = {
+		0.f,       
+		1.f / 10.f, 
+		2.f / 10.f, 
+		3.f / 10.f, 
+		4.f / 10.f, 
+		5.f / 10.f, 
+		6.f / 10.f, 
+		7.f / 10.f, 
+		8.f / 10.f, 
+		9.f / 10.f, 
+		10.f / 10.f };
+	//line 1
+	vertices[0].texcoord = { texture_locs[score_locs_l1_d2], 1.f };//top left
+	vertices[1].texcoord = { texture_locs[score_locs_l1_d2 + 1], 1.f };//top right
+	vertices[2].texcoord = { texture_locs[score_locs_l1_d2 + 1], 0.f };//bottom right
+	vertices[3].texcoord = { texture_locs[score_locs_l1_d2], 0.f };//bottom left
+	vertices[4].texcoord = { texture_locs[score_locs_l1_d1], 1.f };//top left
+	vertices[5].texcoord = { texture_locs[score_locs_l1_d1 + 1], 1.f };//top right
+	vertices[6].texcoord = { texture_locs[score_locs_l1_d1 + 1], 0.f };//bottom right
+	vertices[7].texcoord = { texture_locs[score_locs_l1_d1], 0.f };//bottom left
+	vertices[8].texcoord = { texture_locs[score_locs_l1_d0], 1.f };//top left
+	vertices[9].texcoord = { texture_locs[score_locs_l1_d0 + 1], 1.f };//top right
+	vertices[10].texcoord = { texture_locs[score_locs_l1_d0 + 1], 0.f };//bottom right
+	vertices[11].texcoord = { texture_locs[score_locs_l1_d0], 0.f };//bottom left
+
+	//line 2
+	vertices[12].texcoord = { texture_locs[score_locs_l2_d2], 1.f };//top left
+	vertices[13].texcoord = { texture_locs[score_locs_l2_d2 + 1], 1.f };//top right
+	vertices[14].texcoord = { texture_locs[score_locs_l2_d2 + 1], 0.f };//bottom right
+	vertices[15].texcoord = { texture_locs[score_locs_l2_d2], 0.f };//bottom left
+	vertices[16].texcoord = { texture_locs[score_locs_l2_d1], 1.f };//top left
+	vertices[17].texcoord = { texture_locs[score_locs_l2_d1 + 1], 1.f };//top right
+	vertices[18].texcoord = { texture_locs[score_locs_l2_d1 + 1], 0.f };//bottom right
+	vertices[19].texcoord = { texture_locs[score_locs_l2_d1], 0.f };//bottom left
+	vertices[20].texcoord = { texture_locs[score_locs_l2_d0], 1.f };//top left
+	vertices[21].texcoord = { texture_locs[score_locs_l2_d0 + 1], 1.f };//top right
+	vertices[22].texcoord = { texture_locs[score_locs_l2_d0 + 1], 0.f };//bottom right
+	vertices[23].texcoord = { texture_locs[score_locs_l2_d0], 0.f };//bottom left
+
+	//line 3
+	vertices[24].texcoord = { texture_locs[score_locs_l3_d2], 1.f };//top left
+	vertices[25].texcoord = { texture_locs[score_locs_l3_d2 + 1], 1.f };//top righ
+	vertices[26].texcoord = { texture_locs[score_locs_l3_d2 + 1], 0.f };//bottom r
+	vertices[27].texcoord = { texture_locs[score_locs_l3_d2], 0.f };//bottom left
+	vertices[28].texcoord = { texture_locs[score_locs_l3_d1], 1.f };//top left
+	vertices[29].texcoord = { texture_locs[score_locs_l3_d1 + 1], 1.f };//top righ
+	vertices[30].texcoord = { texture_locs[score_locs_l3_d1 + 1], 0.f };//bottom r
+	vertices[31].texcoord = { texture_locs[score_locs_l3_d1], 0.f };//bottom left
+	vertices[32].texcoord = { texture_locs[score_locs_l3_d0], 1.f };//top left
+	vertices[33].texcoord = { texture_locs[score_locs_l3_d0 + 1], 1.f };//top righ
+	vertices[34].texcoord = { texture_locs[score_locs_l3_d0 + 1], 0.f };//bottom r
+	vertices[35].texcoord = { texture_locs[score_locs_l3_d0], 0.f };//bottom left
+
+	uint16_t indices[] = { 0, 3, 1, 1, 3, 2 , 4,7,5,5,7,6,8,11,9,9,11,10,
+	12, 15, 13, 13, 15, 14, 16, 19, 17, 17, 19, 18, 20, 23, 21, 21, 23, 22, 24, 27, 25, 25, 27, 26,
+	28, 31, 29, 29, 31, 30, 32, 35, 33, 33, 35, 34};
+
+	// Clearing errors
+	gl_flush_errors();
+
+	// Vertex Buffer creation
+	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(TexturedVertex) * 36, vertices, GL_DYNAMIC_DRAW);
+
+	// Index Buffer creation
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t) * 54, indices, GL_DYNAMIC_DRAW);
+}
+
 std::vector<int> HighScores::get_high_scores()
 {
 	return m_high_scores;
 }
 
-void HighScores::check_score_and_insert(int score)
+void HighScores::check_score_and_insert(int score, bool game_over)
 {
+	is_game_over = game_over;
+	SetHighScoreLocs();
 	if (score > m_high_scores[4]) {
+		
 		m_high_scores[4] = score;
 		std::sort(m_high_scores.rbegin(), m_high_scores.rend());
 
@@ -130,77 +203,50 @@ void HighScores::check_score_and_insert(int score)
 	}
 }
 
-void HighScores::update_scores(int new_scores)
-{
-	HighScores::SplitSetScoreDigits(new_scores, &gt_final_score);
-}
-
-void HighScores::SplitSetScoreDigits(int score, gt_tracker* gt_final_score) {
-	float score_offset_d0 = std::fmodf(score, 10) * uv_hs;
-	float score_offset_d1 = std::fmodf(score / 10, 10) * uv_hs;
-	float score_offset_d2 = std::fmodf(score / 100, 10) * uv_hs;
-
-	gt_final_score->digit_0.old_offset = score_offset_d0;
-	gt_final_score->digit_1.old_offset = score_offset_d1;
-	gt_final_score->digit_2.old_offset = score_offset_d2;
-
-}
-
 void HighScores::draw(const mat3& projection) {
-	transform_begin();
-	transform_translate(m_position);
-	transform_scale(m_scale);
-	transform_end();
+	if (is_game_over) {
+		transform_begin();
+		transform_translate(m_position);
+		transform_scale(m_scale);
+		transform_end();;
 
-	// Setting shaders
-	glUseProgram(effect.program);
+		// Setting shaders
+		glUseProgram(effect.program);
 
-	// Enabling alpha channel for textures
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
+		// Enabling alpha channel for textures
+		glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
 
-	// Setting score_vertices and indices
-	glBindVertexArray(mesh.vao);
-	glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
+		// Getting uniform locations for glUniform* calls
+		GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
+		GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+		GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
 
-	// Input data location as in the vertex buffer
-	GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
-	GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
-	glEnableVertexAttribArray(in_position_loc);
-	glEnableVertexAttribArray(in_texcoord_loc);
-	glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)0);
-	glVertexAttribPointer(in_texcoord_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex2), (void*)sizeof(vec3));
+		// Setting vertices and indices
+		glBindVertexArray(mesh.vao);
+		glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.ibo);
 
-	// Enabling and binding texture to slot 0
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, hs_tex.id);
+		// Input data location as in the vertex buffer
+		GLint in_position_loc = glGetAttribLocation(effect.program, "in_position");
+		GLint in_texcoord_loc = glGetAttribLocation(effect.program, "in_texcoord");
 
-	// Getting uniform locations for glUniform* calls
-	GLint transform_uloc = glGetUniformLocation(effect.program, "transform");
-	GLint projection_uloc = glGetUniformLocation(effect.program, "projection");
-	GLint d0_uloc = glGetUniformLocation(effect.program, "year_d0");
-	GLint d1_uloc = glGetUniformLocation(effect.program, "year_d1");
-	GLint d2_uloc = glGetUniformLocation(effect.program, "year_d2");
-	GLint d3_uloc = glGetUniformLocation(effect.program, "year_d3");
+		glEnableVertexAttribArray(in_position_loc);
+		glEnableVertexAttribArray(in_texcoord_loc);
+		glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)0);
+		glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
-	GLint color_uloc = glGetUniformLocation(effect.program, "fcolor");
+		// Enabling and binding texture to slot 0
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, hs_tex.id);
 
-	// Setting uniform values to the currently bound program
-	glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
-	glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
+		// Setting uniform values to the currently bound program
+		glUniformMatrix3fv(transform_uloc, 1, GL_FALSE, (float*)&transform);
+		float color[] = { 1.f, 1.f, 1.f };
+		glUniform3fv(color_uloc, 1, color);
+		glUniformMatrix3fv(projection_uloc, 1, GL_FALSE, (float*)&projection);
 
-	glUniform4f(d0_uloc, gt_final_score.digit_0.old_offset, gt_final_score.digit_0.new_offset, d0_shown_offset_hs, gt_final_score.digit_0.flip);
-	glUniform4f(d1_uloc, gt_final_score.digit_1.old_offset, gt_final_score.digit_1.new_offset, d1_shown_offset_hs, gt_final_score.digit_1.flip);
-	glUniform4f(d2_uloc, gt_final_score.digit_2.old_offset, gt_final_score.digit_2.new_offset, d2_shown_offset_hs, gt_final_score.digit_2.flip);
-	glUniform4f(d3_uloc, gt_final_score.digit_3.old_offset, gt_final_score.digit_3.new_offset, d3_shown_offset_hs, gt_final_score.digit_3.flip);
-
-	float color[] = { 1.f, 1.f, 1.f };
-	glUniform3fv(color_uloc, 1, color);
-
-
-
-	// Drawing!
-	glDrawElements(GL_TRIANGLES, 54, GL_UNSIGNED_SHORT, nullptr);
+		// Drawing!
+		glDrawElements(GL_TRIANGLES, 54, GL_UNSIGNED_SHORT, nullptr);
+	}
 }

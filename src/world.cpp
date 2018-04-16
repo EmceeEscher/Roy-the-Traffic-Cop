@@ -112,7 +112,7 @@ bool World::init(vec2 screen)
 
 	is_game_paused = false;
 	show_start_splash = true;
-	is_game_over = false; //TODO: implement game over conditions etc.
+	is_game_over = false; 
 	game_level = 1;
 
 	m_background.init();
@@ -154,10 +154,10 @@ bool World::update(float elapsed_ms)
 	m_points = m_lane_manager.points();
 	m_req_points_next_level = m_level_manager.get_next_level_point_req();
 	game_level = m_level_manager.get_level();
-	is_game_over = m_level_manager.get_game_over();
+	//is_game_over = m_level_manager.get_game_over();
 
 	if (is_game_over) {
-		m_high_scores.check_score_and_insert(m_points);
+		m_high_scores.check_score_and_insert(m_points, is_game_over);
 	}
 
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
@@ -267,6 +267,9 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
 	if (!is_game_paused && !show_start_splash) {
+		if (action == GLFW_PRESS && key == GLFW_KEY_N) { //debug, triggers game over
+			is_game_over = true;
+		}
 		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
 			Mix_PlayChannel(-1, m_roy_whistle, 0);
 		}
@@ -345,7 +348,7 @@ void World::reset_game() {
 
 void World::on_mouse_move(GLFWwindow* window, double xpos, double ypos)
 {
-	//printf("mouse position: %f,%f\n", xpos, ypos);
+	printf("mouse position: %f,%f\n", xpos, ypos);
 }
 
 int World::hit_count() {

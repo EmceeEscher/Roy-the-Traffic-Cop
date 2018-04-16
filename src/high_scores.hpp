@@ -19,18 +19,20 @@ public:
 	std::vector<int> get_high_scores();
 
 	// Insert the current score into the top 5 if applicable
-	void check_score_and_insert(int score);
+	void check_score_and_insert(int score, bool game_over);
 
 	void draw(const mat3& projection) override;
 
-	void HighScores::SplitSetScoreDigits(int score, gt_tracker* gt_final_score);
+	// Set displayed splash screen texture
+	void SetHighScoreLocs();
 
-	void HighScores::update_scores(int new_scores);
 
 private:
 	std::string high_scores_file = "../src/high_scores.txt";
 	std::vector<int> m_high_scores = std::vector<int>(5);
 	vec2 m_scale;
 	vec2 m_position;
+	bool is_game_over;
+	TexturedVertex vertices[36];
 
 };
