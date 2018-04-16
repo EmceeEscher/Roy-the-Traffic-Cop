@@ -238,8 +238,8 @@ void World::draw()
 	m_coin_icon.draw(projection_2D);
 	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
-
-
+	m_high_scores.draw(projection_2D);
+	
 	// Presenting
 	glfwSwapBuffers(m_window);
 }

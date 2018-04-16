@@ -8,6 +8,7 @@ using std::string;
 class DisplayScreen : public Renderable
 {
 	static Texture splash_screens;
+	static Texture high_scores;
 
 public:
 	// Creates all the associated render resources and default transform
