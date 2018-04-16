@@ -26,8 +26,6 @@ public:
 	// Set displayed splash screen texture
 	void SetHighScoreLocs();
 
-	void HighScores::readScores(std::vector<int> scores);
-
 	std::vector<int> HighScores::parseDigits(int hs);
 
 private:
