@@ -123,8 +123,8 @@ bool World::init(vec2 screen)
 	m_lane_manager.init(m_ai);
 	m_coin_icon.init();
 	m_display_screen.init();
-	m_level_manager.init();
 	m_high_scores.init();
+	m_level_manager.init(m_high_scores);
 	m_weather.init();
 
 	return m_traffic_cop.init();
@@ -155,10 +155,6 @@ bool World::update(float elapsed_ms)
 	m_req_points_next_level = m_level_manager.get_next_level_point_req();
 	game_level = m_level_manager.get_level();
 	is_game_over = m_level_manager.get_game_over();
-
-	if (is_game_over) {
-		m_high_scores.check_score_and_insert(m_points, is_game_over);
-	}
 
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
 	m_level_manager.update(m_points, m_game_timer.get_current_time(), elapsed_ms, m_lane_manager);
@@ -336,7 +332,7 @@ void World::reset_game() {
 
 	m_lane_manager.reset();
 	m_game_timer.reset();
-	m_level_manager.init(); // only sets primitives, no memory leak
+	m_level_manager.init(m_high_scores); // only sets primitives, no memory leak
 	m_remove_intersection.reset();
 	m_display_screen.reset();
 	m_weather.reset();
