@@ -76,6 +76,7 @@ private:
 
 	// Game over status
 	bool is_game_over;
+	bool has_updated_high_score;
 
 	// Game level
 	int game_level;

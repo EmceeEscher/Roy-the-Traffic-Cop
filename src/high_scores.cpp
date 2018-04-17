@@ -79,7 +79,6 @@ bool HighScores::init()
 	m_scale.y = 0.4;
 	m_position.x = 460;
 	m_position.y = 590;
-	return true;
 
 
 	int i = 0;
@@ -200,7 +199,6 @@ std::vector<int> HighScores::get_high_scores()
 void HighScores::check_score_and_insert(int score, bool game_over)
 {
 	is_game_over = game_over;
-	SetHighScoreLocs();
 	if (score > m_high_scores[4]) {
 		
 		m_high_scores[4] = score;
@@ -216,6 +214,7 @@ void HighScores::check_score_and_insert(int score, bool game_over)
 		ofs.close();
 
 	}
+	SetHighScoreLocs();
 }
 
 void HighScores::draw(const mat3& projection) {
