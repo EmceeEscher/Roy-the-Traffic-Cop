@@ -1,9 +1,8 @@
 // Header
 #include "level_manager.hpp"
 
-bool LevelManager::init(HighScores high_scores)
+bool LevelManager::init()
 {
-	m_high_scores = high_scores;
 	game_level = 1; //level 11 is endless mode
 	is_game_over = false;
 	year = 2018;
@@ -22,7 +21,6 @@ void LevelManager::destroy()
 void LevelManager::update(int points, CurrentTime game_time, float elapsed_ms, LaneManager lane_manager) {
 	if (year != game_time.year) {
 		if (points < required_points) {
-			m_high_scores.check_score_and_insert(points);
 			is_game_over = true;
 		}
 		else if (game_level < 10) {
