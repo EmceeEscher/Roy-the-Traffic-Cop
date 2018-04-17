@@ -32,12 +32,6 @@ public:
 	// which sky should it be? dusk/dawn/night etc
 	void determine_sky();
 
-	// which shader effect to use? heat/snow/rain
-	void determine_condition(string condition);
-
-	// sets weather conditions for debugging
-	void set_condition(string condition);
-
 private:
 	TexturedVertex vertices[4];
 	vec2 m_position; // Window coordinates

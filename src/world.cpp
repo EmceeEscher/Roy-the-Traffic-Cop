@@ -112,7 +112,8 @@ bool World::init(vec2 screen)
 
 	is_game_paused = false;
 	show_start_splash = true;
-	is_game_over = false; //TODO: implement game over conditions etc.
+	is_game_over = false; 
+	has_updated_high_score = false;
 	game_level = 1;
 
 	m_background.init();
@@ -156,8 +157,9 @@ bool World::update(float elapsed_ms)
 	game_level = m_level_manager.get_level();
 	is_game_over = m_level_manager.get_game_over();
 
-	if (is_game_over) {
-		m_high_scores.check_score_and_insert(m_points);
+	if (is_game_over && !has_updated_high_score) {
+		m_high_scores.check_score_and_insert(m_points, is_game_over);
+		has_updated_high_score = true;
 	}
 
 	m_display_screen.update(is_game_paused, show_start_splash, is_game_over, game_level, elapsed_ms);
@@ -238,8 +240,10 @@ void World::draw()
 	m_coin_icon.draw(projection_2D);
 	m_weather.draw(projection_2D);
 	m_display_screen.draw(projection_2D);
-
-
+	if (is_game_over) {
+		m_high_scores.draw(projection_2D);
+	}
+	
 	// Presenting
 	glfwSwapBuffers(m_window);
 }
@@ -339,6 +343,7 @@ void World::reset_game() {
 	Mix_PlayMusic(m_background_music, -1);
 
 	is_game_over = false;
+	has_updated_high_score = false;
 	is_game_paused = false;
 	show_start_splash = true;
 }
