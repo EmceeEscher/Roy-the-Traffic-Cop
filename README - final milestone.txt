@@ -12,7 +12,8 @@ Changes made between milestone 4 (robust play) and final submission:
 	It will collide with any cars in its path (using the same bounding box/mesh collision detection as the rest of our cars). It also does a slight curve through
 	the intersection so it can switch lanes (so it will always be an outgoing lane), but we did this manually instead of using a Bezier curve, because the Bezier
 	curve didn't work very well for the type of turning we wanted to do.
--Added a high score system. TODO: describe how this works
+-Added a high score system. The game will save your top 3 high scores and display them on game over. We had lots of trouble trying to render text, so instead we ended up using the 
+	number texture that we used for the in-game score on the high score screen as well. 
 -Added weather. Enabled at level 3 and beyond (or immediately in hardcore mode), adds to game immersion as well as provides some difficulty as weather can be obstructive to placard indicator.
 	There are a number of weather types, including darkness, fog, as well as dawn and twilight lighting. The game will choose between these randomly depending on level and 
 	time of year (as shown in the date in the top right). 
