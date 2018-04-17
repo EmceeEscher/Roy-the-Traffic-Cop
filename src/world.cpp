@@ -271,9 +271,6 @@ void World::on_key(GLFWwindow*, int key, int, int action, int mod)
 		is_game_paused ? Mix_PauseMusic() : Mix_ResumeMusic();
 	}
 	if (!is_game_paused && !show_start_splash) {
-		if (action == GLFW_PRESS && key == GLFW_KEY_N) { //debug, triggers game over
-			m_level_manager.set_game_over();
-		}
 		if (action == GLFW_PRESS && (key == GLFW_KEY_UP || key == GLFW_KEY_DOWN || key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT)) {
 			Mix_PlayChannel(-1, m_roy_whistle, 0);
 		}
