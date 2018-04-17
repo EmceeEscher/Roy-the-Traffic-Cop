@@ -2,7 +2,6 @@
 #include "game_timer.hpp"
 #include "common.hpp"
 #include "lane_manager.hpp"
-#include "high_scores.hpp"
 
 
 using std::string;
@@ -11,7 +10,7 @@ class LevelManager
 {
 public:
 	// Creates all the associated render resources and default transform
-	bool init(HighScores high_scores);
+	bool init();
 
 	// Releases all associated resources
 	void destroy();
@@ -32,7 +31,6 @@ public:
 
 
 private:
-	HighScores m_high_scores;
 	int game_level;
 	bool is_game_over;
 	int year;
